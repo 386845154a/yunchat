@@ -43,6 +43,8 @@ public class UploadFileController extends BaseController {
     @RequestMapping("/commonuploadfile")
     public void commonuploadfile(HttpServletRequest request, HttpServletResponse response) {
         JSONObject json = new JSONObject();
+        JSONObject jsonData = new JSONObject();
+        Boolean isImg = false;
         String flag = request.getParameter("flag");
         try {
             Iterator<String> fileNames = ((MultipartHttpServletRequest) request).getFileNames();
@@ -53,6 +55,11 @@ public class UploadFileController extends BaseController {
                     fileName = file.getOriginalFilename().toLowerCase();
                     String fileType = file.getContentType();
                     String dirType = "other";
+
+                    if (fileType.contains("image")) {
+                        isImg = true;
+                    }
+
                     // 先判断文件类型
                     String ftype[] = {"image", "pdf", "word", "ppt", "excel", "xml", "html", "flash", "visio", "js", "css"};
                     for (String ft : ftype) {
@@ -107,35 +114,46 @@ public class UploadFileController extends BaseController {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        if (!StringUtils.isEmpty(flag)) {
-                            // kindeditor编辑器上传图片
-                            if (flag.equals("ke")) {
-                                String pre = "";
-                                if (handle) {
-                                    pre = "_150";
-                                }
-                                fileName = fileName.substring(0, fileName.lastIndexOf(".")) + pre + fileName.substring(fileName.lastIndexOf("."), fileName.length());
-                                json.put("error", "0");
-                                json.put("message", "/userHeadController/showHead?path=/" + relativePath + "/" + fileName);
-//                                json.put("message", "/userHeadController/showHead?path=/" + relativePath + "/" + fileName + "\"  onclick=\"show_img('/" + relativePath + "/" + fileName + "')");
-                            } else {
-                                json.put("success", true);
-                                json.put("msg", "上传成功");
-                                json.put("message", "/" + relativePath + "/" + fileName + "@@@" + oldFileName);
-                            }
+                        if (isImg) {
+                            json.put("code",0);
+                            json.put("msg","上传成功");
+                            // TODO: 2020/2/16 改为配置文件
+                            jsonData.put("src","http://127.0.0.1:8888/userHeadController/showHead?path=/" + relativePath + "/" + fileName);
+                            jsonData.put("name",oldFileName);
+                            json.put("data",jsonData);
                         }
+                        else {
+                            json.put("code",0);
+                            json.put("msg","上传成功");
+                            // TODO: 2020/2/16 改为配置文件
+                            jsonData.put("src","http://127.0.0.1:8888/indexController/fileHave?path=/" + relativePath + "/" + fileName);
+                            jsonData.put("name",oldFileName);
+                            json.put("data",jsonData);
+                        }
+//                        if (!StringUtils.isEmpty(flag)) {
+//                            // kindeditor编辑器上传图片
+//                            if (flag.equals("ke")) {
+//                                String pre = "";
+//                                if (handle) {
+//                                    pre = "_150";
+//                                }
+//                                fileName = fileName.substring(0, fileName.lastIndexOf(".")) + pre + fileName.substring(fileName.lastIndexOf("."), fileName.length());
+//                                json.put("error", "0");
+//                                json.put("message", "/userHeadController/showHead?path=/" + relativePath + "/" + fileName);
+////                                json.put("message", "/userHeadController/showHead?path=/" + relativePath + "/" + fileName + "\"  onclick=\"show_img('/" + relativePath + "/" + fileName + "')");
+//                            } else {
+//                                json.put("success", true);
+//                                json.put("msg", "上传成功");
+//                                json.put("message", "/" + relativePath + "/" + fileName + "@@@" + oldFileName);
+//                            }
+//                        }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        if (!StringUtils.isEmpty(flag)) {
-                            // kindeditor编辑器上传图片
-                            if (flag.equals("ke")) {
-                                json.put("error", "1");
-                                json.put("message", "文件上传失败");
-                            } else {
-                                json.put("success", false);
-                                json.put("msg", "上传失败");
-                            }
-                        }
+                        json.put("code",1);
+                        json.put("msg","上传失败");
+                        jsonData.put("src","");
+                        jsonData.put("name",oldFileName);
+                        json.put("data",jsonData);
                     }
                 }
             }
