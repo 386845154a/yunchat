@@ -407,6 +407,9 @@
 		'0' as tree_node
 		from sys_user u
 		where 1 = 1
+		<if test="userName !=null and userName !=''">
+			and u.fullname = #{userName}
+		</if>
 		and u.islock = '0'
 		and u.isexpired = '0'
 		and u.status = '1') a

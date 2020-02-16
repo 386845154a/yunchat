@@ -620,10 +620,11 @@ public class GroupController {
 	@RequestMapping("/getGroupEditOrgInf")
 	public List<GroupEidtOrgVo> getGroupEditOrgInf(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		String groupId = request.getParameter("groupId");
+		String userName = request.getParameter("userName");
 		if(groupId==null){
 			groupId = "";
 		}
-		return groupService.getGroupEditOrgInf(groupId);
+		return groupService.getGroupEditOrgInf(groupId,userName);
 	}
 
 }

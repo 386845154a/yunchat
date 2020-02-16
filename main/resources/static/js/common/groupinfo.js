@@ -4,13 +4,13 @@ $(function(){
     var orgdata = "";
 });
 
-function createGroupIm (task,id){
+function createGroupIm (task){
     var gid ="";
     layer.open({
         type: 2
         ,content: ['http://127.0.0.1:8888/ui/css/modules/group/groupFrom.html','no'] //这里content是一个普通的String
         ,area: ['1000px', '660px']
-        ,title:id
+        ,title:"群组信息"
         ,btn: ['创建群组', '取消创建']
         ,yes: function(index, layero){
             //按钮【按钮一】的回调
@@ -39,12 +39,9 @@ function createGroupIm (task,id){
             }
             iframeWin.groupinfo(task,gid);
             if (task == 1){
-
-                // debugger
                 iframeWin.document.getElementById('groupName').value='213213';
                 var body = layer.getChildFrame('body', index);
                 console.log(body.html())
-
             }
             // var iframeWin = window[layero.find('iframe')[0]['name']];
 
@@ -54,8 +51,7 @@ function createGroupIm (task,id){
 
 
 function groupinfo(task,groupId) {
-    debugger
-    var Nodesd = getGroupUserTree(groupId);
+    var Nodesd = getGroupUserTree(groupId,"");
     // console.log(Nodesd);
 
     var zztree = $("#treeDemo").TransferTree({
@@ -102,8 +98,13 @@ function getUserIdList() {
     $.each(Liarr, function (i, item) {
         Liid.push(item.id);
     });
-    // debugger
     return Liid.toString();
+}
+// 搜索用户
+function searchUser(groupId,userName) {
+    var treeObj  = $.fn.zTree.getZTreeObj("treeDemo");
+    var res = getGroupUserTree()
+    treeObj.resetData()
 }
 //群组创建0，群组编辑1，群组关闭2
 //群组创建 groupId = 0
@@ -119,34 +120,58 @@ function GroupTask(task,groupId){
         return "请选择人员";
     }
     console.log(userIdList);
-    $.ajax({
-        type: 'post',
-        url: '/groupController/createGroup',
-        data: {'groupId': groupId
-            ,'task':task
-            ,'groupName':groupName
-        ,'userIdList':userIdList
-        ,'levels':1
-        ,'groupDescribe':groupDescribe},
-        async: false,
-        cache: false,
-        success: function (data) {
-            res = '创建成功';
-        },
-        error: function () {
-            res = '创建失败请重试！';
-        }
-    });
+    if (task == 0){
+        $.ajax({
+            type: 'post',
+            url: '/groupController/createGroup',
+            data: {'groupId': groupId
+                ,'task':task
+                ,'groupName':groupName
+                ,'userIdList':userIdList
+                ,'levels':1
+                ,'groupDescribe':groupDescribe},
+            async: false,
+            cache: false,
+            success: function (data) {
+                res = '创建成功';
+            },
+            error: function () {
+                res = '创建失败请重试！';
+            }
+        });
+    }
+    else if(task == 1)
+    {
+        $.ajax({
+            type: 'post',
+            url: '/groupController/updateGroup',
+            data: {'groupId': groupId
+                ,'groupName':groupName
+                ,'userIdList':userIdList
+                ,'groupDescribe':groupDescribe},
+            async: false,
+            cache: false,
+            success: function () {
+                res = '更新成功';
+            },
+            error: function () {
+                res = '更新失败请重试！';
+            }
+        });
+    }
+    else {
+        res = task;
+    }
     return res;
 }
 
-function getGroupUserTree(groupId) {
-
+function getGroupUserTree(groupId,userName) {
     var res = "";
     $.ajax({
         type: 'post',
         url: '/groupController/getGroupEditOrgInf',
-        data: {'groupId': groupId},
+        data: {'groupId': groupId
+        ,'userName':userName},
         async: false,
         cache: false,
         success: function (data) {

@@ -66,6 +66,7 @@ public class IworkWsMsgHandler implements IWsMsgHandler {
 //      获取用户在线信息，如在线，踢掉他
 //      checkUserOnline(channelContext,userid);
         //todo 改成从userInf获取orgCode
+        // TODO: 2020/2/16 获取用户群组信息，绑定他
         String orgCode=request.getParam("orgCode");
 //      加入组织
         Tio.bindGroup(channelContext,orgCode);
@@ -153,6 +154,9 @@ public class IworkWsMsgHandler implements IWsMsgHandler {
 //                WsResponse.fromText("2123324","utf-8"));
 
         /**消息收到确认应答end*/
+
+        // TODO: 2020/2/16 处理system消息 群组变更信息
+
 
         /**消息解析begin*/
         MsgInfoModel msgInfoModel = (MsgInfoModel) JSON.parseObject(text,MsgInfoModel.class);

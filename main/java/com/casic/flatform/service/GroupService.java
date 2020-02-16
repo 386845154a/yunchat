@@ -282,5 +282,5 @@ public interface GroupService {
      * @return
      */
 	public List<?> del_more_file(Date inputTime, String type);
-	List<GroupEidtOrgVo> getGroupEditOrgInf(String groupId);
+	List<GroupEidtOrgVo> getGroupEditOrgInf(String groupId ,String userName);
 }

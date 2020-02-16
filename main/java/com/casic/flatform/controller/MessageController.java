@@ -114,9 +114,18 @@ public class MessageController {
 		String chat_user = request.getParameter("chat_user");
 		//chat_user="7";
 		String type = request.getParameter("type");
-		if(type == null || "".equals(type)){
+		if ("friend".equals(type)) {
 			type = "0";
 		}
+		else if ("group".equals(type)){
+			type = "1";
+		}
+		else {
+			type = "0";
+		}
+//		if(type == null || "".equals(type)){
+//			type = "0";
+//		}
 		List<ToMsgInfo> msgList = null;
 		if(type.equals("1")){//群聊
 			msgList = this.messageService.getGroupMsgHistory(chat_user);

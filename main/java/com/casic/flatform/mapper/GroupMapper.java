@@ -269,7 +269,7 @@ public interface GroupMapper {
 
 
 
-	List<GroupEidtOrgModel> getGroupEditOrgInf(@Param("groupId") String groupId);
+	List<GroupEidtOrgModel> getGroupEditOrgInf(@Param("groupId") String groupId,@Param("userName") String userName);
 
 }
 

@@ -54,6 +54,9 @@ $(function(){
                 if(res.type === 'friend'){
                     layim.getMessage(res); //res.data即你发送消息传递的数据（阅读：监听发送的消息）
                 }
+                if(res.type === 'system'){
+                    ws.send(res.data);
+                }
             };
 
             this.onclose = function (e, ws) {
@@ -115,6 +118,7 @@ $(function(){
                 url: 'http://127.0.0.1:8081/file/upload' //接口地址
                 , type: 'post' //默认post
             }
+            //TO DO 这里要改地址
 
             //上传文件接口（返回的数据格式见下文），若不开启文件上传，剔除该项即可
             , uploadFile: {
@@ -276,7 +280,7 @@ $(function(){
             layim.chat({
                 name: name //名称
                 , type: 'friend' //聊天类型
-                , avatar: 'http://tp1.sinaimg.cn/5619439268/180/40030060651/1' //头像
+                , avatar: 'http://127.0.0.1:8081/file/headimg/head.gif' //头像
                 , id: id //好友id
             })
         }

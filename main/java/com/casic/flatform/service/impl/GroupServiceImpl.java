@@ -476,9 +476,9 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	@Override
-	public List<GroupEidtOrgVo> getGroupEditOrgInf(String groupId){
+	public List<GroupEidtOrgVo> getGroupEditOrgInf(String groupId, String userName){
 		List<GroupEidtOrgVo> groupEidtOrgVoList = new ArrayList<>();
-		for (GroupEidtOrgModel groupEidtOrg: groupMapper.getGroupEditOrgInf(groupId)
+		for (GroupEidtOrgModel groupEidtOrg: groupMapper.getGroupEditOrgInf(groupId,userName)
 			 ) {
 			GroupEidtOrgVo groupEidtOrgVo = new GroupEidtOrgVo();
 			groupEidtOrgVo.setId(groupEidtOrg.getId());
