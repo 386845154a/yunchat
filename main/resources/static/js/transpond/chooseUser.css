@@ -1,0 +1,20 @@
+#choose-user-list{max-height: 400px;min-width: 240px;overflow-y: auto;float:left;}
+#choose-user-list .user-org{background-color: #EEEEEE}
+#choose-user-list .item-user{padding:0px 20px;}
+#choose-user-list .item-user div{float:left;margin-right: 10px;line-height: 30px;}
+#choose-user-list .item-user .checked-div{width:20px;height:20px;margin:5px;border-radius: 10px;}
+#choose-user-list .item-user .unchecked{background: url(/img/home.png) no-repeat;background-position:-468px -350px;  -webkit-background-size: 487px 462px;  background-size: 487px 462px;}
+#choose-user-list .item-user .checked{background: url(/img/home.png) no-repeat;background-position:-468px -331px;  -webkit-background-size: 487px 462px;  background-size: 487px 462px;}
+#choose-user-list .user-img{width: 30px;height: 30px;border-radius: 16px;line-height: 30px;text-align: center;font-size: 15px;background-color: #9ac9f1;}
+
+
+#choose-group-list{max-height: 400px;min-width: 240px;overflow-y: auto;float:left;margin-left: 20px;}
+#choose-group-list .item-user{padding:0px 20px;}
+#choose-group-list .item-user div{float:left;margin-right: 10px;line-height: 30px;}
+#choose-group-list .img-div{width: 30px;height: 30px;border-radius: 16px;line-height: 30px;text-align: center;float:left;}
+#choose-group-list .img-div .user-img{width:20px;height:20px;}
+#choose-group-list .item-user div{float:left;margin-right: 10px;line-height: 30px;}
+#choose-group-list .item-user .checked-div{width:20px;height:20px;margin:5px;border-radius: 10px;}
+#choose-group-list .item-user .unchecked{background: url(/img/home.png) no-repeat;background-position:-468px -350px;  -webkit-background-size: 487px 462px;  background-size: 487px 462px;}
+#choose-group-list .item-user .checked{background: url(/img/home.png) no-repeat;background-position:-468px -331px;  -webkit-background-size: 487px 462px;  background-size: 487px 462px;}
+

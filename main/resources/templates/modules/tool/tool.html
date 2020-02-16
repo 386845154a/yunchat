@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+    <script th:src="@{/js/jquery-2.0.3.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}"/>
+    <script th:src="@{/assets/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/newtools.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/newtools.css}"/>
+    <script th:src="@{/js/dialog/jquery.gritter.js}"></script>
+    <script th:src="@{/js/download.js}"></script>
+    <link th:href="@{/css/star-rating.css}" rel="stylesheet" />
+	<script th:src="@{/js/star-rating.js}"></script>
+	<style type="text/css">
+		#tool_lb {
+			word-wrap:break-word;
+		}
+	</style>
+</head>
+<body>
+<input id="doUser" type="text" style="display: none;" />
+<div class="container" style="width: 100%">
+    <div class="row clearfix">
+        <div class="col-xs-3 column">
+            <div class="panel panel-default" style="margin-bottom:15px;">
+                <div class="panel-heading">个人工具
+                <input class="toolAdd" type="button" value="添加" onclick="add_local_tools()" style="position: absolute; right: 30px; top:8px;"/>
+                </div>
+                <div class="panel-body">
+                    <button type="button" class="btn btn-default" onclick="load_localTool('我的工具')">我的工具</button>
+                    <button type="button" class="btn btn-default" onclick="upAndApprove('我的上传')">我的上传</button>
+                    <button type="button" class="btn btn-default" onclick="upAndApprove('上传审批')">上传审批</button>
+                    <button type="button" class="btn btn-default" onclick="downApporTable('下载审批')">下载审批</button>
+                </div>
+            </div>
+            <div class="panel panel-default" style="margin-bottom:15px;">
+                <div class="panel-heading">二部工具</div>
+                <div class="panel-body">
+                    <button type="button" class="btn btn-default" onclick="load_othertools('全部工具', '', 'all', 1)">全部工具</button>
+                    <button type="button" class="btn btn-default" onclick="load_othertools('最新工具', '', 'new', 1)">最新工具</button>
+                    <button type="button" class="btn btn-default" onclick="load_othertools('热门工具', '', 'hot', 1)">热门工具</button>
+                </div>
+            </div>
+            <div class="panel panel-default" style="margin-bottom:15px;">
+                <div class="panel-heading">研究室工具</div>
+                <div class="panel-body" style="max-height: 122px; overflow-x:hidden; ">
+                    <button type="button" class="btn btn-default" onclick="load_othertools('一室', 'B000001163', '', 1)">一室</button>
+                    <button type="button" class="btn btn-default" onclick="load_othertools('二室', 'B000001164', '', 1)">二室</button>
+                    <button type="button" class="btn btn-default" onclick="load_othertools('三室', 'B000001165', '', 1)">三室</button>
+                    <button type="button" class="btn btn-default" onclick="load_othertools('四室', 'B000001166', '', 1)">四室</button>
+                    <button type="button" class="btn btn-default" onclick="load_othertools('五室', 'B000001167', '', 1)">五室</button>
+                    <button type="button" class="btn btn-default" onclick="load_othertools('六室', 'B000001168', '', 1)">六室</button>
+                    <button type="button" class="btn btn-default" onclick="load_othertools('七室', 'B000001169', '', 1)">七室</button>
+                    <button type="button" class="btn btn-default" onclick="load_othertools('八室', 'B000001170', '', 1)">八室</button>
+                    <button type="button" class="btn btn-default" onclick="load_othertools('九室', 'B000001171', '', 1)">九室</button>
+                    <button type="button" class="btn btn-default" onclick="load_othertools('十室', 'B000001172', '', 1)">十室</button>
+                    <button type="button" class="btn btn-default" onclick="load_othertools('十一室', 'B000001173', '', 1)">十一室</button>
+                    <button type="button" class="btn btn-default" onclick="load_othertools('十三室', 'B000001174', '', 1)">十三室</button>
+                    <button type="button" class="btn btn-default" onclick="load_othertools('十五室', 'B000001175', '', 1)">十五室</button>
+                    <button type="button" class="btn btn-default" onclick="load_othertools('十六室', 'B000001176', '', 1)">十六室</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-8 column">
+        	<div id="my_tool" style="display: none;" >
+        		<div class="panel panel-success">
+	                <div class="panel-heading" id="my_tab_name"></div>
+	                <div class="panel-body">
+		                <div id="my_tool_list" class="tool_list" style="max-height: 450px;"></div>
+		                <div id="tool_lb" style="max-height: 465px; overflow-x: hidden;">
+			                <table id="dynamic-table" class="table table-striped table-bordered table-hover" style="width: 100%; table-layout: fixed">
+			                    <thead>
+			           				<tr>
+			           					<th>名称</th>
+										<th>时间</th>
+										<th>说明</th>
+			           					<th>密级</th>
+										<th>版本</th>
+										<th>状态</th>
+			           					<th>意见</th>
+										<th>执行人</th>
+										<th>操作</th>
+									</tr>
+			                    </thead>
+			                    <tbody class="infor-tbody" id="tool_lb_up" >
+			                    </tbody>
+			                </table>
+						</div>
+	                </div>
+        		</div>
+        	</div>
+        	<div id="datable" style="display: none;" >
+        		<div class="panel panel-success">
+	                <div class="panel-heading" id="datable_name"></div>
+	                <div class="panel-body">
+		                <div id="my_tool_list" class="tool_list" style="max-height: 450px;"></div>
+		                <div id="datable_lb" style="max-height: 465px; overflow-x: hidden;">
+			                <table id="dynamic-table" class="table table-striped table-bordered table-hover" style="width: 100%; table-layout: fixed">
+			                    <thead>
+			           				<tr>
+			           					<th>资源名称</th>
+										<th>申请内容</th>
+										<th>申请人</th>
+			           					<th>密级</th>
+										<th>审核人</th>
+										<th>创建时间</th>
+			           					<th>状态</th>
+			           					<th>操作</th>
+									</tr>
+			                    </thead>
+			                    <tbody class="infor-tbody" id="datable_text" >
+			                    </tbody>
+			                </table>
+						</div>
+	                </div>
+        		</div>
+        	</div>
+        	<div id="other_tool" style="display: none;">
+	            <div class="panel panel-success">
+	            	<input class="toolAdd" type="button" value="添加" onclick="add_other_tools()"/>
+	                <div class="panel-heading" id="other_tab_name"></div>
+	                <div class="panel-body" style="max-height: 410px;">
+		                <div id="other_tool_list" class="tool_list" style="max-height: 410px;"></div>
+	                </div>
+	                <div class="page">
+						<ul class="pagination" id="system_noti_page" style="float: right;"></ul>
+					</div>
+        		</div>
+        	</div>
+        	<div id="details_info" style="display: none;">
+	            <div class="panel panel-success">
+	                <div class="panel-heading" id="details_tab_name"></div>
+	                <div class="panel-body" style="height: 480px;">
+		                <div id="details_info_list" class="tool_list" style="height: 480px;">
+		                	<div id="toolImg"></div>
+							<span id="xq_name" class="xq"></span>
+							<div id="commentAll" style="position: relative; bottom: 85px; left: 100px;">
+								<input id="input-22" style="font_size:12px;" type="number" class="rating" min="0" max="5" step="0.5" data-container-class="text-right" data-glyphicon="0" />
+								<script>
+	                                jQuery(document).ready(function () {
+	                                    $(".rating-kv").rating();
+	                                });
+								</script>
+							</div>
+							<div class="downc">下载(<span id="down_cs"></span>次)</div>
+							<div style="position: relative; bottom: 45px; right: 100px;">
+								开发者:<span id="kf_user" class="send_float"></span>
+								日期:<span id="kf_date" class="send_float" style="padding-left: 10px;"></span>
+								版本:<span id="kf_version" class="send_float"></span>
+							</div><br/>
+							<div style="position: relative; bottom: 60px;">
+								<span class="send_float">软件说明:</span><br/>
+								<div style="width: 90%; word-wrap: break-word; min-height: 100px; border: 1px solid #C3C3C3;" id="software_sm"></div>
+							</div><br/>
+							<div style="position: relative; bottom: 60px;">
+								<span class="send_float">团队信息:</span><br/>
+								<div style="width: 90%; word-wrap: break-word; min-height: 100px; border: 1px solid #C3C3C3;" id="team_info"></div>
+							</div><br/>
+							<div style="position: relative; bottom: 70px;">
+								<span class="send_float">用户评论:</span><br/>
+								<div id="user_pl" style="width: 90%; min-height: 50px; max-height: 220px; overflow-x: hidden; word-wrap: break-word; border: 1px solid #C3C3C3;"></div>
+							</div><br/>
+							<div style="position: relative; bottom: 70px;">
+								<div>
+									<span class="send_float">我的评论:</span>
+									<span class="send_float" style="margin-left: 37%;">我的评级:</span>
+									<div id="myComment" class="send_float" style="float: right; position: relative; right: 9%; top: -26px;">
+										<input id="input-23" style="font_size:12px;" type="number" class="rating" min="0" max="5" step="0.5" data-container-class="text-right" data-glyphicon="0" />
+										<script>
+			                                jQuery(document).ready(function () {
+			                                    $(".rating-kv").rating();
+			                                });
+										</script>
+									</div>
+								</div><br/>
+								<textarea id="my_pl" style="border: 1px solid #C3C3C3; width: 90%; height: 100px; resize: none; word-wrap: break-word; overflow-x: hidden; position: relative; bottom: 27px;"></textarea>
+							</div><br/>
+							<div id="fb_botton"></div>
+		                </div>
+	                </div>
+        		</div>
+        	</div>
+        </div>
+    </div>
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myTools" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">工具配置</h4>
+            </div>
+            <div class="modal-body">
+				<div style="margin-top: 10px;">
+					<lable class="col-sm-3" style="line-height:30px;">工具名称：</lable>
+					<input type="text" id="tools_name" style="line-height:30px; width: 279px;"/>
+				</div>
+				<lable class="col-sm-3" style="line-height:30px; margin-top: 10px;">工具地址：</lable>
+				<input id="tools_address" readonly="true" type="text" style="margin-top: 10px; width: 279px;line-height:30px;"/>
+				<input type="button" style="height: 30px;" value="获取地址" onclick="get_address()"/>
+				<div style="margin-top: 10px;">
+					<lable class="col-sm-3" style="line-height:30px;">版本信息：</lable>
+					<input type="text" id="tools_ver" style="line-height:30px; width: 279px;"/>
+				</div>
+				<div style="margin-top: 10px;">
+					<lable class="col-sm-3" style="line-height:30px;">工具说明：</lable>
+					<textarea type="text" id="tools_ex" style="line-height:30px; width: 49.5%; resize: none; overflow-x: hidden;"></textarea>
+				</div>
+				<div style="margin-top: 10px;">
+					<lable class="col-sm-3" style="line-height:30px;">工具头像：</lable>
+					<div type="text" id="tools_img" style="line-height:30px; width: 385px; border:1px solid #A9A9A9;
+						height: 150px; overflow-x: hidden;"></div>
+					<input id="tool_head_img" style="display: none;"/>
+				</div>
+			</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" style="margin: 10px;">关闭</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="commit_tools()" style="margin: 10px;">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="downAppor_model" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">下载申请</h4>
+            </div>
+            <div class="modal-body">
+            	<input type="hidden" id="dafileid" />
+            	<input type="hidden" id="dafilename" />
+            	<input type="hidden" id="dafilelevel" />
+            	<input type="hidden" id="tabName_" />
+            	<input type="hidden" id="tab_id_" />
+            	<input type="hidden" id="typ_e" />
+            	<input type="hidden" id="pag_e" />
+				<div style="margin-top: 10px;">
+					<lable class="col-sm-2" style="line-height:30px;">审批人：</lable><label style="color:red;">*</label>
+					<select id="dauser" style="width: 150px; height: 30px;"></select>
+				</div>
+				<div style="margin-top: 10px;">
+					<lable class="col-sm-2" style="line-height:30px;">申请原因：</lable><label style="color:red;">*</label>
+					<textarea type="text" id="datext" style="line-height:30px; width: 50.5%; resize: none; overflow-x: hidden;"></textarea>
+				</div>
+			</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" style="margin: 10px;">关闭</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="downAppor_submit()" style="margin: 10px;">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="tools_model" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">工具上传</h4>
+			</div>
+			<div class="modal-body" style="margin-left:65px;">
+				 保密级别：<select id="levelId" class="unLocalTool" ></select><span style="color: red;">*</span><br/>
+				 <div style="margin-top: 10px;">
+					  注 册 权：<input id="have" name="zcq" type="radio" value="1" />有<input id="nohave" name="zcq" type="radio" checked="checked" value="0" />无
+				 </div><br/>
+				 <div style="margin-top: -10px; margin-bottom: -20px;">
+					 工具级别：<input id="grade" name="tul" type="radio" value="1" />二部<input id="grade" name="tul" type="radio" value="2" />二院<input id="grade" name="tul" type="radio" value="3" checked="checked" />研究室
+				 </div><br/>
+				  研 究 室：<select id="tools_class_" class="unLocalTool">
+				  			<option value="">请选择种类</option>
+				  			<option value="B000001163">一室</option>
+				  			<option value="B000001164">二室</option>
+				  			<option value="B000001165">三室</option>
+				  			<option value="B000001166">四室</option>
+				  			<option value="B000001167">五室</option>
+				  			<option value="B000001168">六室</option>
+				  			<option value="B000001169">七室</option>
+				  			<option value="B000001170">八室</option>
+				  			<option value="B000001171">九室</option>
+				  			<option value="B000001172">十室</option>
+				  			<option value="B000001173">十一室</option>
+				  			<option value="B000001174">十三室</option>
+				  			<option value="B000001175">十五室</option>
+				  			<option value="B000001176">十六室</option>
+				  		</select><span style="color: red;">*</span><br/>
+				 团队信息：<input id="tools_note_info" class="unLocalTool" placeholder="请填写团队信息!" /><span style="color: red;">*</span><br/>
+				 版本信息：<input id="tools_version_info" class="unLocalTool" placeholder="请填写版本信息!" /><span style="color: red;">*</span><br/>
+				 使用说明：<textarea id="tools_use_info" class="unLocalTool" placeholder="请填写详细工具说明!" style="width: 400px; height: 100px;"></textarea><span style="color: red; position: relative; top: 50px;">*</span>
+			</div>
+			<div class="modal-footer">
+				<div class="btn btn-default" id="update_btn" style="margin: 10px;">
+					上传<input type="file" style="display: none;" id="one" disabled="true" onchange="upload_chat_file(this, '')" multiple="multiple" />
+				</div>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="edit_model" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">工具更新</h4>
+			</div>
+			<div class="modal-body" style="margin-left:65px;">
+				<input id="editId" style="display: none;"/>
+				<input id="editLevle" style="display: none;"/>
+				  研 究 室：<select id="room_choose" class="unLocalTool">
+				  			<option value="">请选择种类</option>
+				  			<option value="B000001163">一室</option>
+				  			<option value="B000001164">二室</option>
+				  			<option value="B000001165">三室</option>
+				  			<option value="B000001166">四室</option>
+				  			<option value="B000001167">五室</option>
+				  			<option value="B000001168">六室</option>
+				  			<option value="B000001169">七室</option>
+				  			<option value="B000001170">八室</option>
+				  			<option value="B000001171">九室</option>
+				  			<option value="B000001172">十室</option>
+				  			<option value="B000001173">十一室</option>
+				  			<option value="B000001174">十三室</option>
+				  			<option value="B000001175">十五室</option>
+				  			<option value="B000001176">十六室</option>
+				  		</select><span style="color: red;">*</span><br/>
+				 团队信息：<input id="teamInfo" class="unLocalTool" placeholder="请填写团队信息!" /><span style="color: red;">*</span><br/>
+				 版本信息：<input id="toolsVer" class="unLocalTool" placeholder="请填写版本信息!" /><span style="color: red;">*</span><br/>
+				 使用说明：<textarea id="toolsUse" class="unLocalTool" placeholder="请填写详细工具说明!" style="width: 400px; height: 100px;"></textarea><span style="color: red; position: relative; top: 50px;">*</span>
+			</div>
+			<div class="modal-footer">
+				<div class="btn btn-default" id="edit_up" style="margin: 10px;">
+					上传<input type="file" style="display: none;" id="editT" disabled="true"  onchange="edit_tool_file(this)" multiple="multiple" />
+				</div>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+</body>
+</html>
+

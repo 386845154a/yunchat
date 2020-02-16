@@ -1,0 +1,63 @@
+@charset "UTF-8";
+
+html, body{min-height:100%;min-width:100%}
+*{font-family:'微软雅黑';font-size:14px;}
+.page-top-button{margin:4px 0px 6px 0px;}
+a{cursor:pointer;}
+.form-horizontal{padding:14px;}
+.left{float:left;}
+.right{float:right;}
+.page-top-button{margin-bottom: 10px;}
+
+.nav-list > li > a > .menu-icon {display: inline-block;min-width: 30px;margin-right: 2px;vertical-align: sub;text-align: center;font-size: 18px;font-weight: normal;}
+
+.search-content>.control-label{float: left;margin-left: 9px;margin-top: 5px;}
+.search-content>.form-control{float: left;width: 140px;margin-right: 11px}
+
+/*图标*/
+.people_icon{background: url(/img/icon_people.png) 0 0 no-repeat;width: 16px;height: 16px;display: inline-block;}
+.org_icon{background: url(/img/icon_folder_blue.png) 0 0 no-repeat;width: 16px;height: 16px;display: inline-block;}
+
+
+/*checked样式*/
+.radio-img{background-image:url(/img/icons.png);background-position: -323px -826px;width: 14px;height: 14px;margin: auto;cursor:pointer;}
+.checked{background-position: -239px -826px;}
+
+
+/*滚动条*/
+::-webkit-scrollbar {width: 6px;height: 6px;}
+::-webkit-scrollbar-thumb {border-radius: 3px;-moz-border-radius: 3px;-webkit-border-radius: 3px;background-color: #c3c3c3;}
+::-webkit-scrollbar-track {background-color: #eee;}
+::selection{color:#ccc}
+
+
+/*弹窗*/
+.bootstrap-dialog-title{font-size:130%;}
+
+/*聊天列表*/
+.chat-msg .img-msg-div img{max-height:80px;max-width:80px;cursor:pointer;}
+.send-name{color: #0973FF;margin: 0px 4px;font-size: 12px;width:100px;}
+.send-time{color: #6FA06F;margin: 0px 4px;font-size: 12px;}
+.chat-msg{margin:2px 0px 2px 20px;}
+.emoji-div{width:30px;height:30px;}
+	
+/*文档消息*/
+.msg-office-div{min-width:300px;height:80px;cursor: pointer;max-width:340px;background-color:#eee;padding: 2px;}
+.msg-office-div .name-span{font-family:'微软雅黑';font-size: 16px;float: left;max-width: 210px;word-wrap: break-word;word-break: break-all;}
+.msg-office-div .icon-img-div {width: 74px;  height: 74px;  float: left;  margin: 2px 10px 2px 6px;border-radius: 10px;}
+.msg-office-div .doc-img-div{background: url(/img/home.png) no-repeat;background-position: -76px -246px;-webkit-background-size: 487px 462px;background-size: 487px 462px;  }
+.msg-office-div .xls-img-div{background: url(/img/home.png) no-repeat;background-position: -152px -246px;-webkit-background-size: 487px 462px;background-size: 487px 462px;}
+.msg-office-div .ppt-img-div{background: url(/img/home.png) no-repeat;background-position: -1px -246px;-webkit-background-size: 487px 462px;background-size: 487px 462px;}
+.msg-office-div .pdf-img-div{background: url(/img/home.png) no-repeat;background-position: -229px -248px;-webkit-background-size: 487px 462px;background-size: 487px 462px;}
+.msg-office-div .txt-img-div{background: url(/img/home.png) no-repeat;background-position: 0px -322px;-webkit-background-size: 487px 462px;background-size: 487px 462px;}
+.msg-office-div .zip-img-div{background: url(/img/home.png) no-repeat;background-position:-271px -152px;-webkit-background-size: 487px 462px;background-size: 487px 462px;}
+.msg-office-div .other-img-div{background: url(/img/home.png) no-repeat;background-position:-347px -1px;-webkit-background-size: 487px 462px;background-size: 487px 462px;}
+.msg-office-div .shade-div{position: relative;top:0px;left:0px;background: rgba(240, 240, 240, 0.4);width: 100%;height: 100%}
+.msg-office-div .shade-div .load-img{position: absolute;  top: 40%;  left: 46%;}
+
+/*文件，图片弹出框 start*/
+.dialog-background{position: absolute; top:0px;left:0px;background:  rgba(40, 40, 40, 0.8);width: 100%;height:100%;z-index: 9;}
+.dialog-background .dialog-div{background-color: #efefef;width:90%;height: 90%;overflow: auto;margin: 2% auto;border-radius: 4px;text-align: center;}
+.dialog-background .dialog-div img{}
+.dialog-background .dialog-close{background: url(/img/home.png) no-repeat;background-position: -423px -167px;  -webkit-background-size: 487px 462px;  background-size: 487px 462px;
+    position: absolute; top:1%; right: 1%; float:right;width:52px;height:52px;cursor: pointer;}

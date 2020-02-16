@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.casic.flatform.mapper.LogMapper">
+	<resultMap id="LogMsgModel" type="com.casic.flatform.model.LogModel">
+		<id column="log_id" property="logId" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+		<result column="creater" property="creater" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="Logout" type="com.casic.flatform.model.StatisticsModel">
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="num" property="num" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		log_id, type, content, create_time, creater
+	</sql>
+	
+	<!-- 分页查询日志消息 -->
+	<select id="queryLogInfo" resultMap="LogMsgModel">
+		SELECT * FROM  
+		(  
+		SELECT A.*, ROWNUM RN  
+		FROM (SELECT * FROM pf_log t
+		WHERE log_id is not null  AND (creater = 'admin' OR creater = 'secadm')
+		<if test="startTime != null and startTime != ''">
+			AND t.create_time &gt;= to_date(#{startTime},'YYYY/MM/DD')
+		</if>	
+		<if test="endTime != null and endTime != ''">
+			AND t.create_time &lt;= to_date(#{endTime},'YYYY/MM/DD')
+		</if>	
+		<if test="content != null">
+			AND t.content LIKE '%' || #{content} || '%'
+		</if>
+		<if test="fullName != null">
+			AND t.fullName LIKE '%' || #{fullName} || '%'
+		</if>
+		 order by t.create_time desc
+		) A  
+		WHERE ROWNUM <![CDATA[ <= ]]> #{row}  
+		)  
+		WHERE RN<![CDATA[ >= ]]> #{start}
+	</select>
+	
+	<!-- 查询日志消息总数 -->
+	<select id="queryLogcount" resultType="int">
+		SELECT count(1)
+		FROM pf_log t
+		WHERE log_id is not null AND  (creater = 'admin' OR creater = 'secadm')
+		<if test="startTime != null and startTime != ''">
+			AND t.create_time &gt;= to_date(#{startTime},'YYYY/MM/DD')
+		</if>	
+		<if test="endTime != null and endTime != ''">
+			AND t.create_time &lt;= to_date(#{endTime},'YYYY/MM/DD')
+		</if>	
+		<if test="content != null">
+			AND content LIKE '%' || #{content} || '%'
+		</if>
+		<if test="fullName != null">
+			AND t.fullName LIKE '%' || #{fullName} || '%'
+		</if> 	
+		order by t.create_time desc
+	</select>
+	
+	<!-- 分页查询安全日志信息 -->
+	<select id="querySecadmInfo" resultMap="LogMsgModel">
+		SELECT * FROM  
+		(  
+		SELECT A.*, ROWNUM RN  
+		FROM (SELECT * FROM pf_log t
+		WHERE log_id is not null AND creater != 'secadm' AND creater != 'admin'
+		<if test="startTime != null and startTime != ''">
+			AND t.create_time &gt;= to_date(#{startTime},'YYYY/MM/DD')
+		</if>	
+		<if test="endTime != null and endTime != ''">
+			AND t.create_time &lt;= to_date(#{endTime},'YYYY/MM/DD')
+		</if>	
+		<if test="content != null">
+			AND t.content LIKE '%' || #{content} || '%'
+		</if>
+		<if test="fullName != null">
+			AND t.fullName LIKE '%' || #{fullName} || '%'
+		</if>
+		order by t.create_time desc
+		) A  
+		WHERE ROWNUM <![CDATA[ <= ]]> #{row}  
+		)  
+		WHERE RN<![CDATA[ >= ]]> #{start}
+	</select>
+	
+	<!-- 查询安全日志总数 -->
+	<select id="querySecadmcount" resultType="int">
+		SELECT count(1)
+		FROM pf_log t
+		WHERE log_id is not null AND creater != 'secadm' AND creater != 'admin'
+		<if test="startTime != null and startTime != ''">
+			AND t.create_time &gt;= to_date(#{startTime},'YYYY/MM/DD')
+		</if>	
+		<if test="endTime != null and endTime != ''">
+			AND t.create_time &lt;= to_date(#{endTime},'YYYY/MM/DD')
+		</if>	
+		<if test="content != null">
+			AND content LIKE '%' || #{content} || '%'
+		</if>
+		<if test="fullName != null">
+			AND t.fullName LIKE '%' || #{fullName} || '%'
+		</if>	
+		order by t.create_time desc
+	</select>
+	
+	<!-- 导出日志 -->
+	<select id="query_LogInfo" resultMap="LogMsgModel">
+		SELECT * FROM pf_log
+	</select>
+	
+	<!-- 保存日志信息 -->
+	<insert id="saveLog">
+		INSERT INTO pf_log (log_id, type, content, creater, address, fullName) 
+		VALUES (#{logId,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{content,jdbcType=INTEGER}, #{creater,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, #{fullName,jdbcType=VARCHAR})
+	</insert>
+	
+	<!-- 工具保存日志 -->
+	<insert id="saveToolLog">
+		INSERT INTO pf_log (log_id, type, content, creater, address, fullName, toolid) 
+		VALUES (#{logId,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{content,jdbcType=INTEGER}, #{creater,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, #{fullName,jdbcType=VARCHAR}, #{toolid,jdbcType=VARCHAR})
+	</insert>
+
+	<!--操作统计-->
+	<select id="countLog" resultMap="Logout">
+		select to_char(create_time,'yyyymmdd') as content,count(distinct log_id) as num from pf_log t
+		where to_char(create_time,'yyyymm')=#{logdate,jdbcType=VARCHAR} and t.type=#{logtype,jdbcType=VARCHAR} group by to_char(create_time,'yyyymmdd')
+	</select>
+	<!--月部门登录次数统计-->
+	<select id="orgLogin" resultMap="Logout">
+	select o.orgname as content,count(distinct log_id) as num from pf_log t,sys_user u,sys_org o
+	where t.creater = u.account and u.orgid = o.orgid and to_char(create_time,'yyyymm')=#{logdate,jdbcType=VARCHAR}
+	and t.type=#{logtype,jdbcType=VARCHAR} group by o.orgname
+	</select>
+
+	<!--月反馈次数-->
+	<!--<select id="orgLogin" resultType="int">-->
+	<!--select count(1) from PF_FEEDBACK t where to_char( t.fback_time,'yyyymm')=#{logdate,jdbcType=VARCHAR}-->
+	<!--</select>-->
+	<!--&lt;!&ndash;月登录人数&ndash;&gt;-->
+	<!--<select id="orgLogin" resultType="int">-->
+	<!--select count(distinct t.creater) from PF_LOG t where where to_char( t.create_time,'yyyymm')=#{logdate,jdbcType=VARCHAR}-->
+	<!--</select>-->
+	<!--工具下载总数-->
+
+	<!--发起会议总数-->
+	
+	<select id="DQInfo" resultMap="LogMsgModel">
+		select * from pf_log t where t.toolid = #{toolId,jdbcType=VARCHAR} order by t.create_time desc
+	</select>
+
+</mapper>

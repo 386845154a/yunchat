@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.casic.flatform.mapper.PermissionMapper">
+
+	<resultMap id="RolePermissionModel" type="com.casic.flatform.model.RolePermissionModel">
+		<id column="permission_id" property="permissionId" jdbcType="INTEGER" />
+		<result column="permission_name" property="permissionName" jdbcType="VARCHAR" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="RoleModel" type="com.casic.flatform.model.RoleModel">
+		<id column="roleId" property="roleId" jdbcType="INTEGER" />
+		<result column="systemId" property="systemId" jdbcType="INTEGER" />
+		<result column="alias" property="alias" jdbcType="VARCHAR" />
+		<result column="roleName" property="roleName" jdbcType="VARCHAR" />
+		<result column="memo" property="memo" jdbcType="VARCHAR" />
+		<result column="allowDel" property="allowDel" jdbcType="INTEGER" />
+		<result column="allowEdit" property="allowEdit" jdbcType="INTEGER" />
+		<result column="enabled" property="enabled" jdbcType="INTEGER" />
+	</resultMap>
+
+	<!-- 获得全部权限列表 -->
+	<select id="findAllPermission" resultMap="RolePermissionModel">
+		SELECT *
+		FROM pf_role_permission
+	</select>
+
+	<!-- 获得角色的权限 -->
+	<select id="rolePermission" parameterType="String" resultMap="RolePermissionModel">
+		SELECT rper.*
+		FROM pf_role_permission rper JOIN pf_role_permission_ref pref 
+			ON rper.permission_id = pref.permission_id
+		WHERE pref.role_id = #{roleId}
+	</select>
+
+	<!-- 获得用户角色 -->
+	<select id="userRole" parameterType="String" resultMap="RoleModel">
+		SELECT role.*
+		FROM sys_role role JOIN sys_user_role ref ON role.roleId = ref.roleId
+		WHERE ref.userId = #{userId}
+	</select>
+	
+	<!-- 删除用户的角色 -->
+	<delete id="deleteUserRole" parameterType="String">
+		DELETE FROM sys_user_role where userId = #{userId}
+	</delete>
+	
+	<!-- 新增用户角色 -->
+	<insert id="insertUserRole">
+		INSERT INTO sys_user_role (userId, roleId) VALUES 
+		<foreach collection="roleIdArray" item="item" index="index" separator=",">
+			(#{userId}, #{item})
+		</foreach>
+	</insert>
+	
+	<!-- 删除角色权限 -->
+	<delete id="deleteRolePermission" parameterType="String">
+		DELETE FROM pf_role_permission_ref WHERE role_id = #{roleId}
+	</delete>
+	
+	<!-- 新增角色权限 -->
+	<insert id="InsertRolePermission">
+		INSERT INTO pf_role_permission_ref (role_id, permission_id) VALUES 
+		<foreach collection="permissionIdArray" item="item" index="index" separator=",">
+			(#{roleId}, #{item})
+		</foreach>
+	</insert>
+	
+	<!-- 保存token -->
+	<insert id="saveToken">
+		INSERT INTO pf_token (token, user_id) VALUES (#{token,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR})
+	</insert>
+	
+	<!-- 删除用户token -->
+	<delete id="deleteToken">
+		DELETE FROM pf_token WHERE user_id = #{userId,jdbcType=VARCHAR}
+	</delete>
+	
+	<!-- 查询全部权限以及用户拥有的权限 -->
+	<select id="queryUserPermission" parameterType="String" resultType="Map">
+		select prp.permission_id, prp.permission_name, prp.code FROM pf_role_permission prp
+		LEFT JOIN (SELECT rpr.permission_id FROM pf_role_permission_ref rpr 
+		LEFT JOIN sys_user_role sur ON rpr.role_id = sur.roleId WHERE sur.userId = #{userId}
+		) t ON prp.permission_id = t.permission_id
+	</select>
+</mapper>
+
+
+

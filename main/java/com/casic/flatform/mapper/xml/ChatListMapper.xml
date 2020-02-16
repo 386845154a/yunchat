@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.casic.flatform.mapper.ChatListMapper">
+
+	<resultMap id="ChatObjectPageModel" type="com.casic.flatform.pageModel.ChatObjectPageModel">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="OrgUserPageModel" type="com.casic.flatform.pageModel.OrgUserPageModel">
+		<id column="userId" property="userId" jdbcType="VARCHAR" />
+		<result column="userName" property="userName" jdbcType="VARCHAR" />
+		<result column="orgId" property="orgId" jdbcType="VARCHAR" />
+		<result column="orgName" property="orgName" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="GroupModel" type="com.casic.flatform.model.GroupModel">
+		<result column="group_id" property="groupId" jdbcType="VARCHAR" />
+		<result column="group_name" property="groupName" jdbcType="VARCHAR" />
+		<result column="group_describe" property="groupDescribe" jdbcType="VARCHAR" />
+		<result column="isdelete" property="isdelete" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="DATE" />
+		<result column="creator" property="creator" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="DATE" />
+		<result column="updator" property="updator" jdbcType="VARCHAR" />
+		<result column="pname" property="pname" jdbcType="VARCHAR" />
+		<result column="isclose" property="isclose" jdbcType="VARCHAR" />
+		<result column="levels" property="levels" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="GroupInfo" type="com.casic.flatform.model.GroupInfo">
+		<result column="group_id" property="id" jdbcType="VARCHAR" />
+		<result column="group_name" property="groupname" jdbcType="VARCHAR" />
+		<result column="group_describe" property="groupDescribe" jdbcType="VARCHAR" />
+		<result column="isdelete" property="isdelete" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="DATE" />
+		<result column="creator" property="creator" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="DATE" />
+		<result column="updator" property="updator" jdbcType="VARCHAR" />
+		<result column="pname" property="avatar" jdbcType="VARCHAR" />
+		<result column="isclose" property="isclose" jdbcType="VARCHAR" />
+		<result column="levels" property="levels" jdbcType="VARCHAR" />
+	</resultMap>
+
+	
+	<!-- 获得所有最近联系人 -->
+	<select id="latelyUser" parameterType="Map"  resultType="Map">
+		select A.* from (select B.* ,rownum rn from
+				(select us.userId as id, us.fullname as name, lin.type type, gro.creator as creator, us.head as head,
+					lin.link_time as link_time,lin.link_id as link_id
+					from sys_user us
+					LEFT JOIN pf_lately_linkman lin ON lin.type = 'user' AND lin.link_id = us.userId
+					left join pf_user_group gro on gro.group_id = lin.link_id
+					where us.userId IS NOT NULL and lin.user_id = #{userId} and us.endFlag != '1'
+					union
+					select gro.group_id, gro.group_name, lin.type type, gro.creator, '' as head,
+					lin.link_time as link_time, lin.link_id as link_id
+					from pf_lately_linkman lin
+					LEFT JOIN pf_user_group gro ON lin.type = 'group' AND lin.link_id = gro.group_id
+					and lin.user_id = #{userId}
+					where gro.group_id IS NOT NULL and lin.link_id in (select gro.group_id
+					from pf_user_group gro JOIN pf_user_group_ref refs on gro.group_id = refs.group_id
+					left join sys_user u on refs.user_id = u.userid
+					where gro.isdelete <![CDATA[<>]]>'1' and gro.isclose <![CDATA[<>]]>'1' and refs.user_id = #{userId} and u.endFlag != '1')
+			) B where  rownum <![CDATA[ <= ]]>#{end}
+		) A where RN <![CDATA[ >= ]]> #{start} order by link_time desc
+	</select>
+	
+	<!-- 获得所有单位人员 -->
+	<select id="allOrgUserNoLogUser" parameterType="String"  resultMap="OrgUserPageModel">
+		select us.fullname as userName, us.userId, org.orgId as orgId, org.orgName as orgName 
+        from sys_org org join sys_user us on org.orgId = us.orgId
+        where us.userId <![CDATA[<>]]> #{userId} and us.levels &gt;= #{level} and org.orgId <![CDATA[<>]]> '1000' and us.endFlag != '1'
+        <if test="inputValue != null and inputValue != '' "> 
+ 			AND us.fullname LIKE '%' || #{inputValue} || '%'
+ 		</if> 
+ 		 order by us.picture asc
+	</select> 
+
+	<!-- 根据密级获取用户 -->
+	<select id="queryOrgUserBylevels" parameterType="String"  resultMap="OrgUserPageModel">
+		select us.fullname as userName, us.userId, org.orgId as orgId, org.orgName as orgName
+        from sys_org org join sys_user us on org.orgId = us.orgId
+        where us.userId != #{userId} and us.levels &gt;= #{levels} and account != 'secadm' and account != 'admin' and account != 'logmanager' and us.endFlag != '1' order by org.px asc,us.picture asc
+	</select>
+
+	<!-- 根据密级组织id获取用户-->
+	<select id="queryOrgUserBylevelsOrgID" parameterType="String"  resultMap="OrgUserPageModel">
+		select us.fullname as userName, us.userId, org.orgId as orgId, org.orgName as orgName
+        from sys_org org join sys_user us on org.orgId = us.orgId
+        where us.userId != #{userId} and us.levels &gt;= #{levels} and us.orgId = #{orgid} and account != 'secadm' and account != 'admin' and account != 'logmanager' and us.endFlag != '1' order by org.px asc,us.picture asc
+	</select>
+	
+	<!-- 获得所有单位人员 -->
+	<select id="allOrgUser"  resultMap="OrgUserPageModel">
+		select us.fullname as userName, us.userId, org.orgId as orgId, org.orgName as orgName 
+        from sys_org org join sys_user us on org.orgId = us.orgId
+        where us.endFlag != '1' order by us.picture asc
+	</select>
+	
+	<!-- 获得当前用户所在的所有讨论组 -->
+	<select id="groupByUserId" parameterType="Map"  resultType="Map">
+		select gro.*, refs.enter_time ,u.userId
+        from pf_user_group gro JOIN pf_user_group_ref refs on gro.group_id = refs.group_id 
+        left join sys_user u on refs.user_id = u.userid
+        where gro.isdelete <![CDATA[<>]]> '1' and gro.isclose <![CDATA[<>]]> '1' and refs.user_id = #{userId}
+        order by gro.create_time desc
+	</select>
+
+	<!-- 获得当前用户所在的所有讨论组 -->
+	<select id="groupByUserIdNew" resultMap="GroupInfo">
+		select gro.*, refs.enter_time ,u.userId
+        from pf_user_group gro JOIN pf_user_group_ref refs on gro.group_id = refs.group_id
+        left join sys_user u on refs.user_id = u.userid
+        where gro.isdelete <![CDATA[<>]]> '1' and gro.isclose <![CDATA[<>]]> '1' and refs.user_id = #{userId}
+        order by gro.create_time desc
+	</select>
+
+
+	<!-- queryGandP -->
+	<select id="queryGandP" resultMap="GroupModel">
+		select gro.* from pf_user_group gro 
+        where gro.isdelete = 0 and gro.isclose = 0 and gro.ispublic = 0 and gro.pname = #{pname}
+        order by gro.create_time desc
+	</select>
+	
+</mapper>

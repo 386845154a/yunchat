@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.casic.flatform.mapper.SensitiveMapper">
+	<resultMap id="SensitiveWordModel" type="com.casic.flatform.model.SensitiveWordModel">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="sensitive_word" property="sensitiveWord" jdbcType="VARCHAR" />
+		<result column="replace_word" property="replaceWord" jdbcType="VARCHAR" />
+		<result column="is_available" property="isAvailable" jdbcType="VARCHAR" />
+		<result column="count" property="count" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="DATE" />
+		<result column="creator" property="creator" jdbcType="VARCHAR" />
+		<result column="creator_name" property="creatorName" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="DATE" />
+		<result column="updator" property="updator" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 分页获得敏感词列表 -->
+	<select id="querySensitiveWordList" resultMap="SensitiveWordModel">
+		SELECT * FROM  ( SELECT A.*,ROWNUM RN  FROM (select psw.*, syu.fullname as creator_name 
+		from pf_sensitive_words psw LEFT JOIN sys_user syu on syu.userId = psw.creator
+		where 1=1 
+		<if test="sensitiveWord != null">
+			and psw.sensitive_word like '%' || #{sensitiveWord} || '%'
+		</if>
+		order by psw.create_time desc
+		)A  WHERE ROWNUM <![CDATA[ <= ]]> #{rows} ) WHERE RN <![CDATA[ >= ]]> #{start}
+	</select>
+	
+	<!-- 分页查询时获得总数 -->
+	<select id="querySensitiveWordCount" resultType="Long">
+		select count(1) from pf_sensitive_words psw
+		where 1=1 
+		<if test="sensitiveWord != null">
+			and psw.sensitive_word like '%' || #{sensitiveWord} || '%'
+		</if>
+	</select>
+	
+	<!-- 新增敏感词 -->
+	<insert id="saveSensitiveWord">
+		INSERT INTO pf_sensitive_words (id,sensitive_word, replace_word, is_available, count, create_time, creator) 
+		VALUES (#{id,jdbcType=INTEGER},#{sensitiveWord,jdbcType=VARCHAR}, #{replaceWord,jdbcType=VARCHAR}, #{isAvailable,jdbcType=VARCHAR}, #{count,jdbcType=INTEGER},  SYSDATE, #{creator,jdbcType=VARCHAR})
+	</insert>
+	
+	<!-- 更新敏感词 -->
+	<update id="updateSensitiveWord">
+		UPDATE pf_sensitive_words SET sensitive_word = #{sensitiveWord,jdbcType=VARCHAR}, 
+			replace_word = #{replaceWord}, is_available = #{isAvailable,jdbcType=VARCHAR}, count = #{count,jdbcType=INTEGER}, 
+			update_time = SYSDATE, updator = #{updator,jdbcType=INTEGER}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 删除敏感词 -->
+	<delete id="deleteSensitiveWordById" parameterType="String">
+		DELETE FROM pf_sensitive_words WHERE id = #{id}
+	</delete>
+	
+	<!-- 批量删除敏感词 -->
+	<delete id="deleteSensitiveWord" parameterType="String">
+		DELETE FROM pf_sensitive_words WHERE id in (
+		<foreach collection="idList" item="id" index="index" separator=",">
+			#{id}
+		</foreach>
+		)
+	</delete>
+	
+	<!-- 获得敏感词信息 -->
+	<select id="querySensitiveWord" resultMap="SensitiveWordModel">
+		select * from pf_sensitive_words where id = #{id}
+	</select>
+	
+	<!-- 根据关键词获得关键词信息列表 -->
+	<select id="getSensitiveWordByWord" resultMap="SensitiveWordModel">
+		select * from pf_sensitive_words where sensitive_word = #{word}
+	</select>
+	
+	<!-- 获得全部可用敏感词 -->
+	<select id="getAllSensitiveWord" resultMap="SensitiveWordModel">
+		select sensitive_word, replace_word from pf_sensitive_words
+	</select>
+	
+</mapper>

@@ -1,0 +1,115 @@
+<meta http-equiv="Content-Type" charset="utf-8"/>
+<link href='/css/fullcalendar.css' rel='stylesheet' />
+<link href='/css/fullcalendar.print.css' rel='stylesheet' media='print'/>
+<script src='/js/jquery-ui.custom.min.js'></script>
+<script src='/js/calendar/fullcalendar.js'></script>
+<script src='/js/myhometask.js'></script>
+
+
+<div class="customer_message content-info m-t-8">
+	<div class="mymsg f_left m-l-10">
+		<div class="t-bar">
+			<span target="_blank"><img src="/images/2018/mymsg.png" width="150px"/></span>
+			<h2 class="title">我的消息</h2>
+			<div style="width: 50px;float:right;margin-top:5px;font-weight: bold;">
+				<span id="pageInfoMessage"></span>
+			</div>
+		</div>
+		<div class="content no-border-top">
+			<ul id="lastMessage" class="scrollLoading" data-url="/homeController/queryLastlyMessageByUserId"></ul>
+		</div>
+	</div>
+	<div class="mytask f_left m-l-10">
+		<div class="t-bar">
+			<img src="/images/2018/mytask.png" width="150px"/><h2 class="title">我的待办</h2>
+		</div>
+		<div class="content no-border-top">
+			<ul id="mytask"></ul>
+		</div>
+	</div>
+	<div class="webtools f_left m-l-10" style="border-radius: 0px;">
+		<div class="content no-border-top">
+			<img src="/img/微信图片_20181008112045.png" width="150px"  style="padding-left: 12%; padding-right: 12%;"/>
+			<ul id="commonly_used_links_list" class="customer"></ul>
+		</div>
+	</div>
+</div>
+<div class="customer_notice content-info m-t-8">
+	<div class="notice_tools f_left m-l-10">
+		<div class="notice">
+			<div class="t-bar">
+				<img src="/images/2018/notice.png" width="150px"/><h2 class="title">公告</h2>
+				<div style="width: 50px;float:right;margin-top:5px;font-weight: bold;">
+					<span id="pageInfoGg"></span>
+				</div>
+			</div>
+			<div class="content no-border-top">
+				<ul id="afficheInfo" class="scrollLoading" data-url="/upDownLoadToolsController/queryAffiche"></ul>
+			</div>
+		</div>
+		<div class="tools m-t-8">
+			<div class="content no-border-top">
+				<ul>
+ 	    			<li code="modules/work/work_one" onclick="chang_menu(this)">
+ 	    			    <div class="tools-img">
+ 	    			    	<img src="/images/数据中心.png" width="45" height="46"/>
+ 	    			    </div>
+ 	    				<span class="subject"><a>知识管理</a></span>
+ 	    			</li>
+	    			<li code="modules/work/work_two" onclick="chang_menu(this)">
+	    				<div class="tools-img">
+	    			    	<img src="/images/项目管理.png" width="45" height="46"/>
+	    			    </div>
+	    				<span class="subject"><a>项目定义</a></span>
+	    			</li>
+	    			<li code="modules/work/work_three" onclick="chang_menu(this)">
+	    				<div class="tools-img">
+	    			    	<img src="/images/任务管理.png" width="45" height="46"/>
+	    			    </div>
+	    				<span class="subject"><a>任务管理</a></span>
+	    			</li>
+	    			<!-- <li>
+	    				<div class="tools-img">
+	    			    	<img src="/images/2018/t-edit.png" width="51" height="55"/>
+	    			    </div>
+	    				<span class="subject"><a>协同编辑</a></span>
+	    			</li>
+	    			<li>
+	    				<div class="tools-img">
+	    			    	<img src="/images/2018/t-data.png" width="51" height="55"/>
+	    			    </div>
+	    				<span class="subject"><a>我的数据</a></span>
+	    			</li>
+	    			<li>
+	    				<div class="tools-img">
+	    			    	<img src="/images/2018/t-que.png" width="51" height="55"/>
+	    			    </div>
+	    				<span class="subject"><a>问题反馈</a></span>
+	    			</li>
+	    			<li>
+	    				<div class="tools-img">
+	    			    	<img src="/images/2018/add-o.png" width="40" height="55"/>
+	    			    </div>
+	    				<span class="subject"><a>other</a></span>
+	    			</li> -->
+	    		</ul>
+			</div>
+		</div>
+	</div>	
+	<div class="date f_left m-l-10">
+		<div class="content no-border-top">
+			<div id='calendar'></div>
+		</div>
+	</div>
+	
+	
+	<div class="webtools f_left m-l-10" style="border-radius: 0px;height: calc(100vh - 10px);">
+		<div class="content no-border-top">
+			<img src="/img/微信图片_20181008112041.png" width="150px" style="padding-left: 12%; padding-right: 12%;"/>
+			<ul id="common_tools_list" style="height: 170px;"></ul>
+		</div>
+	</div>
+</div>
+<link th:href="@{/css/common_tools.css}" rel="stylesheet" />
+<script th:src="@{/js/newjs/index/index.js}"></script>
+<script th:src="@{/js/newjs/index/calendarDate.js}"></script>

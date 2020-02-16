@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.casic.flatform.mapper.PrivateMsgMapper">
+	<resultMap id="PrivateMsgModel" type="com.casic.flatform.model.PrivateMsgModel">
+		<id column="msg_id" property="msgId" jdbcType="VARCHAR" />
+		<result column="msg_sender" property="msgSender" jdbcType="VARCHAR" />
+		<result column="senderName" property="senderName" jdbcType="VARCHAR" />
+		<result column="msg_receiver" property="msgReceiver" jdbcType="VARCHAR" />
+		<result column="receiverName" property="receiverName" jdbcType="VARCHAR" />
+		<result column="send_time" property="sendTime" />
+		<result column="receiver_time" property="receiverTime" />
+		<result column="is_read" property="isRead" jdbcType="VARCHAR" />
+		<result column="msg" property="msg" jdbcType="VARCHAR" />
+		<result column="msg_type" property="msgType" jdbcType="VARCHAR" />
+		<result column="is_delete" property="isDelete" jdbcType="VARCHAR" />
+		<result column="levels" property="levels" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 全部私聊消息 -->
+	<select id="privateMsgsList" resultMap="PrivateMsgModel">
+		SELECT * FROM  
+		(  
+		SELECT A.*, ROWNUM RN  
+		FROM (SELECT t.* FROM pf_hi_private_msg t 
+		WHERE t.msg not like '%' || 'img-msg-div' || '%' and t.msg not like '%' || 'msg-office-div' || '%'
+		<if test="msgName != null and msgName != ''">
+			AND t.msg like '%' || #{msgName} || '%'
+		</if>        
+		<if test="sendUser != null and sendUser != ''">
+			AND t.msg_sender = #{sendUser}
+		</if>
+		<if test="msgLevels != null and msgLevels != ''">
+			AND t.levels = #{msgLevels}
+		</if>
+		 order by t.send_time desc
+		) A  
+		WHERE ROWNUM <![CDATA[ <= ]]> #{row}  
+		)  
+		WHERE RN<![CDATA[ >= ]]> #{start}
+	</select>
+	
+	<!-- 获取私聊消息数量 -->
+	<select id="privateMsgsListCount" resultType="int">
+		SELECT count(1)
+		FROM pf_hi_private_msg t
+		WHERE t.msg not like '%' || 'img-msg-div' || '%' and t.msg not like '%' || 'msg-office-div' || '%'
+		<if test="msgName != null and msgName != ''">
+			AND t.msg like '%' || #{msgName} || '%'
+		</if>        
+		<if test="sendUser != null and sendUser != ''">
+			AND t.msg_sender = #{sendUser}
+		</if>
+		<if test="msgLevels != null and msgLevels != ''">
+			AND t.levels = #{msgLevels}
+		</if>
+		 order by t.send_time desc
+	</select>
+
+
+	<insert id="savePrivateMsg" parameterType="com.casic.flatform.model.PrivateMsgInfoModel">
+    insert into PF_HI_PRIVATE_MSG (MSG_ID, MSG_SENDER, MSG_RECEIVER,
+      SEND_TIME, RECEIVER_TIME, IS_READ,
+      MSG, MSG_TYPE, MSG_PATH,
+      IS_DELETE, LEVELS)
+    values (#{msgId,jdbcType=VARCHAR}, #{msgSender,jdbcType=VARCHAR}, #{msgReceiver,jdbcType=VARCHAR},
+      #{sendTime,jdbcType=DATE}, #{receiverTime,jdbcType=DATE}, #{isRead,jdbcType=VARCHAR},
+      #{msg,jdbcType=VARCHAR}, #{msgType,jdbcType=VARCHAR}, #{msgPath,jdbcType=VARCHAR},
+      #{isDelete,jdbcType=VARCHAR}, #{levels,jdbcType=VARCHAR})
+  </insert>
+</mapper>

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta charset="UTF-8" />
+<title>协同平台</title>
+<script th:src="@{/js/jquery-2.0.3.min.js}"></script>
+<script th:src="@{/js/webuploader-0.1.5/webuploader.js}"></script>
+
+<script th:src="@{/js/transpond/transpond.js}"></script>
+<!--<script th:src="@{/js/upload/upload.js}"></script> -->
+<script th:src="@{/js/groupEdit/groupEdit.js}"></script>
+
+<script th:src="@{/css/bootstrap-3.0.2/js/bootstrapmenu.min.js}"></script>
+<script th:src="@{/css/bootstrap-3.0.2/js/bootstrap.min.js}"></script>
+<link th:href="@{/css/bootstrap-3.0.2/css/bootstrap.css}" rel="stylesheet" />
+<link th:href="@{/css/bootstrap-3.0.2/css/bootstrap-switch.min.css}"
+	rel="stylesheet" />
+
+<script th:src="@{/js/home.js}"></script>
+<link th:href="@{/js/dialog/jquery.gritter.css}" rel="stylesheet" />
+<script th:src="@{/js/dialog/jquery.gritter.js}"></script>
+<script th:src="@{/js/dialog/bootbox.js}"></script>
+<script th:src="@{/js/dialog/dialog.js}"></script>
+<script th:src="@{/js/star-rating.js}"></script>
+
+<script th:src="@{/js/ajax.js}"></script>
+<script th:src="@{/js/download.js}"></script>
+<script th:src="@{/js/socket.io.js}"></script>
+<script th:src="@{/js/chat.js}"></script>
+<script th:src="@{/js/count.js}"></script>
+<link th:href="@{/css/home.css}" rel="stylesheet" />
+<script th:src="@{/js/star-rating.js}"></script>
+<link th:href="@{/css/star-rating.css}" rel="stylesheet" />
+
+<link th:href="@{/css/controls.css}" rel="stylesheet" />
+
+<link th:href="@{/css/font-awesome-4.7.0/css/font-awesome.min.css}"
+	rel="stylesheet" />
+<style
+	th:if="${permission} != null and !${permission.group_delete_file}">
+#group_user_file .del_gro_fil {
+	display: none;
+}
+</style>
+<style th:if="${permission} != null and !${permission.create_group}">
+#user-list #create_group_li {
+	display: none;
+}
+</style>
+<style>
+body {
+	overflow: hidden;
+}
+.content {
+	height: 100%;
+}
+
+.content>div {
+	height: 100%;
+}
+
+.content .user-info {
+	border-bottom: 1px solid #ccc;
+	padding: -20px 0px 0px 0px;
+/* 	margin-left: -15px; */
+	margin-right:-15px;
+	background-color: #1F68D4;
+}
+
+.content .last-name {
+	height: 40px;
+    width: 200px;
+    margin: 6px 0 0 15px;
+    line-height: 60px;
+    font-weight: bold;
+    text-align: left;
+    font-size: 25px;
+    color: white;
+    line-height: 40px;
+}
+
+.content .progect-info .list-unstyled {
+	margin: 10px 0px 10px 0px;
+}
+
+.left {
+	float: left;
+}
+
+.right {
+	float: right;
+}
+
+.list-unstyled>li {
+	overflow: auto;
+	margin: 0px 0px;
+	color: #666;
+}
+
+.content .system-msg-list {
+	min-height: 200px;
+	max-height: 400px;
+}
+
+.card {
+    width: 230px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 18px 0 rgba(0, 0, 0, 0.19);
+    text-align: left;
+    float: left;
+    margin-right: 15px;
+    line-height: 25px;
+    margin-top: 22px;
+/*     margin-left: 3px; */
+    margin-right: 15px;
+    margin-bottom: -2px;
+}
+
+.header {
+	color: #fff;
+	padding: 10px;
+	font-size: 15px;
+	height: 60px;
+}
+
+.body {
+	padding: 10px;
+}
+
+.body p {
+	margin-left: 5px;
+}
+
+.h3 {
+	margin-top: 10px;
+	margin-bottom: -10px;
+	background-color: #F5F7FA;
+	margin-right: -15px;
+	margin-left: 3px;
+}
+
+.ul>li {
+	list-style: none;
+	margin-left: -30px;
+}
+.bg{
+	background-color: #C3C3C3;
+}
+.nav > li {
+    margin-top: 8px;
+}
+.nav > li > a {
+	padding: 11px 15px;
+}
+.home_div { 
+ 	float: left; 
+ 	margin-left: 8%;
+    margin-top: 10%;
+} 
+.home_span { 
+ 	height: 95px;
+    width: 95px;  
+ 	line-height:100px; 
+ 	display:block; 
+ 	border-radius:50px;
+ 	color:#1F68D4;  
+ 	font-weight: bold; 
+ 	font-size: 32px; 
+	text-align:center;
+}
+.home_span_title {
+/* 	position: absolute;  */
+	width: 100px; 
+	margin-top: 10px; 
+	text-align:center; 
+	display:block;
+	font-weight: bold;
+}
+.task_menu {
+	float: left;
+    width: 108px;
+    text-align: center;
+}
+.affiche_li {
+    list-style: none;
+    border: 2px solid #ccc;
+    border-top: none;
+    min-height: 45px;
+    padding-left: 15px;
+    padding-top: 10px;
+    font-size: 16px;
+}
+.affiche_span {
+   float: right;
+   padding-right: 15px;
+}
+</style>
+<style type="text/css">
+.head_edit {
+	position: absolute;
+    top: 38%;
+    left: 26%;
+    color: green;
+    cursor: pointer;
+}
+</style>
+
+
+<!-- <link rel="stylesheet" th:href="@{/assets/css/ace.min.css}"/> -->
+
+<!-- <link rel="stylesheet" th:href="@{/assets/css/ace-skins.min.css}" /> -->
+<!-- <link rel="stylesheet" th:href="@{/assets/css/ace-rtl.min.css}" /> -->
+</head>
+<body>
+	<div id="body">
+		<div id="left-user-info" style="margin-top: 0px;">
+			<div class="user-div">
+				<div id="aa"></div>
+				<div class="user-lastname"
+					th:text="${user.fullname.substring(0, 1)}"></div>
+				<!-- 						<a href="/showVide">test</a> -->
+<!-- 				<div id="sidebar" class="sidebar responsive ace-save-state menu-min" data-sidebar="true" data-sidebar-scroll="true" data-sidebar-hover="true"> -->
+<!-- 					<div class="sidebar-shortcuts" id="sidebar-shortcuts"> -->
+<!-- 						<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large"> -->
+<!-- 							<button class="btn btn-success"> -->
+<!-- 								<i class="ace-icon fa fa-signal"></i> -->
+<!-- 							</button> -->
+	
+<!-- 							<button class="btn btn-info"> -->
+<!-- 								<i class="ace-icon fa fa-pencil"></i> -->
+<!-- 							</button> -->
+	
+<!-- 							#section:basics/sidebar.layout.shortcuts -->
+<!-- 							<button class="btn btn-warning"> -->
+<!-- 								<i class="ace-icon fa fa-users"></i> -->
+<!-- 							</button> -->
+	
+<!-- 							<button class="btn btn-danger"> -->
+<!-- 								<i class="ace-icon fa fa-cogs"></i> -->
+<!-- 							</button> -->
+	
+<!-- 							/section:basics/sidebar.layout.shortcuts -->
+<!-- 						</div> -->
+	
+<!-- 						<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini"> -->
+<!-- 							<span class="btn btn-success"></span> -->
+	
+<!-- 							<span class="btn btn-info"></span> -->
+	
+<!-- 							<span class="btn btn-warning"></span> -->
+	
+<!-- 							<span class="btn btn-danger"></span> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+			</div>
+			<div>
+				<ul class="" id="nav_ul">
+					<li id="home" class="active" onclick="chang_menu(this, 'modules/home/home')">
+						<span></span><br/>
+						<span class="glyphicon glyphicon-home" style="font-size: 18px;"></span><br/>
+						<span>主页</span>
+					</li>
+					<li id="lately" onclick="chang_menu(this, 'modules/discussion/discussion')">
+						<span id="red_dot" style="color: red; margin-left: 30px; font-size: 6px; display: none;" 
+							class="glyphicon glyphicon-asterisk"></span><br/>
+						<span class="glyphicon glyphicon-time conSize" style="font-size: 18px;"></span><br/>
+						<span>最近</span>
+					</li>
+<!-- 					<li id="user" onclick="person()"><span -->
+<!-- 						class="glyphicon glyphicon-user conSize"></span></li> -->
+					<li id="group" onclick="chang_menu(this, 'modules/recently/recently')">
+						<span></span><br/>
+						<span class="glyphicon glyphicon-comment conSize" style="font-size: 18px;"></span><br/>
+						<span>群组</span>
+					</li>
+					<li id="task" onclick="go_work()">
+						<span></span><br/>
+						<span class="glyphicon glyphicon-tasks" style="font-size: 18px;"></span><br/>
+						<span>待办</span>
+					</li>
+					<li id="controls" onclick="chang_menu(this, 'modules/controls/controls')">
+						<span></span><br/>
+						<span class="glyphicon glyphicon-th" style="font-size: 18px;"></span><br/>
+						<span>工具</span>
+					</li>
+					<li id="models" onclick="my_model()">
+						<span></span><br/>
+						<span class="glyphicon glyphicon-file" style="font-size: 18px;"></span><br/>
+						<span>模型</span>
+					</li>
+					<li id="models" onclick="chang_menu(this, 'modules/feedBack/feedBack')">
+						<span></span><br/>
+						<span class="glyphicon glyphicon-question-sign" style="font-size: 18px;"></span><br/>
+						<span>反馈</span>
+					</li>
+<!-- 					<li id="versions" onclick="chang_menu(this, 'modules/version/index')"> -->
+<!-- 						<span></span><br/> -->
+<!-- 						<span class="glyphicon glyphicon-indent-left conSize" style="font-size: 18px;"></span><br/> -->
+<!-- 						<span></span> -->
+<!-- 					</li> -->
+				</ul>
+			</div>
+			
+			<div class="user-menu dropup">
+				<div class="menu-img-div" data-toggle="dropdown"></div>
+				<ul class="dropdown-menu" role="menu">
+<!-- 					<li onclick='set_user()'><a><label>设置</label></a></li> -->
+					<li onclick="user_info('')"><a><label>个人信息 </label></a></li>
+					<li onclick="sys_info()"><a><label>版本信息 </label></a></li>
+<!-- 					<li onclick="chang_menu(this, 'modules/feedBack/feedBack')"><a><label>信息反馈 </label></a></li> -->
+<!-- 					<li onclick='login_out()'><a><label>退出</label></a></li> -->
+				</ul>
+			</div>
+			
+		</div>
+		<div style="height: 48px;width:100%;margin-top: 0px; background-color: #fefefe;">
+		<div style="float: left;" class="last-name" id="last-name">
+<!-- 			<ul class="nav ace-nav"> -->
+<!-- 				<li><img alt="" src="/img/logo.png" width="200px" style="float: left; margin-left: -92px; margin-top: -1px;"></img></li> -->
+<!-- 			</ul> -->
+		</div>
+		<div style="float: right;  position: absolute; right: 1%;">
+			<ul class="nav ace-nav">
+				<li style="float: left;">
+					<div class="test" style="margin-top: 8px; float: left;">      
+						<!-- <form method="post" action="http://10.12.97.30:9000/api/query" target="blank">        
+							<input name="query" type="text" onchange="getCardId()"/>        
+							<input id="card_id" name="token" type="hidden"/>      
+							<button type="submit" style="border-radius: 5px;">搜索</button>      
+						</form>   --> 
+						<input name="query" type="text" id="query"/>  
+						<input type="button" onclick="query()" value="搜索"/>
+					</div>
+				</li>
+				<li  style="float: left; margin-top: 3px;">
+					<a id="warning_tips" data-toggle="dropdown" class="dropdown-toggle" href="#" title="系统通知"
+					onclick="chang_menu(this, 'modules/discussion/discussion')" onmouseover="xianshi('系统通知')" onmouseout="yincang('系统通知')">
+						<i class="ace-icon fa fa-bell icon-animated-bell" style="color: #428BCA;"></i>
+						<span id="warn" class="badge badge-important"><span id="totalCount"></span></span>
+						<span id="abc" style="display:none; width: 70px; position: absolute; bottom: 27px; right: 2px;"></span>
+					</a>
+				</li>
+				<li  style="float: left;">
+					<a data-toggle="dropdown" class="dropdown-toggle" style="margin-top:-3px" href="#" title="联系人" 
+					onclick="chang_menu(this, 'modules/person/person')" onmouseover="xianshi('联系人')" onmouseout="yincang('联系人')">
+						<i class="glyphicon glyphicon-user" style="color: #428BCA;"></i>
+						<span class="badge badge-success"></span>
+						<span id="bcd" style=" width: 70px; position: absolute; bottom: 27px; right: 1px; padding-left: 26px;"></span>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+		<div id="content-body" class="content-body"></div>
+	</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="group-user-modal" tabindex="-1"
+	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body guser_info">
+				<!-- 弹窗内容 -->
+				<div class="user-left">
+					<div id="guser-lastname"></div>
+					<div id="guser-name"></div>
+					<div class="modal-footer">
+						<div class="glyphicon glyphicon-pencil head_edit sah" id="update_btn" onclick="$(this).find('input')[0].click()">
+							<input type="file" style="display: none;"
+								onchange="up_head_img(this)" multiple="multiple" />
+						</div>
+						<div style="position: absolute; left: 35px; bottom: 10px;">
+							<span>请上传200KB之内的头像</span><br/>
+							<span style="float: left;">(jpg、png格式均可)</span>
+						</div>
+					</div>
+				</div>
+				<div class="user-right">
+					<div class="row">
+						<div class="col-xs-2">
+							<i class="fa fa-sitemap"></i>
+						</div>
+						<div class="col-xs-1">：</div>
+						<div class="col-xs-8" id="guser-org"></div>
+					</div>
+<!-- 					<div class="row"> -->
+<!-- 						<div class="col-xs-2"> -->
+<!-- 							<i class="fa fa-mobile" style="font-size: 24px;"></i> -->
+<!-- 						</div> -->
+<!-- 						<div class="col-xs-1">：</div> -->
+<!-- 						<div class="col-xs-8" id="guser-mobile"></div> -->
+<!-- 					</div> -->
+					<div class="row">
+						<div class="col-xs-2">
+							<i class="fa fa-phone"></i>
+						</div>
+						<div class="col-xs-1">：</div>
+						<div class="col-xs-8" id="guser-phone"></div>
+					</div>
+					<div class="row">
+						<div class="col-xs-2">
+							<i class="fa fa-envelope"></i>
+						</div>
+						<div class="col-xs-1">：</div>
+						<div class="col-xs-8" id="guser-roomid"></div>
+					</div>
+					<div class="row">
+						<div class="glyphicon glyphicon-pencil" onclick="updata_userInfo()"
+						style="position: absolute; color: green; cursor: pointer; top: 70%; right: 10%;">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="set_model" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">工作空间配置</h4>
+            </div>
+            <div class="modal-body">
+				<input type="button" style="margin-top: 10px;" value="工作空间" onclick="get_address()"/>：<input id="work_space" type="text" style="margin-left: 48px; height: 36px;"/>
+				
+				<div style="margin-top: 10px;">
+					<lable class="col-sm-3" style="line-height:30px;">客户主页：</lable>
+					<input type="text" id="c_page" style="line-height:30px;"/>
+				</div>
+				<div style="margin-top: 10px;">
+					<lable class="col-sm-3" style="line-height:30px;">服务主页：</lable>
+					<input type="text" id="s_page" style="line-height:30px;"/>
+				</div>
+			</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="commit_workspace()">提交</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="queryPro" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">项目详情</h4>
+			</div>
+			<div class="modal-body" style="margin-left:65px;">
+			  
+			  项目名称：<span id = "projectName" style="line-height:30px;"></span><br/>
+			  项目时间：<span id = "projectTime" style="line-height:30px;"></span>
+			
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				<!-- <button type="button" class="btn btn-primary">提交更改</button> -->
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="updata_userInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">编辑客户信息</h4>
+            </div>
+            <div class="modal-body">
+				<div style="margin-top: 10px;">
+					<lable class="col-sm-3" style="line-height:30px;">联系方式：</lable>
+					<input type="text" id="call_phone" style="line-height:30px; margin-right: 40%;"/>
+				</div>
+				<div style="margin-top: 10px;">
+					<lable class="col-sm-3" style="line-height:30px;">地址：</lable>
+					<input type="text" id="work_room" style="line-height:30px; margin-right: 40%;"/>
+				</div>
+			</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="upUserInfo()">提交</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+	
+</body>
+</html>
+

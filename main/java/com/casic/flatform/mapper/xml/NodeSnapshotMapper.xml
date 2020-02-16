@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.casic.flatform.mapper.NodeSnapshotMapper">
+	<resultMap id="NodeSnapshotModel" type="com.casic.flatform.model.NodeSnapshotModel">
+		<id column="node_id" property="nodeId" jdbcType="BIGINT" />
+		<result column="version" property="version" jdbcType="VARCHAR" />
+		<result column="version_name" property="versionName" jdbcType="VARCHAR" />
+		<result column="source" property="source" jdbcType="BIGINT" />
+	</resultMap>
+
+	<!-- 获得所有节点 -->
+	<select id="queryAllNode" resultMap="NodeSnapshotModel">
+		SELECT * from node_snapshot 
+	</select>
+
+</mapper>

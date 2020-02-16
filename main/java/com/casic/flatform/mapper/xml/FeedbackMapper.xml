@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.casic.flatform.mapper.FeedbackMapper">
+	<!-- 查询反馈信息 -->
+	<resultMap id="FeedBackModel" type="com.casic.flatform.model.FeedBackModel">
+		<id column="fback_id" property="fbackId" jdbcType="VARCHAR" />
+		<result column="fback_content" property="fbackContent" jdbcType="VARCHAR" />
+		<result column="fback_person" property="fbackPerson" jdbcType="VARCHAR" />
+		<result column="fback_solve" property="fbackSolve" jdbcType="VARCHAR" />
+		<result column="fback_time" property="fbackTime"/>
+		<result column="reply_msg" property="replyMsg" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 添加反馈信息 -->
+	<insert id="saveFback">
+		INSERT INTO pf_feedback (fback_id, fback_content, fback_person, fback_solve,fback_time) 
+		VALUES (#{fbackId,jdbcType=VARCHAR}, #{fbackContent,jdbcType=VARCHAR}, #{fbackPerson,jdbcType=VARCHAR}, #{fbackSolve,jdbcType=VARCHAR}, sysdate)
+	</insert>
+	
+	<!-- 分页查询反馈信息详情 -->
+	<select id="queryFeedBackInfo" resultMap="FeedBackModel">
+		SELECT * FROM  
+		(  
+		SELECT A.*, ROWNUM RN  
+		FROM (SELECT * FROM pf_feedback t
+		WHERE fback_id is not null
+		<if test="startTime != null and startTime != ''">
+			AND t.fback_time &gt;= to_date(#{startTime},'YYYY/MM/DD')
+		</if>	
+		<if test="endTime != null and endTime != ''">
+			AND t.fback_time &lt;= to_date(#{endTime},'YYYY/MM/DD')
+		</if>	
+		<if test="context != null">
+			AND t.fback_content LIKE '%' || #{context} || '%'
+		</if>
+		<if test="user != null">
+			AND t.fback_person LIKE '%' || #{user} || '%'
+		</if>
+		<if test="state != null and state != '' ">
+			AND t.fback_solve = #{state}
+		</if>
+		order by fback_time desc
+		) A  
+		WHERE ROWNUM <![CDATA[ <= ]]> #{row}  
+		)  
+		WHERE RN<![CDATA[ >= ]]> #{start}
+	</select>
+	
+	<!-- 查询反馈信息总数 -->
+	<select id="queryFeedBackInfoCount" resultType="int">
+		SELECT count(1)
+		FROM pf_feedback t
+		WHERE fback_id is not null
+		<if test="startTime != null and startTime != ''">
+			AND t.fback_time &gt;= to_date(#{startTime},'YYYY/MM/DD')
+		</if>	
+		<if test="endTime != null and endTime != ''">
+			AND t.fback_time &lt;= to_date(#{endTime},'YYYY/MM/DD')
+		</if>	
+		<if test="context != null">
+			AND t.fback_content LIKE '%' || #{context} || '%'
+		</if>
+		<if test="user != null">
+			AND t.fback_person LIKE '%' || #{user} || '%'
+		</if>
+		<if test="state != null">
+			AND t.fback_solve LIKE '%' || #{state} || '%'
+		</if>	
+		order by fback_time desc
+	</select>
+	
+	<!-- 反馈数据导出 -->
+	<select id="queryfeedBackInfo" resultMap="FeedBackModel">
+		SELECT * FROM pf_feedback
+	</select>
+	
+	<!-- 删除反馈信息 -->
+	<delete id="delfeedback" parameterType="String">
+		DELETE FROM pf_feedback WHERE fback_id = #{fbackId}
+	</delete>
+	
+	<!-- 修改反馈信息状态 -->
+	<update id="updateReply" parameterType="String">
+		UPDATE pf_feedback SET reply_msg = #{replyContext,jdbcType=VARCHAR} where fback_id = #{fbackId,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 修改反馈信息状态 -->
+	<update id="updatefeedback" parameterType="String">
+		UPDATE pf_feedback SET fback_solve = '1' where fback_id = #{fbackId,jdbcType=VARCHAR}
+	</update>
+</mapper>

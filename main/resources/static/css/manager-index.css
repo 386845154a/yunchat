@@ -1,0 +1,8 @@
+@CHARSET "UTF-8";
+
+/*全局样式*/
+*{margin:0px;padding:0px;font-family: 'Microsoft Yahei', Helvetica, Arial, sans-serif,'Open Sans';font-size: 13px;}
+html,body,#body{height:100%;width:100%;}
+
+#menu-nav .menu-icon{font-size:24px;}
+#menu-nav>li>a{padding:10px 15px;}

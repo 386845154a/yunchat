@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta charset="UTF-8" />
+<title>标记信息详情</title>
+<style type="text/css">
+li {
+	list-style: none;
+	min-height: 30px;
+}
+
+/*左对齐*/
+.left {
+	float: left;
+}
+
+/*右对齐*/
+.right {
+	float: right;
+}
+
+/*offic图标*/
+.fileImg {
+	width: 20px;
+	height: 20px;
+}
+/*内容图片大小*/
+.img-msg-div img {
+	width: 40px;
+	height: 30px;
+}
+/*表情图片大小*/
+.emoji-div {
+	width: 30px;
+	height: 30px;
+}
+</style>
+<script type="text/javascript">
+	var msg = "";
+	var groupId = "";
+	var userId = "";
+	var str = location.href; //取得整个地址栏
+	var tmp1 = str.split("?")[1];
+	var tmp2 = tmp1.split(",");
+	for ( var i in tmp2) {
+		if (tmp2[i].split("=")[0] == "msg") {
+			msg = tmp2[i].split("=")[1];
+		} else if (tmp2[i].split("=")[0] == "groupId") {
+			groupId = decodeURIComponent(tmp2[i].split("=")[1]);
+		} else if (tmp2[i].split("=")[0] == "userId") {
+			userId = decodeURIComponent(tmp2[i].split("=")[1]);
+		}
+	}
+	var user_html = "";
+	var fileImg = "";
+	var his_info = JSON.parse(groupId);
+
+	for ( var i in his_info) {
+		if (his_info[i].msg.indexOf(".docx") != -1
+				|| his_info[i].msg.indexOf(".doc") != -1) {
+			fileImg = '<img class="fileImg" src="/img/wordImg.png" />';
+		} else if (his_info[i].msg.indexOf(".xls") != -1
+				|| his_info[i].msg.indexOf(".xlsx") != -1) {
+			fileImg = '<img class="fileImg" src="/img/xlsImg.png" />';
+		} else if (his_info[i].msg.indexOf(".ppt") != -1
+				|| his_info[i].msg.indexOf(".pptx") != -1) {
+			fileImg = '<img class="fileImg" src="/img/pptImg.png" />';
+		} else if (his_info[i].msg.indexOf(".pdf") != -1) {
+			fileImg = '<img class="fileImg" src="/img/pdfImg.png" />';
+		} else if (his_info[i].msg.indexOf(".rar") != -1
+				|| his_info[i].msg.indexOf(".zip") != -1) {
+			fileImg = '<img class="fileImg" src="/img/rarImg.png" />';
+		} else {
+			fileImg = '';
+		}
+		if (his_info[i].msgSender == userId) {//我的消息
+			user_html += '<li>';
+			if (his_info[i].msg == msg) {
+				user_html += '	<img src="/img/user_two.png" class="right"/>';
+				user_html += '	<div class="right">' + 	fileImg + '<span>' + his_info[i].msg + '</span></div>';
+				user_html += '	<div style="clear:both"></div>'
+			} else {
+				user_html += '	<img src="/img/user_one.png" class="right"/>';
+				user_html += '	<div class="right">' + fileImg + '<span class="right">' + his_info[i].msg + '</span></div>';
+				user_html += '	<div style="clear:both"></div>'
+			}
+			user_html += '</li>';
+		} else { //别人的消息
+			user_html += '<li>';
+			if (his_info[i].msg == msg) {
+				user_html += '	<img src="/img/user_two.png" class="left"/>';
+				user_html += '	<div class="left">' + fileImg + '<span class="right">' + his_info[i].msg + '</span></div>';
+				user_html += '	<div style="clear:both"></div>'
+			} else {
+				user_html += '	<img src="/img/user_one.png" class="left"/>';
+				user_html += '	<div class="left">' + fileImg + '<span class="right">' + his_info[i].msg + '</span></div>';
+				user_html += '	<div style="clear:both"></div>'
+			}
+			user_html += '</li>';
+		}
+		
+	}
+
+	window.onload = function() {
+		//document.getElementById('show').innerText=user_html;
+		document.getElementById('show').innerHTML = user_html;
+	}
+</script>
+</head>
+<body style="height:500px;">
+	<div id="show" style="border: 2px solid skyblue; margin: auto;"></div>
+</body>
+</html>
+

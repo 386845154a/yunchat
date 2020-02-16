@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.casic.flatform.mapper.SysMapper">
+	<resultMap id="SystemNotificationModel" type="com.casic.flatform.model.SystemNotificationModel">
+		<id column="notification_id" property="notificationId" jdbcType="VARCHAR" />
+		<result column="sender" property="sender" jdbcType="VARCHAR" />
+		<result column="send_time" property="sendTime" />
+		<result column="msg_title" property="msgTitle" jdbcType="VARCHAR" />
+		<result column="msg_type" property="msgType" jdbcType="VARCHAR" />
+		<result column="msg_content" property="msgContent" jdbcType="VARCHAR" />
+		<result column="is_delete" property="isDelete" jdbcType="VARCHAR" />
+		<result column="is_read" property="isRead" jdbcType="VARCHAR" />
+		<result column="receiver" property="receiver" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 获取系統消息 -->
+	<select id="qSysMsg"  resultMap="SystemNotificationModel">
+		SELECT * FROM pf_system_notification t where t.receiver = #{userId} or t.msg_type = 'all'
+	</select>
+	
+	<!-- 获取系統消息条数 -->
+	<select id="qSysMsgCount"  resultType="int">
+		SELECT count(*) FROM pf_system_notification t where t.receiver = #{userId} or t.msg_type = 'all'
+	</select>
+	
+	<!-- 刪除系統消息 -->
+	<delete id="delSysInfo" parameterType="String">
+		DELETE FROM pf_system_notification WHERE notification_id = #{sysId}
+	</delete>
+</mapper>

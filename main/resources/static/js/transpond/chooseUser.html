@@ -1,0 +1,18 @@
+<link href='/js/transpond/chooseUser.css' rel='stylesheet'>
+<div class="choose_user_div" style="overflow: auto;" id="tran_list_div">
+	<div class="input-group" style="width: 200px;padding: 4px;">
+        <input type="text" class="form-control" id="tran-list-input" style="height:24px;" onchange="query_tran_user()"/>
+        <span class="input-group-btn" onclick="query_tran_user()">
+        	<button  class="btn btn-default" style="height:24px;line-height:12px;font-size:12px;">搜索</button >
+        </span>
+    </div>
+    <div class="user-list " id="choose-user-list">
+
+    </div>
+    <div class="group-list" id="choose-group-list" style="float: right;width: 260px; position: absolute; left: 50%; top: 10%">
+    	<div style="background-color: #eee;">讨论组</div>
+    	<ul class="nav list-group" id="choose-group-ul" style="min-height: 95px;">
+    	</ul>
+    </div>
+</div>
+    

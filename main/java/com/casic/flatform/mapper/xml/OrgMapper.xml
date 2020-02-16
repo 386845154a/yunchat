@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.casic.flatform.mapper.OrgMapper">
+	<resultMap id="OrgModel" type="com.casic.flatform.model.OrgModel">
+		<id column="orgId" property="orgId" jdbcType="INTEGER" />
+		<result column="orgname" property="orgName" jdbcType="INTEGER" />
+		<result column="orgsupid" property="orgSupId" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="OrgModelNew" type="com.casic.flatform.model.OrgModelNew">
+		<id column="orgId" property="orgId" jdbcType="VARCHAR" />
+		<result column="orgname" property="orgName" jdbcType="VARCHAR" />
+		<result column="orgsupid" property="orgSupId" jdbcType="VARCHAR" />
+		<result column="isleaf" property="isLeaf" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="OrgTreeNodeModel" type="com.casic.flatform.model.OrgTreeNodeModel">
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="label" property="label" jdbcType="VARCHAR" />
+		<result column="pid" property="pid" jdbcType="VARCHAR" />
+	</resultMap>
+	<!-- 获取保密等级 -->
+	<select id="queryOrg" resultMap="OrgModel">
+		SELECT * FROM sys_org o where o.orgsupid <![CDATA[ <> ]]> 0 order by o.depth asc
+	</select>
+	
+	<!-- 根据科室ID获取科室名称-->
+	<select id="queryOrgNameById" resultMap="OrgModel">
+		SELECT * FROM sys_org o where o.orgId = #{orgId}
+	</select>
+
+	<select id="queryOrgNew"  resultMap="OrgModelNew">
+		SELECT to_char(o.orgid) as orgid,orgname,to_char(orgsupid) as orgsupid,
+       (case when exists
+         (select 1
+           from sys_org t
+          where t.orgsupid = o.orgid) then '0' else '1' end) as isleaf
+           FROM sys_org o
+           where o.orgsupid  = #{orgsupid}
+           order by nvl(o.px,10000000)
+	</select>
+    <select id="queryUserSuperOrgCode"  resultType="String">
+		select to_char(org.orgsupid)
+          from sys_org org, sys_user usr
+         where usr.orgid = org.orgid
+           and usr.userid = #{userId}
+	</select>
+	<select id="getOrgData"  resultMap="OrgTreeNodeModel">
+-- 		select orgid id, orgname name, orgsupid pid, level, connect_by_isleaf leaf
+-- 		  from sys_org t
+-- 		 start with t.orgsupid = '0000'
+-- 		connect by t.orgsupid = prior t.orgid
+-- 		 order by level asc, t.px asc
+		select *
+		 from (select orgid id, orgname label, orgsupid pid, level as levels,nvl(px,9999) as px, -1 as picture,to_char(connect_by_isleaf) leaf
+			 from sys_org t
+			start with t.orgsupid = '0000'
+		   connect by t.orgsupid = prior t.orgid
+
+		   union all
+
+		   select us.userId   id,
+				 us.fullname label,
+				 us.orgid    pid,
+				 10000       as levels,
+				 10000 as px,
+				 us.picture,
+		         '2' as leaf
+			 from sys_user us
+			where 1 = 1
+			  and us.levels >= 0
+			  and account != 'secadm'
+			  and account != 'admin'
+			  and account != 'logmanager'
+			  <if test="excludeUserId != null and excludeUserId != ''">
+				  and us.userId != #{excludeUserId}
+			  </if>
+			  and exists (select 1 from sys_org o where us.orgid = o.orgid)
+			  and us.endFlag != '1')
+		order by levels asc, px asc, picture asc
+	</select>
+	<select id="getOrgDataByUserName"  resultMap="OrgTreeNodeModel">
+		select *
+		from (select orgid id, orgname label, orgsupid pid, level as levels,nvl(px,9999) as px, -1 as picture,to_char(connect_by_isleaf) leaf
+		from sys_org t
+		start with t.orgsupid = '0000'
+		connect by t.orgsupid = prior t.orgid
+
+		union all
+
+		select us.userId   id,
+		us.fullname label,
+		us.orgid    pid,
+		10000       as levels,
+		10000 as px,
+		us.picture,
+		'2' as leaf
+		from sys_user us
+		where 1 = 1
+		and us.levels >= 0
+		and account != 'secadm'
+		and account != 'admin'
+		and account != 'logmanager'
+		<if test="excludeUserId != null and excludeUserId != ''">
+			and us.userId != #{excludeUserId}
+		</if>
+		and us.fullname like '%'||#{userName}|| '%'
+		and exists (select 1 from sys_org o where us.orgid = o.orgid)
+		and us.endFlag != '1')
+		order by levels asc, px asc, picture asc
+	</select>
+
+    <select id="getOrgDataByPid"  resultMap="OrgTreeNodeModel">
+        select t.orgid id,
+           t.orgname label,
+           t.orgsupid pid,
+           (case
+             when exists (select 1 from sys_org t2 where t2.orgsupid = t.orgid) then
+              '0'
+             else
+              '1'
+           end) as leaf
+      from sys_org t
+     where 1 = 1
+        and t.orgsupid = #{pid}
+     order by px asc
+    </select>
+
+    <select id="getUserDataByPid"  resultMap="OrgTreeNodeModel">
+        select us.userId   id,
+        us.fullname label,
+        us.orgid    pid,
+        '2' as leaf
+        from sys_user us
+        where 1 = 1
+        and us.levels >= 0
+        and account != 'secadm'
+        and account != 'admin'
+        and account != 'logmanager'
+        <if test="excludeUserId != null and excludeUserId != ''">
+            and us.userId != #{excludeUserId}
+        </if>
+        and us.orgid = #{pid}
+        and us.endFlag != '1'
+		order by us.picture asc
+    </select>
+</mapper>
+
+
+

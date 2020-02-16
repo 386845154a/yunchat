@@ -1,0 +1,99 @@
+<link rel="stylesheet" href="/assets/css/bootstrap-datetimepicker.min.css">
+<!--<script src="/assets/js/bootstrap-datetimepicker.min.js"></script>-->
+<script src="/js/echarts/echartsmin.js" type="text/javascript"></script>
+<script src="/manager/statistics.js" type="text/javascript"></script>
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="input-group">
+            <input type="text" id="search" class="form-control" placeholder="输入年月,例如201810...">
+            <span class="input-group-btn">
+        <button class="btn btn-default" type="button" onclick="searchInfo()">查询</button>
+      </span>
+        </div><!-- /input-group -->
+    </div><!-- /.col-lg-6 -->
+</div>
+
+<div class="row">
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-aqua">
+            <div class="inner">
+                <h3>150</h3>
+                <p>月登录总人数</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-bag"></i>
+            </div>
+        </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-green">
+            <div class="inner">
+                <h3>53<sup style="font-size: 20px">%</sup></h3>
+                <p>月反馈总数</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-stats-bars"></i>
+            </div>
+        </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-yellow">
+            <div class="inner">
+                <h3>44</h3>
+                <p>工具下载总数</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-person-add"></i>
+            </div>
+        </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-red">
+            <div class="inner">
+                <h3>65</h3>
+                <p>工具上传统计</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-pie-graph"></i>
+            </div>
+        </div>
+    </div>
+    <!-- ./col -->
+</div>
+
+<!--每月讨论组中传输文件数量-->
+
+<!--当前在线人数-->
+
+<!--每月问题反馈数量-->
+
+
+<div class="container-fluid">
+    <!--每天登录人数统计-->
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="login" style="width: 100%;height:400px"></div>
+        </div>
+    </div>
+    <!--每天创建讨论组统计-->
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="createGroup" style="width: 100%;height:400px"></div>
+        </div>
+    </div>
+    <!--按部门统计每月登录次数-->
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="orgLogin" style="width: 100%;height:400px"></div>
+        </div>
+    </div>
+</div>

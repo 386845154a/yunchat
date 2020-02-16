@@ -1,0 +1,175 @@
+<div class="row">
+	<div class="">
+		<div class="page-top-button">
+			<button type="button" class="btn btn-primary btn-xs" onclick="saveItem()">新增敏感词</button>
+			<button type="button" class="btn btn-primary btn-xs" onclick="deleteItem()">删除敏感词</button>
+			<div class="nav-search" style="top:2px;">
+				<form class="form-search">
+					<input type="text" placeholder="敏感词" class="nav-search-input" id="nav-search-input" />
+					<div class="btn btn-xs btn-info" style="margin-top: -5px;" id="queryBtn">查询</div>
+				</form>
+			</div>
+		</div>
+		<div>
+			 <table id="datatable" class="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th width="60px"><div class="radio-img"></div></th>
+                  <th>敏感词</th>
+                  <th>替换显示</th>
+                  <th class="center">创建时间</th>
+                  <th>创建人</th>
+                  <th class="center">操作</th>
+                </tr>
+              </thead>
+              <tbody id="data-list">
+              	<!-- ajax填充 -->
+              </tbody>
+            </table>
+		</div>
+		<div id="page-info" class="">
+		
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(function (){
+		htmlPage('page-info', 1, 0, 'queryData', 10);
+		queryData(1);
+	});
+	$("#queryBtn").click(function(){
+        var queryText = $("#nav-search-input").val();
+        if(queryText==""){
+       		queryData(1);
+        }else{
+     	  	queryData(1);
+        }
+     })
+	//分页加载数据
+	function queryData(page) {
+		var rows = $('#pageSelect').val();
+		AjaxMethod.ajax("sensitiveWordsController/querySensitiveWords", {
+			'word' : $('#nav-search-input').val(),
+			'page' : page,
+			'rows' : rows
+		}).then(function (data){
+			if (!data)
+				return false;
+			var page_html = '';
+			var dataList = data.dataList;
+			for (var i in dataList){
+				page_html += '<tr> \
+						<td><div class="radio-img" onclick="change_check(this)" id="'+dataList[i].id+'"></div></td> \
+						<td>' + dataList[i].sensitiveWord + '</td> \
+						<td>' + dataList[i].replaceWord + '</td> \
+						<td class="center">' + (dataList[i].createTimeStr || '') + '</td> \
+						<td>' + (dataList[i].creatorName || '' ) + '</td> \
+						<td class="center"><a onclick="editItem(\''+dataList[i].id+'\')">修改</a> &nbsp;|&nbsp; \
+							<a onclick="deleteItem(\''+dataList[i].id+'\')">删除</a> \
+						</td> \
+					</tr>';
+			}
+			
+			$('#data-list').html(page_html);
+			//拼接页码
+			htmlPage('page-info', page, data.count, 'queryUser', rows);
+		});
+	}
+	
+	//新增敏感词
+	function saveItem() {
+		JqdeBox.dialog({
+	        title: '新增敏感词',
+	        url: '/manager/sensitive/sensitive-edit.html',
+	        init: function () {
+	        	validForm(null);
+	        },
+	        confirm: function () {
+	            if ($('#validation-form').valid()){
+	            	AjaxMethod.ajax("sensitiveWordsController/saveSensitiveWord", {
+	        			'sensitiveWord' : $('#sensitiveWord').val(),
+	        			'replaceWord' : $('#replaceWord').val(),
+	        			'isAvailable' : ''
+	        		}).then(function (data){
+	        			if(data){
+	        				queryData(1);
+	        				JqdeBox.message(true, '新增成功！');
+	        			}else {
+	        				JqdeBox.message(true, '新增失败！');
+	        			}
+	        		});
+	            	return true;
+	            }
+	            return false;
+	        }
+	    });
+	}
+	
+	//修改敏感词
+	function editItem(id) {
+		JqdeBox.dialog({
+	        title: '修改敏感词',
+	        url: '/manager/sensitive/sensitive-edit.html',
+	        init: function () {
+	        	validForm(id);
+	        	AjaxMethod.ajax("sensitiveWordsController/querySensitiveWord", {
+	        		'id' : id
+	        	}).then(function (data){
+	        		console.log(data);
+        			if (data){
+        				$('#sensitiveWord').val(data.sensitiveWord);
+        				$('#replaceWord').val(data.replaceWord);
+        			}
+        		});
+	        },
+	        confirm: function () {
+	            if ($('#validation-form').valid()){
+	            	AjaxMethod.ajax("sensitiveWordsController/editSensitiveWord", {
+	            		'id' : id,
+	        			'sensitiveWord' : $('#sensitiveWord').val(),
+	        			'replaceWord' : $('#replaceWord').val(),
+	        			'isAvailable' : ''
+	        		}).then(function (data){
+	        			if(data){
+	        				queryData(1);
+	        				JqdeBox.message(true, '更新成功！');
+	        			}else {
+	        				JqdeBox.message(true, '更新失败！');
+	        			}
+	        		});
+	            	return true;
+	            }
+	            return false;
+	        }
+	    });
+	}
+	
+	//删除敏感词
+	function deleteItem(id) {
+		if (!id){
+			id = '';
+			$('#data-list').find('.checked').each(function(i, v) {
+				id += v.id + ',';
+			});
+		}
+		if (id.length < 1){
+			JqdeBox.alert("请选择需要删除的敏感词！");
+			return;
+		}
+		AjaxMethod.ajax("sensitiveWordsController/deleteSensitiveWord", {
+    		'id' : id
+		}).then(function (data){
+			if(data){
+				queryData(1);
+				JqdeBox.message(true, '删除成功！');
+			}else {
+				JqdeBox.message(true, '删除失败！');
+			}
+		});
+	}
+</script>
+
+
+
+
+

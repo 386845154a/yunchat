@@ -1,0 +1,157 @@
+<style>
+	#agenda .ke-container {
+		width: 76.8% !important;
+	}
+</style>
+<script type="text/javascript">
+//下拉框交换JQuery
+$(function(){
+    //移到右边
+    $('#addu').click(function() {
+    	var meet_U = ""; var meet_U_ = "";
+    	$('#select2 option').each(function(index,element){
+    		meet_U += $(element).val() + ",";
+    	});
+    	$('#select1 option:selected').each(function(index,element){
+    		meet_U_ += $(element).val() + ",";
+    	});
+    	if (meet_U.indexOf(meet_U_) == -1) {
+	    	//获取选中的选项，删除并追加给对方
+	        $('#select1 option:selected').appendTo('#select2');
+    	}
+    });
+    //移到左边
+    $('#remove').click(function() {
+    	var falg;
+    	$('#select2 option:selected').each(function(index,element){
+    		falg = index;
+    	});
+    	if (falg >= 0) {
+	    	$('#select2 option:selected').remove();
+			//获取会议人员
+			meeting_user();
+//         	$('#select2 option:selected').appendTo('#select1');
+    	}
+    });
+    //全部移到右边
+    $('#add_all').click(function() {
+        //获取全部的选项,删除并追加给对方
+        $('#select1 option').appendTo('#select2');
+    });
+    //全部移到左边
+    $('#remove_all').click(function() {
+    	$('#select2 option').remove();
+		//获取会议人员
+		meeting_user();
+//         $('#select2 option').appendTo('#select1');
+    });
+    //双击选项
+    $('#select1').dblclick(function(){ //绑定双击事件
+    	var meet_U = ""; var meet_U_ = "";
+    	$('#select2 option').each(function(index,element){
+    		meet_U += $(element).val() + ",";
+    	});
+    	$('#select1 option:selected').each(function(index,element){
+    		meet_U_ += $(element).val() + ",";
+    	});
+    	if (meet_U.indexOf(meet_U_) == -1) {
+	        //获取全部的选项,删除并追加给对方
+	        $("option:selected",this).appendTo('#select2'); //追加给对方
+    	}
+    });
+    //双击选项
+    $('#select2').dblclick(function(){
+		$("option:selected",this).remove();
+		//获取会议人员
+		meeting_user();
+//        $("option:selected",this).appendTo('#select1');
+    });
+});
+
+</script>
+<div style="margin-top: 20px;">
+    <lable class="col-sm-2" style="line-height:30px;">时间：</lable>
+    	时:<select id="hour" name="hour"></select>
+    	分:<select id="minute" name="minute"> </select>
+</div><br/>
+<div style="margin-top: 0px;">
+    <lable class="col-sm-2" style="line-height:30px;">事件标题：</lable>
+    <input id="eventName" name="eventName" style="width: 324px;"/>
+</div><br/><br/>
+<div style="margin-top: -20px;">
+    <lable class="col-sm-2" style="line-height:30px;">事件地点：</lable>
+    <input id="eventAddress" name="eventAddress" style="width: 324px;"/>
+</div><br/><br/>
+<div style="margin-top: -20px;">
+    <lable class="col-sm-2" style="line-height:30px;">事件内容：</lable>
+    <textarea id="eventDescribe" name="eventDescribe" style="margin: 0px; height: 103px; width: 324px; resize: none; overflow-x: hidden;"></textarea>
+</div><br/>
+<div id="agenda">
+    <lable class="col-sm-2" style="line-height:30px;">事件议程：</lable>
+    <textarea id="eventagenda" name="eventagenda" class="area"></textarea>
+</div><br/>
+<div>
+	<lable class="col-sm-2" style="line-height:30px;">人员选择：</lable>
+	<input type="radio" id="mr" name="u_c" value="1" onclick="load_org()" checked="checked" />默认
+	<input type="radio" id="ot" name="u_c" value="" onclick="load_org()" />其他
+</div>
+<div id="user_choose" style="display: none;">
+	<select id="muser_org" onchange="meeting_user()" style="height: 26px; width: 155px; margin-top: 10px;"></select>
+	<div style="position: relative; top: 10px;">
+		<div style="position: absolute; left: 22%;">
+			<select multiple="multiple" id="select1" style="width:150px;height:200px; float:left; padding:4px; "></select>
+		</div>
+		<div style="float:left; margin-left: 52%; margin-top: 15px;"> 
+			<span id="addu" >
+				<input type="button" class="btn" value="添加" style="margin-top: 10px;"/>
+			</span><br/>
+			<span id="add_all" >
+				<input type="button" class="btn" value="全选" style="margin-top: 10px;"/>
+			</span> <br/>
+			<span id="remove" >
+				<input type="button" class="btn" value="移除" style="margin-top: 10px;"/>
+			</span><br/>
+			<span id="remove_all" >
+				<input type="button" class="btn" value="全删" style="margin-top: 10px;"/>
+			</span> 
+		</div>
+		<div>
+			<select multiple="multiple" id="select2" style="width: 150px;height:200px; float:lfet; padding:4px;"></select>
+		</div>
+	</div>
+<!-- 	<select id="orgs" onchange="load_user()" style="position: relative; top: 10px; height: 26px;"></select><br/> -->
+<!-- 	<div id="org_user" style="border: 1px solid rgb(169, 169, 169); width: 330px;  -->
+<!-- 	height: 90px; position: relative; top: 20px; left: 123px; overflow-x: hidden; word-wrap: break-word;"></div> -->
+</div>
+<input type="hidden" id="eventId" name="eventId"/>
+<link rel="stylesheet" src="/js/2018/kindeditor/themes/default/default.css" />
+<link rel="stylesheet" src="/js/2018/kindeditor/plugins/code/prettify.css" />
+<script type="text/javascript" src="/js/2018/kindeditor/kindeditor.js"></script>
+<script type="text/javascript" src="/js/2018/kindeditor/kindeditor-min.js"></script>
+<script type="text/javascript" src="/js/2018/kindeditor/lang/zh_CN.js"></script>
+<script type="text/javascript" src="/js/2018/kindeditor/plugins/code/prettify.js"></script>
+<script type="text/javascript" src="/js/2018/kindeditor/setkindeditor.js"></script>
+<!--<script th:src="@{/vendors/bootstrap-datepicker/dist/js/bootstrap-datepicker.js}"></script>-->
+<!--<script type="application/javascript">-->
+    <!--$('.datetimepicker').datepicker({-->
+        <!--weekStart:1,-->
+        <!--todayBtn : 1,-->
+        <!--startView:1,-->
+        <!--autoclose: 1,-->
+        <!--minView : 0,-->
+        <!--minuteStep : 1-->
+    <!--});-->
+<!--</script>-->
+<script>
+    var kindEditor = null;
+    var uploadUrl = "/upload/commonuploadfile";
+    // 设置编辑器
+    setKindEditor($('textarea[name="eventagenda"]'));
+    if ($('textarea[name="eventagenda"]').val()) {
+        if (!kindEditor.html()) {
+            kindEditor.html($('textarea[name="eventagenda"]').val());
+        }
+    }
+</script>
+
+

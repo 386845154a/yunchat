@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.casic.flatform.mapper.ToolsMapper">
+	<resultMap id="ToolsModel" type="com.casic.flatform.model.ToolsModel">
+		<id column="file_id" property="fileId" jdbcType="VARCHAR" />
+		<result column="file_name" property="fileName" jdbcType="VARCHAR" />
+		<result column="path" property="path" jdbcType="VARCHAR" />
+		<result column="read_path" property="readPath" jdbcType="VARCHAR" />
+		<result column="send_time" property="sendTime"/>
+		<result column="sender" property="sender" jdbcType="VARCHAR" />
+		<result column="classification" property="classification" jdbcType="VARCHAR" />
+		<result column="file_falg" property="fileFalg" jdbcType="VARCHAR" />
+		<result column="version" property="version" jdbcType="VARCHAR" />
+		<result column="use" property="use" jdbcType="VARCHAR" />
+		<result column="note" property="note" jdbcType="VARCHAR" />
+		<result column="talkleve" property="talkLeve" jdbcType="VARCHAR" />
+		<result column="talkcontent" property="talkContent" jdbcType="VARCHAR" />
+		<result column="isapprove" property="isApprove" jdbcType="VARCHAR" />
+		<result column="downc" property="downc" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="VARCHAR" />
+		<result column="approval" property="approval" jdbcType="VARCHAR" />
+		<result column="approver" property="approver" jdbcType="VARCHAR" />
+		<result column="updater" property="updater" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="AfficheModel" type="com.casic.flatform.model.ChildModel">
+		<id column="file_id" property="fileId" jdbcType="VARCHAR" />
+		<result column="file_name" property="fileName" jdbcType="VARCHAR" />
+		<result column="path" property="path" jdbcType="VARCHAR" />
+		<result column="read_path" property="readPath" jdbcType="VARCHAR" />
+		<result column="send_time" property="sendTime"/>
+		<result column="sender" property="sender" jdbcType="VARCHAR" />
+		<result column="pid" property="pid" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="context" property="context" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="DetailsModel" type="com.casic.flatform.model.DetailsModel">
+		<id column="detaileid" property="detaileId" jdbcType="VARCHAR" />
+		<result column="pid" property="pid" jdbcType="VARCHAR" />
+		<result column="talkleve" property="talkLeve" jdbcType="VARCHAR" />
+		<result column="talkcontent" property="talkContent" jdbcType="VARCHAR" />
+		<result column="isapprove" property="isApprove" jdbcType="VARCHAR" />
+		<result column="writer" property="writer" jdbcType="VARCHAR" />
+		<result column="createtime" property="createtime"/>
+		<result column="sender" property="sender" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="DownApporModel" type="com.casic.flatform.model.DownApporModel">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="daid" property="daid" jdbcType="VARCHAR" />
+		<result column="daname" property="daname" jdbcType="VARCHAR" />
+		<result column="datext" property="datext" jdbcType="VARCHAR" />
+		<result column="dacreater" property="dacreater" jdbcType="VARCHAR" />
+		<result column="dacreatername" property="dacreatername" jdbcType="VARCHAR" />
+		<result column="dalevel" property="dalevel" jdbcType="VARCHAR" />
+		<result column="dastate" property="dastate" jdbcType="VARCHAR" />
+		<result column="daappor" property="daappor" jdbcType="VARCHAR" />
+		<result column="dacreatertime" property="dacreatertime"/>
+	</resultMap>
+	
+	<!-- 获取网络工具 -->
+	<select id="queryTools" resultMap="ToolsModel">
+		SELECT * FROM  
+		(  
+		SELECT A.*, ROWNUM RN  
+		FROM (SELECT * FROM pf_tools_file
+		WHERE isapprove = 1
+		<if test="type == 'all'">
+			AND grade = 1
+		</if>	
+		<if test="type == 'new'">
+			AND grade = 1 order by send_time desc
+		</if>	
+		<if test="type == 'hot'">
+			AND grade = 1 order by downc desc
+		</if>
+		<if test="tab_id != null and tab_id != ''">
+			AND classification = #{tab_id} AND grade = 3
+		</if>
+		) A  
+		WHERE ROWNUM <![CDATA[ <= ]]> #{row}  
+		)  
+		WHERE RN<![CDATA[ >= ]]> #{start}
+	</select>
+	
+	<!-- 获取网络工具 -->
+	<select id="queryToolsCount" resultType="int">
+		SELECT count(1)
+		FROM pf_tools_file t
+		WHERE isapprove = 1
+		<if test="type == 'all'">
+			AND grade = 1
+		</if>	
+		<if test="type == 'new'">
+			AND grade = 1 order by send_time desc
+		</if>	
+		<if test="type == 'hot'">
+			AND grade = 1 order by downc desc
+		</if>
+		<if test="tab_id != null and tab_id != ''">
+			AND classification = #{tab_id} AND grade = 3
+		</if>
+	</select>
+<!-- 	<select id="queryTools" resultMap="ToolsModel"> -->
+<!-- 		SELECT * FROM pf_tools_file where classification = #{tools_class} and (grade is null or grade = 3) -->
+<!-- 	</select> -->
+	
+	<!-- 获取最新上传/热门推荐工具信息 -->
+	<select id="queryDetailsInfo" resultMap="ToolsModel">
+		SELECT t.*
+		FROM pf_tools_file t
+		where t.file_id = #{toolId}
+		
+	</select>
+	
+	<!-- 获取讨论区信息 -->
+	<select id="queryDetails" resultMap="DetailsModel">
+		SELECT t.*, f.sender FROM pf_tools_details t LEFT JOIN pf_tools_file f ON t.pid = f.sender where t.pid = #{fileId} order by t.createtime desc
+	</select>
+
+	<!-- 获取讨论区 -->
+	<select id="queryComment" resultMap="DetailsModel" parameterType="com.casic.flatform.model.DetailsModel">
+		SELECT t.* FROM pf_tools_details t where 1=1
+		 <if test="writer != null and writer !=''">
+			 and t.writer = #{writer}
+		 </if>
+		<if test="pid != null and pid != ''">
+			and t.pid = #{pid}
+		</if>
+		<if test="detaileId != null and detaileId != ''">
+			and t.detaileId = #{detaileId}
+		</if>
+		order by t.createtime desc
+	</select>
+	
+	<!-- 获取公告 -->
+	<select id="queryAffiche" resultMap="AfficheModel">
+		SELECT * FROM
+		(
+			SELECT A.*, ROWNUM RN
+			FROM (SELECT * FROM pf_child_file t
+			order by send_time desc
+		) A
+			WHERE ROWNUM <![CDATA[ <= ]]> #{end}
+		)
+		WHERE RN<![CDATA[ >= ]]> #{start}
+	</select>
+
+	<!--公告总数-->
+	<select id="countChildFile" resultType="int">
+		SELECT count(*) FROM pf_child_file
+	</select>
+	
+	<!-- 分页查询工具消息 -->
+	<select id="query_Tools" resultMap="ToolsModel">
+		SELECT * FROM (
+		SELECT A.*, ROWNUM RN FROM (
+		SELECT * 
+		FROM pf_tools_file t 
+		where t.isapprove = 0 and t.state = '3'
+		<if test="fileName != null and fileName !=''">
+			and t.file_name LIKE '%' || #{fileName} || '%'
+		</if>
+		<if test="sendUser != null and sendUser != ''">
+			and t.sender = #{sendUser}
+		</if>
+		<if test="fileLevels != null and fileLevels != ''">
+			and t.leves = #{fileLevels}
+		</if>
+		order by t.send_time desc
+		) A WHERE ROWNUM <![CDATA[ <= ]]> #{row}) 
+		WHERE RN<![CDATA[ >= ]]> #{start}
+	</select>
+	
+	<!-- 工具消息总数 -->
+	<select id="query_Tools_count" resultType="int">
+		SELECT count(1) 
+		FROM pf_tools_file t 
+		where t.isapprove = 0 and t.state = '3'
+		<if test="fileName != null and fileName !=''">
+			and t.file_name LIKE '%' || #{fileName} || '%'
+		</if>
+		<if test="sendUser != null and sendUser != ''">
+			and t.sender = #{sendUser}
+		</if>
+		<if test="fileLevels != null and fileLevels != ''">
+			and t.leves = #{fileLevels}
+		</if>
+		order by t.send_time desc
+	</select>
+	
+	<!-- 上传子文件 -->
+	<insert id="saveChild">
+		INSERT INTO pf_child_file (file_id, file_name, path, read_path, send_time, sender, pid, title, context) 
+		VALUES (#{fileId,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, #{readPath,jdbcType=VARCHAR}, sysdate, #{sender,jdbcType=VARCHAR}, #{pid,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{context,jdbcType=VARCHAR})
+	</insert>
+	
+	<!-- 保存评论信息 -->
+	<insert id="saveDetails">
+		INSERT INTO pf_tools_details (detaileid, pid, talkleve, talkcontent, writer, createtime)
+		VALUES (#{detaileId,jdbcType=VARCHAR}, #{pid,jdbcType=VARCHAR}, #{talkLeve,jdbcType=INTEGER}, #{talkContent,jdbcType=INTEGER}, #{writer,jdbcType=INTEGER}, #{createtime})
+	</insert>
+	
+	<!-- 修改下载次数 -->
+	<update id="updateDownc" parameterType="com.casic.flatform.model.ToolsModel">
+		UPDATE pf_tools_file SET downc = #{downc} where file_id = #{fileId,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 审批工具 -->
+	<update id="approve_tool" parameterType="com.casic.flatform.model.ToolsModel">
+		UPDATE pf_tools_file SET isapprove = '1', state = '5', grade = #{grade,jdbcType=VARCHAR}, isregister = #{isregister,jdbcType=VARCHAR} where file_id = #{fileId,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 工具图片 -->
+	<update id="titleImg" parameterType="String">
+		UPDATE pf_tools_file SET read_path = #{path} WHERE file_id = #{toolid}
+	</update>
+	
+	<!-- 删除工具 -->
+	<delete id="del_tool" parameterType="String">
+		DELETE FROM pf_tools_file WHERE file_id = #{fileId,jdbcType=VARCHAR}
+	</delete>
+	
+	<!-- 根据Id删除公告 -->
+	<delete id="delAfficheById" parameterType="String">
+		DELETE FROM pf_child_file WHERE file_id = #{afficheId,jdbcType=VARCHAR}
+	</delete>
+
+	<!--后台管理员获取公告-->
+	<select id="queryAfficheList" resultMap="AfficheModel">
+		SELECT * FROM pf_child_file order by send_time desc
+	</select>
+	
+	<!--全部平均评分-->
+	<select id="commentAll" resultType="int">
+		 select sum(t.talkleve)
+		 from PF_TOOLS_DETAILS t left join pf_tools_file f on t.pid = f.file_id
+		 where t.pid = #{toolId,jdbcType=VARCHAR} 
+	</select>
+	
+	<!--全部平均评分总数-->
+	<select id="commentAllCount" resultType="int">
+		 select count(*) 
+		 from PF_TOOLS_DETAILS t left join pf_tools_file f on t.pid = f.file_id
+		 where t.pid = #{toolId,jdbcType=VARCHAR} 
+	</select>
+	
+	<!--我的评分-->
+	<select id="Mycomment" resultMap="DetailsModel">
+		select t.*
+  		from PF_TOOLS_DETAILS t left join pf_tools_file f on t.pid = f.file_id
+ 		where t.writer = #{userId,jdbcType=VARCHAR} and t.pid = #{toolId,jdbcType=VARCHAR} and rownum <![CDATA[ <= ]]> 1
+ 		order by t.createtime asc 
+	</select>
+	
+	<!-- 根据ID获取工具信息 -->
+	<select id="getToolById" resultMap="ToolsModel">
+		select * from pf_tools_file t where t.file_id = #{toolId,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 获取系統消息条数 -->
+	<select id="myPLCount"  resultType="int">
+		SELECT count(*) FROM pf_tools_details t left join pf_tools_file f on t.pid = f.file_id 
+		where t.pid = #{toolId}
+	</select>
+	
+	<!-- 我的上传、我的审批 -->
+	<select id="upAndApprove"  resultMap="ToolsModel">
+		SELECT * FROM pf_tools_file t 
+		<if test="approve =='我的上传'">
+			where t.sender = #{userId,jdbcType=VARCHAR}
+		</if>
+		<if test="approve =='上传审批'">
+			where t.approver = #{userId,jdbcType=VARCHAR} and t.sender != #{userId,jdbcType=VARCHAR} and t.state != 4
+		</if>
+	</select>
+	
+	<!-- 下载审批 -->
+	<select id="datablelist"  resultMap="DownApporModel">
+		SELECT * FROM pf_downappor t
+		<if test="daname =='下载审批'">
+			where t.daappor = #{userId,jdbcType=VARCHAR} and t.dastate = '1'
+		</if>
+	</select>
+	
+	<!-- 根据ID获取工具审核状态 -->
+	<select id="getDownState"  resultMap="DownApporModel">
+		SELECT * FROM pf_downappor t where t.daid = #{tid,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 根据ID获取工具审核状态 -->
+	<select id="isSubmit"  resultMap="DownApporModel">
+		SELECT * FROM pf_downappor t where t.daid = #{tid,jdbcType=VARCHAR} and t.dacreater = #{userId,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 下载审核通过/驳回 -->
+	<update id="agreeDown" parameterType="com.casic.flatform.model.DownApporModel">
+		UPDATE pf_downappor t SET t.dastate = #{flag,jdbcType=VARCHAR} where t.id = #{id,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 根据Id删除公告 -->
+	<delete id="delDownApporSubmit" parameterType="String">
+		DELETE FROM pf_downappor t WHERE t.daid = #{dafileid,jdbcType=VARCHAR} and t.dacreater = #{userId,jdbcType=VARCHAR}
+	</delete>
+	
+	<!-- 二级审批提交 -->
+	<update id="apporChange" parameterType="com.casic.flatform.model.ToolsModel">
+		UPDATE pf_tools_file SET approver = #{approver,jdbcType=VARCHAR}, state = #{state,jdbcType=VARCHAR} where file_id = #{fileId,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 审批意见变更 -->
+	<update id="approvalChange" parameterType="com.casic.flatform.model.ToolsModel">
+		UPDATE pf_tools_file SET approval = #{approval,jdbcType=VARCHAR} where file_id = #{fileId,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 提交工具下载申请 -->
+	<insert id="downApporSubmit">
+		INSERT INTO pf_downappor (id, daid, daname, datext, dacreater, dacreatername, dalevel, dastate, daappor, dacreatertime)
+		VALUES (#{id,jdbcType=VARCHAR}, #{daid,jdbcType=VARCHAR}, #{daname,jdbcType=VARCHAR}, #{datext,jdbcType=INTEGER}, #{dacreater,jdbcType=INTEGER}, 
+		#{dacreatername,jdbcType=INTEGER}, #{dalevel,jdbcType=INTEGER}, #{dastate,jdbcType=INTEGER}, #{daappor,jdbcType=INTEGER}, sysdate)
+	</insert>
+</mapper>
+
+
+

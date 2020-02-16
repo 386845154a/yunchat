@@ -1,0 +1,477 @@
+<meta http-equiv="Content-Type" charset="utf-8"/>
+<style type="text/css">
+.tools_ids > a {
+	cursor: pointer;
+}
+#showC {
+    text-align: center;
+    padding-top: 2px;
+    font-size: 70px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-family: serif;
+    float: left;
+    margin-left: -15px;
+    margin-top: 12px;
+}
+
+#showW {
+    border-radius: 15px;
+    height: 70px;
+    width: 70px;
+}
+
+.tools_ids > li > a{
+	color: white;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.tools_cls > li{
+	 height: 100px; 
+     width: 100px; 
+     text-align: center; 
+     padding-top: 2px; 
+     font-size: 70px; 
+     font-weight: bold; 
+     font-family: serif;
+     float: left; 
+     margin-left: -15px; 
+/*      margin-top: 3%; */
+}
+.add_tools{
+	width: 70px; 
+	height: 70px; 
+	border-radius: 15px;
+	cursor: pointer;
+	margin-top: -20%;
+}
+
+.add_tools_{
+	width: 70px; 
+	height: 70px; 
+	border-radius: 15px;
+	cursor: pointer;
+    margin-top: 2%;
+    margin-left: 2%;
+}
+
+.delete_tools {
+	 color: red; 
+	 float: left; 
+	 width: 25px; 
+	 height: 25px; 
+     margin-top: -110px;
+     margin-left: 50px;
+	 border-radius: 50%;
+	 cursor: pointer;
+	 position: relative;
+     top: 8px;
+     left: 20px;
+}
+</style>
+<style type="text/css">
+.tip{
+	position: relative;
+}
+.tip > span{
+	display: none;
+	width: 100px;
+	font-size: 20%;
+	margin-left: 13%;
+    border-radius: 5px;
+}
+
+.popbox{
+	font-size: 12px;
+    float: left;
+    width: 100%; 
+    border-radius: 5px;
+    margin-top: -25px;
+    word-wrap: break-word;
+    font-family: serif;
+    font-weight: bold;
+}
+.popbox_{
+	font-size: 16px;
+    float: left;
+    width: 100%;
+    border-radius: 5px;
+    word-wrap: break-word;
+    text-align: center;
+    font-weight: bold;
+    font-family: serif;
+}
+</style>
+<style type="text/css">
+.tableLeft {
+    border: 1px solid black;
+}
+
+.tableLeft tr {
+    border-bottom: 1px solid black;
+}
+
+.tableLeft td {
+    border-right: 1px solid black;
+}
+
+.tab {
+	background-color: #D4CCCC;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+}
+
+.inputTd {
+	background-color: rgba(222, 214, 214, 0.89);
+}
+.species {
+	margin-left: -35px;
+	list-style: none;
+	margin-top: 5px;
+	overflow-x:hidden;
+}
+.add {
+	height: 35px;
+	margin-top: 10px;
+}
+.control_a {
+	margin-left: 10px;
+	cursor: pointer;
+}
+#tools_class > li {
+	width: 95%;
+}
+a:hover{
+	text-decoration:underline;
+}
+.nav > li > a {
+   padding: 11px 15px;
+}
+.head_edit {
+	position: absolute;
+    top: 38%;
+    left: 26%;
+    color: green;
+    cursor: pointer;
+}
+
+.i_tools {
+    font-size: 20px;
+    color: red;
+    float: right;
+    width: 30px;
+    height: 30px;
+    margin-top: -10px;
+    margin-left: -30px;
+    margin-right: -10px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.i_tools_ {
+    font-size: 20px;
+    float: left;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    top: 42px;
+    left: 42px;
+}
+.label {
+    font-size: 0.7em;
+    background-color: rgba(242, 249, 242, 0);
+}
+.glyphicon-minus-sign{
+	display: none !important; 
+}
+.rating-stars {
+	size: 16px;
+	font-size: 16px;
+}
+.text-right {
+    text-align: left; 
+}
+.star-rating {
+	margin-top: -25px;
+}
+.bd_div {
+	font-size: 40px; 
+	border-radius: 5px; 
+/* 	height: 75%;  */
+	color: white; 
+	margin-top: -40px;
+ 	background-size: 100% 100%; 
+	cursor: pointer;
+	width: 70px;
+	height: 70px;
+}
+.star-rating span {
+	color: #000000;
+}
+.hotNewImg {
+	height: 10px;
+	width: 10px;
+}
+.tHeadImg {
+	background-color: #C3C3C3;
+}
+</style>
+<link th:href="@{/css/controls.css}" rel="stylesheet" />
+<link th:href="@{/css/star-rating.css}" rel="stylesheet" />
+<script th:src="@{/js/controls.js}"></script>
+<script th:src="@{/js/star-rating.js}"></script>
+	<div id="body" style="overflow:hidden;">
+		<div>
+			<div id="head-div"
+				style="height:0px;width:100%;">
+				<input type="hidden" id="chat-type" /> <input type="hidden"
+					id="chat-user-id" />
+				<div class="group-info-div" style="margin-left: 0%; margin-top: 0px;">
+					<ul class="nav navbar-nav" id="input_ul" style="margin-top: 12px;">
+						<li onclick="inputInfo()" id="ginfo" class="tab" style="margin-left: 10px;"><span
+							class="glyphicon glyphicon-exclamation-sign"></span> 个人工具 </li>
+						<li onclick="taskInfo()" id="guser" class="tab" style="margin-left: 10px;"><span
+							class="glyphicon glyphicon-user"></span> 发布工具</li>
+<!-- 						<li onclick="fileDown()" id="gfile" class="tab" style="margin-left: 10px;"><span -->
+<!-- 							class="glyphicon glyphicon-folder-open"></span> 文件下载</li> -->
+					</ul>
+				</div>
+			</div>
+			<div style="margin: 55px 2% 20px 0%; height: 800px;">
+				<!-- 本地工具 -->
+				<div id="inputInfo" class="form-group" style="height: 100%; display: none;">
+<!-- 					<div style="margin: 30px; height: 50%; overflow-x:hidden;"> -->
+						<ul class="tools_cls" style="list-style: none;"></ul>
+<!-- 					</div> -->
+				</div>
+				<!-- 网络工具 -->
+				<div id="taskInfo" class="form-group" style="height: 100%; display: none;">
+					<div style="min-height:100%; max-height:100%; width:12%; float:left; border-right:2px solid skyblue; overflow-x:hidden;">
+						<ul id="tools_class">
+							<li class="species btn btn-default" onclick="hotNew('new', '')"><img class="hotNewImg" src="/img/hot.png" />最新上传</li><br/>
+							<li class="species btn btn-default" onclick="hotNew('', 'hot')"><img class="hotNewImg" src="/img/hot.png" />热门推荐</li><br/>
+							<li class="species btn btn-default" onclick="show_tools('设计类')">设计类</li><br/>
+							<li class="species btn btn-default" onclick="show_tools('仿真分析类')">仿真分析类</li><br/>
+							<li class="species btn btn-default" onclick="show_tools('数据处理类')">数据处理类</li><br/>
+							<li class="species btn btn-default" onclick="show_tools('实验验证类')">实验验证类</li>
+						</ul>
+					</div>
+					<div style="min-height:100%; max-height:100%; width:56%; float:left; overflow-x:hidden;">
+						<ul id="tools_ids" class="tools_ids" style="list-style: none; padding: 0px;"></ul>
+					</div>
+					<div style="min-height:100%; max-height:100%; width:30%; float:left; overflow-x:hidden; border-left:2px solid skyblue; position: relative; bottom: 54px;">
+						<span id="father_id" style="display: none;"></span>
+						<div style="margin-top: 5px;">
+							<span style="color: #000000; font-weight: bold;">下载次数：</span>
+							<span id="downCount"></span>
+						</div>
+						<div style="margin-top: 5px;">
+							<span style="color: #000000; font-weight: bold;">工具名称：</span>
+							<span id="tool_Name"></span>
+						</div>
+						<div style="margin-top: 5px;">
+							<span style="color: #000000; font-weight: bold;">工具等级：</span>
+							<span id="tool_level"></span>
+						</div>
+						<div id="commentAll">
+							<span style="color: #000000; font-weight: bold;">评定等级:</span>
+							<input id="input-22" style="font_size:12px;" type="number" class="rating" min="0" max="5" step="0.5"
+								   data-container-class='text-right' data-glyphicon="0" />
+							<script>
+                                jQuery(document).ready(function () {
+                                    $(".rating-kv").rating();
+                                });
+							</script>
+						</div>
+						<div>
+							<span style="color: #000000; font-weight: bold;">软件说明:</span>
+							<div id="explain" style="overflow-x: hidden; min-height: 60px; max-height: 60px; width:95%; 
+								margin:10px; margin-top:0px; word-wrap: break-word; border: 1px solid #D4D4D4;"></div>
+						</div>
+						<div>
+							<span style="color: #000000; font-weight: bold;">团队信息:</span>
+							<div id="teamInfo" style="overflow-x: hidden; min-height: 60px; max-height: 60px; width:95%; 
+								margin:10px; margin-top:0px; word-wrap: break-word; border: 1px solid #D4D4D4;"></div>
+						</div>
+						<div id="myComment">
+							<span style="color: #000000; font-weight: bold;">我的评定等级:</span>
+							<input id="input-23" style="font_size:12px;" type="number" class="rating" min="0" max="5" step="0.5"
+								   data-container-class='text-right' data-glyphicon="0" />
+							<script>
+                                jQuery(document).ready(function () {
+                                    $(".rating-kv").rating();
+                                });
+							</script>
+						</div>
+						<div style="margin-top: -10px;">
+							<span style="color: #000000; font-weight: bold;">评论:</span>
+							<div id="PLInfo" style="border: 1px solid #D4D4D4; min-height: 60px; max-height: 60px; 
+							width:95%; margin:10px; margin-top:0px; overflow-x: hidden;"></div>
+							<textarea id="comment" style="min-height: 60px; max-height: 60px; resize: none;
+							width:95%; margin:10px; margin-top:0px; word-wrap: break-word; overflow-x: hidden;"></textarea>
+						</div>
+						<div style="margin-top: 10px;">
+							<input id="detcom" type="button" style="float: right; position: relative; bottom: 17px;
+							border-radius: 5px;" onclick="details_commit()" value="发布" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div> 
+<!-- 模态框（Modal） -->
+<!-- <div class="modal fade" id="ToolsDetailsModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow-x: hidden;"> -->
+<!-- 	<div id="talker_commit" style="background-color: #777777; float: right; margin-top: 5%; opacity: 0.5; width: 30%; border-radius: 5px;"> -->
+<!-- 		<span id="father_id" style="display: none;"></span> -->
+<!-- 		<div style="margin-top: 5px;"> -->
+<!-- 			<span style="color: #000000; font-weight: bold;">下载次数：</span> -->
+<!-- 			<span id="downCount" style="color: #FFFFFF;"></span> -->
+<!-- 		</div> -->
+<!-- 		<div> -->
+<!-- 			<span style="color: #000000; font-weight: bold;">软件说明:</span> -->
+<!-- 			<div id="explain" style="overflow-x: hidden; min-height: 135px; max-height: 150px; width:95%;  -->
+<!-- 				margin:10px; word-wrap: break-word; color: #FFFFFF; border: 1px solid #D4D4D4;"></div> -->
+<!-- 		</div> -->
+<!-- 		<div> -->
+<!-- 			<span style="color: #000000; font-weight: bold;">评定等级:</span> -->
+<!-- 			<input id="input-22" style="font_size:12px;" type="number" class="rating" min="0" max="5" step="0.5"  -->
+<!-- 			data-container-class='text-right' data-glyphicon="0" /> -->
+<!-- 			<script> -->
+<!-- // 			    jQuery(document).ready(function () { -->
+<!-- // 			        $(".rating-kv").rating(); -->
+<!-- // 			    }); -->
+<!-- 			</script> -->
+<!-- 		</div> -->
+<!-- 		<div style="margin-top: -10px;"> -->
+<!-- 			<span style="color: #000000; font-weight: bold;">评论:</span> -->
+<!-- 			<div id="PLInfo" style="background-color: #777777; border: 1px solid #D4D4D4; min-height: 135px; max-height: 150px;  -->
+<!-- 			width:95%; margin:10px; color: #FFFFFF; overflow-x: hidden;"></div> -->
+<!-- 			<textarea id="comment" style="background-color: #777777; min-height: 135px; max-height: 150px;  -->
+<!-- 			width:95%; margin:10px; margin-top:0px; word-wrap: break-word; color: #FFFFFF; overflow-x: hidden;"></textarea> -->
+<!-- 		</div> -->
+<!-- 		<div style="margin-top: 10px;"> -->
+<!-- 			<input id="detcom" type="button" style="background-color: #777777; color: #FFFFFF; float: right; margin-bottom: 3%; -->
+<!-- 			margin-right: 15px; border-radius: 5px;" onclick="details_commit()" value="发布" /> -->
+<!-- 		</div> -->
+<!-- 	</div> -->
+<!-- </div> -->
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="files_model" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">文件上传</h4>
+			</div>
+			<div class="modal-body" style="margin-left:65px;">
+			  
+				 版本信息：<input id="files_version_info" class="add"/><br/>
+				 使用说明：<input id="files_use_info" class="add"/><br/>
+				 备注信息：<input id="files_note_info" class="add"/>
+			</div>
+			<div class="modal-footer">
+				<div class="btn btn-default" id="update_btn" onclick="$(this).find('input')[0].click()">
+					上传<input type="file" style="display: none;" onchange="upload_chat_file(this, 'file_up')" multiple="multiple" />
+				</div>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="tools_model" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">工具上传</h4>
+			</div>
+			<div class="modal-body" style="margin-left:65px;">
+			  
+				  工具种类：<select id="tools_class_" class="add" style="width:174px;">
+				  			<option value="">请选择种类</option>
+				  			<option value="设计类">设计类</option>
+				  			<option value="仿真分析类">仿真分析类</option>
+				  			<option value="数据处理类">数据处理类</option>
+				  			<option value="实验验证类">实验验证类</option>
+				  		</select><br/>
+				 保密级别：<select id="levelId" style="height: 35px; margin-top: 10px; width: 174px;" onchange="isClick('false')"></select><br/>
+				 版本信息：<input id="tools_version_info" class="add" style="width: 174px;" /><br/>
+				 使用说明：<input id="tools_use_info" class="add" style="width: 174px;" /><br/>
+				 团队信息：<input id="tools_note_info" class="add" style="width: 174px;" />
+			</div>
+			<div class="modal-footer">
+				<div class="btn btn-default" id="update_btn" onclick="$(this).find('input')[0].click()" style="margin: 10px;">
+					上传<input type="file" style="display: none;" id="one" disabled="true" onchange="upload_chat_file(this, '')" multiple="multiple" />
+				</div>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="set_model" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">工作空间配置</h4>
+            </div>
+            <div class="modal-body">
+				<input type="button" style="margin-top: 10px;" value="工作空间" onclick="get_address()"/>：<input id="work_space" type="text" style="margin-left: 48px; height: 36px;"/>
+				
+				<div style="margin-top: 10px;">
+					<lable class="col-sm-3" style="line-height:30px;">客户主页：</lable>
+					<input type="text" id="c_page" style="line-height:30px;"/>
+				</div>
+				<div style="margin-top: 10px;">
+					<lable class="col-sm-3" style="line-height:30px;">服务主页：</lable>
+					<input type="text" id="s_page" style="line-height:30px;"/>
+				</div>
+			</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="commit_workspace()">提交</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<div class="modal fade" id="myTools" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">工具配置</h4>
+            </div>
+            <div class="modal-body">
+				<div style="margin-top: 10px;">
+					<lable class="col-sm-3" style="line-height:30px;">工具名称：</lable>
+					<input type="text" id="tools_name" style="line-height:30px; width: 279px;"/>
+				</div>
+				<input type="button" style="margin-top: 10px;margin-left: 13px;" value="获取地址" onclick="get_address()"/>
+				：<input id="tools_address" type="text" style="margin-left: 62px; width: 279px;line-height:30px;"/>
+				<div style="margin-top: 10px;">
+					<lable class="col-sm-3" style="line-height:30px;">版本信息：</lable>
+					<input type="text" id="tools_ver" style="line-height:30px; width: 279px;"/>
+				</div>
+				<div style="margin-top: 10px;">
+					<lable class="col-sm-3" style="line-height:30px;">工具说明：</lable>
+					<textarea type="text" id="tools_ex" style="line-height:30px; width: 49.5%;"></textarea>
+				</div>
+				<div style="margin-top: 10px;">
+					<lable class="col-sm-3" style="line-height:30px;">工具头像：</lable>
+					<div type="text" id="tools_img" style="line-height:30px; width: 385px; border:1px solid #A9A9A9;
+						height: 150px; overflow-x: hidden;"></div>
+					<input id="tool_head_img" style="display: none;"/>
+				</div>
+			</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" style="margin: 10px;">关闭</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="commit_tools()" style="margin: 10px;">提交</button>
+            </div>
+        </div>
+    </div>
+</div>

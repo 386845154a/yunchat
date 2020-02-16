@@ -1,0 +1,115 @@
+<style>
+.affiche_li {
+    list-style: none;
+    border: 1px solid #dddddd;
+    border-top: none;
+    min-height: 45px;
+    padding-left: 15px;
+    padding-top: 10px;
+    font-size: 16px;
+}
+.affiche_span {
+   float: right;
+   padding-right: 15px;
+}
+.add {
+	height: 35px;
+	margin-top: 10px;
+}
+.span {
+    float: left;
+    margin-top: 10px;
+}
+.bttn {
+    margin-top: 6px;
+    margin-left: 22px;
+}
+.area {
+	margin-top: 10px;
+    width: 370px;
+    height: 130px;
+    overflow-x: hidden;
+    word-wrap: break-word;
+    word-break: normal;
+    resize: none;
+}
+#show img{
+	max-width: 500px;
+}
+.modal-dialog{
+	width: 80%;
+}
+.ke-container ke-container-simple{
+	width: 80% !important;
+}
+</style>
+<div class="row">
+	<input type="button" value="公告上传" onclick="update_affiche()"/>
+	<div id="affiche_info" style="border-top: 1px solid #dddddd; margin-top: 15px; overflow-x:hidden;"></div>
+</div>
+<div class="modal fade" id="affiche_model" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">公告上传</h4>
+			</div>
+			<div class="modal-body" style="margin-left:1px;">
+					<div class="row">
+						<div class="col-md-2" style="text-align: right;">公告标题:</div>
+						<div class="col-md-10"><input id="affiche_title"/></div>
+					</div>
+					<div class="row" style="padding-top: 10px;">
+						<div class="col-md-2" style="text-align: right;">公告内容:</div>
+						<div class="col-md-10">
+							<textarea id="msg-content" name="msg-content" class="area"></textarea>
+						</div>
+					</div>
+					<div class="row" style="padding-top: 10px;">
+						<div class="col-md-12 col-md-offset-1">
+							<button type='button' class="bttn" onclick='F_Open_dialog()'>附件</button>
+							<input id="file_name"/>
+							<input type="file" id="btn_file" style="display: none;" onchange="get_attachment(this)"/>
+						</div>
+					</div>
+			</div>
+			<div class="modal-footer">
+				<div class="btn btn-default" onclick="upload_file()"> 确认 </div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="afficheInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel2">公告详情</h4>
+			</div>
+			<div class="modal-body" style="margin-left:65px;">
+				<div id="show" style="margin: auto;"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- basic scripts -->
+<link rel="stylesheet" src="/js/2018/kindeditor/themes/default/default.css" />
+<link rel="stylesheet" src="/js/2018/kindeditor/plugins/code/prettify.css" />
+<script type="text/javascript" src="/js/2018/kindeditor/kindeditor.js"></script>
+<script type="text/javascript" src="/js/2018/kindeditor/kindeditor-min.js"></script>
+<script type="text/javascript" src="/js/2018/kindeditor/lang/zh_CN.js"></script>
+<script type="text/javascript" src="/js/2018/kindeditor/plugins/code/prettify.js"></script>
+<script type="text/javascript" src="/js/2018/kindeditor/setkindeditor.js"></script>
+<script src="/js/download.js"></script>
+<script src="/manager/affiche.js" type="text/javascript"></script>
+<script>
+    var kindEditor = null;
+    var uploadUrl = "/upload/commonuploadfile";
+    // 设置编辑器
+    setKindEditor($('textarea[name="msg-content"]'));
+    if ($('textarea[name="msg-content"]').val()) {
+        if (!kindEditor.html()) {
+            kindEditor.html($('textarea[name="msg-content"]').val());
+        }
+    }
+</script>

@@ -1,0 +1,208 @@
+<link href='/js/groupEdit/groupEdit.css' rel='stylesheet'>
+<link href="/vendors/zTree/css/zTreeStyle/zTreeStyle.css"  rel="stylesheet"/>
+<script src="/vendors/zTree/js/jquery.ztree.all.min.js"></script>
+<style>
+	li {
+		list-style: none;
+	}
+	#change-user-list .item-user {
+	    width: 70%;
+    	margin-left: 13%;
+	}
+	#tree1 span {
+	    float: left;
+    }
+    .modal-body {
+     	max-height: 350px;
+    	overflow-x: hidden;
+    }
+    .uf {
+   	    width: 40px;
+	    height: 40px;
+	    border-radius: 20px;
+	    line-height: 40px;
+	    text-align: center;
+	    font-size: 16px;
+	    background-color: #9ac9f1;
+	    margin: auto;
+    }
+    .du {
+   	    color: red;
+	    float: left;
+	    width: 25px;
+	    height: 25px;
+	    border-radius: 50%;
+	    cursor: pointer;
+	    position: relative;
+        bottom: 65px;
+    	left: 45px;
+    }
+</style>
+<div class="group_info">
+    <div class="group_left_div">
+        <div class="create-group-info" style="border-bottom: 0px solid;">
+            <div class="row-info">
+                <span>讨论组名称：</span>
+                <input type="text" id="gname-input" style="width: 200px;" class="name-input form-control" disabled="true" maxlength="12">
+            </div>
+            <div class="row-info">
+                <span>讨论组描述：</span>
+                <textarea id="gdecribe-textarea" style="resize: none;width: 200px;" class="decribe-textarea form-control" disabled="true"></textarea>
+            </div>
+            <div class="row-info">
+                <span>讨论组密级：</span>
+                <input type="text" id="level_input" style="width: 200px;" class="name-input form-control" disabled="true" maxlength="12">
+            </div>
+            <div class="row-info">
+                <select id="gProject" class="btn btn-default dropdown-toggle" style="float: left;width: 200px;" onchange="getProject()"></select>
+            </div>
+        </div>
+    </div>
+    <div class="group_right_div" style="max-height: 700px;">
+    	<ul id="tree1" class="ztree" style="padding: 15px; height: 50%;"></ul>
+    	<ul id="userList" style="height: 50%; padding: 15px;"></ul>
+    </div>
+	<input type="hidden" id="proId" />
+	<input type="hidden" id="proName" />
+	<input type="hidden" id="levelId" />
+	<input type="hidden" id="modelName" />
+</div>
+<script type="text/javascript">
+	function getProject() {
+		//当前选择单位id
+		var fileId = "0";
+		$(document).ready(function(){
+			var setting = {
+					edit: {
+						enable: false
+					},
+					data: {
+						simpleData: {
+							enable: true
+						}
+					},
+					view: {
+						fontCss :{
+							'font-size' : '18px',
+							'font-weight' : '50%',
+							'line-height' : '28px',
+							'height' : '28px',
+							'min-width' : '120px'
+						}
+					},
+					callback: {
+						onClick: onClickTree
+					}
+			};
+			var treeData = "";
+			if ($("#gProject").val() == "p01") {
+				$("#modelName").val("一级项目");
+				treeData = [{"id":"1000","name":"一级项目","open":false,"isParent":true,"iconClose":"/img/tree/icon_folder_blue.png","iconOpen":"/img/tree/icon_folder_blue.png","icon":null,"pid":"0"},
+			                {"id":"100001","name":"项目A","open":false,"isParent":true,"iconClose":"/img/tree/icon_folder_blue.png","iconOpen":"/img/tree/icon_folder_blue.png","icon":null,"pid":"1000"},
+			                {"id":"100002","name":"项目B","open":false,"isParent":true,"iconClose":"/img/tree/icon_folder_blue.png","iconOpen":"/img/tree/icon_folder_blue.png","icon":null,"pid":"1000"},
+			                {"id":"1000001","name":"工作单元D","open":false,"isParent":true,"iconClose":"/img/tree/icon_folder_blue.png","iconOpen":"/img/tree/icon_folder_blue.png","icon":null,"pid":"100002"},
+			                {"id":"1000002","name":"工作单元E","open":false,"isParent":true,"iconClose":"/img/tree/icon_folder_blue.png","iconOpen":"/img/tree/icon_folder_blue.png","icon":null,"pid":"100002"},
+			                {"id":"10000001","name":"工作单元F","open":false,"isParent":true,"iconClose":"/img/tree/icon_folder_blue.png","iconOpen":"/img/tree/icon_folder_blue.png","icon":null,"pid":"1000002"},
+			                {"id":"10000002","name":"工作单元G","open":false,"isParent":true,"iconClose":"/img/tree/icon_folder_blue.png","iconOpen":"/img/tree/icon_folder_blue.png","icon":null,"pid":"1000002"},
+			                {"id":"100000001","name":"工作单元H","open":false,"isParent":true,"iconClose":"/img/tree/icon_folder_blue.png","iconOpen":"/img/tree/icon_folder_blue.png","icon":null,"pid":"10000002"},
+			                {"id":"100000002",
+							"name":"工作单元I",
+							"open":false,
+							"isParent":false,
+							"iconClose":"/img/tree/icon_folder_blue.png",
+							"iconOpen":"/img/tree/icon_folder_blue.png",
+							"icon":null,
+							"level":"1",
+							"levelName":"非密",
+							"contest":"项目C是一个好项目!",
+							"pid":"10000002"},
+							{"id":"100003","name":"项目C","open":false,"isParent":true,"iconClose":"/img/tree/icon_folder_blue.png","iconOpen":"/img/tree/icon_folder_blue.png","icon":null,"pid":"1000"}
+			                ];
+			} else if ($("#gProject").val() == "p02") {
+				$("#modelName").val("二级项目");
+				treeData = [{"id":"2000","name":"二级项目","open":false,"isParent":true,"iconClose":"/img/tree/icon_folder_blue.png","iconOpen":"/img/tree/icon_folder_blue.png","icon":null,"pid":"0"},
+			                {"id":"200001","name":"项目一","open":false,"isParent":true,"iconClose":"/img/tree/icon_folder_blue.png","iconOpen":"/img/tree/icon_folder_blue.png","icon":null,"pid":"2000"},
+			                {"id":"200002","name":"项目二","open":false,"isParent":true,"iconClose":"/img/tree/icon_folder_blue.png","iconOpen":"/img/tree/icon_folder_blue.png","icon":null,"pid":"2000"},
+			                {"id":"2000002","name":"工作单元四","open":false,"isParent":true,"iconClose":"/img/tree/icon_folder_blue.png","iconOpen":"/img/tree/icon_folder_blue.png","icon":null,"pid":"200002"},
+			                {"id":"20000002","name":"工作单元五","open":false,"isParent":true,"iconClose":"/img/tree/icon_folder_blue.png","iconOpen":"/img/tree/icon_folder_blue.png","icon":null,"pid":"200002"},
+			                {"id":"200000002","name":"工作单元六","open":false,"isParent":false,"iconClose":"/img/tree/icon_folder_blue.png","iconOpen":"/img/tree/icon_folder_blue.png","icon":null,"pid":"20000002"},
+			                {"id":"200003",
+							"name":"项目三",
+							"open":false,
+							"isParent":true,
+							"iconClose":"/img/tree/icon_folder_blue.png",
+							"iconOpen":"/img/tree/icon_folder_blue.png",
+							"icon":null,
+							"pid":"2000"},
+			                ];
+			} else if ($("#gProject").val() == "p03") {
+				$("#modelName").val("三级项目");
+				treeData = [{"id":"3000","name":"三级项目","open":false,"isParent":true,"iconClose":"/img/tree/icon_folder_blue.png","iconOpen":"/img/tree/icon_folder_blue.png","icon":null,"pid":"0"},
+				            {"id":"300001","name":"项目Ⅰ","open":false,"isParent":true,"iconClose":"/img/tree/icon_folder_blue.png","iconOpen":"/img/tree/icon_folder_blue.png","icon":null,"pid":"3000"},
+				            {"id":"300002","name":"项目Ⅱ","open":false,"isParent":true,"iconClose":"/img/tree/icon_folder_blue.png","iconOpen":"/img/tree/icon_folder_blue.png","icon":null,"pid":"3000"},
+			                {"id":"3000001","name":"工作单元Ⅳ","open":false,"isParent":true,"iconClose":"/img/tree/icon_folder_blue.png","iconOpen":"/img/tree/icon_folder_blue.png","icon":null,"pid":"300001"},
+			                {"id":"30000001","name":"工作单元Ⅴ","open":false,"isParent":true,"iconClose":"/img/tree/icon_folder_blue.png","iconOpen":"/img/tree/icon_folder_blue.png","icon":null,"pid":"3000001"},
+			                {"id":"300000001","name":"工作单元Ⅶ","open":false,"isParent":false,"iconClose":"/img/tree/icon_folder_blue.png","iconOpen":"/img/tree/icon_folder_blue.png","icon":null,"pid":"30000001"},
+			                {"id":"300003",
+							"name":"项目Ⅲ",
+							"open":false,
+							"isParent":true,
+							"iconClose":"/img/tree/icon_folder_blue.png",
+							"iconOpen":"/img/tree/icon_folder_blue.png",
+							"icon":null,
+							"pid":"3000"},
+			                ];
+			}
+// 	   		$.ajax({
+// 				  url: 'http://iport/services/synchrodata?wsdl',
+// 				  type: 'GET',
+// 				  dataType: 'jsonp',
+// 				  jsonp:"callback",
+// 				  success: function (data) {
+// 					  treeData = data;
+// 				  },
+// 				  error: function(err){
+// 				  }
+// 			});
+			for (var i in treeData){
+				treeData[i]['pId'] = treeData[i].pid;
+				if (treeData[i].pid == '0'){
+					treeData[i]['open'] = true;
+				}
+			}
+			$.fn.zTree.init($("#tree1"), setting, treeData);
+		});
+	}
+	
+	//点击节点
+	function onClickTree(e, treeId, treeNode) {
+		$('#userList').empty();
+		var zTree = $.fn.zTree.getZTreeObj(treeId);
+		zTree.expandNode(treeNode);
+		$("#proId").val(treeNode.id);
+		$("#proName").val(treeNode.name);
+		$("#gname-input").val($("#modelName").val()+"-->"+treeNode.name);
+		$("#gdecribe-textarea").val(treeNode.contest);
+		$("#level_input").val(treeNode.levelName);
+		$("#levelId").val(treeNode.level);
+// 		$.ajax({
+// 			  url: 'http://iport/services/synchrodata?wsdl',
+// 			  type: 'GET',
+// 			  dataType: 'jsonp',
+// 			  jsonp:"callback",
+// 			  success: function (data) {
+// 				  groupUser = data;
+				  groupUser = treeNode.users;
+// 			  },
+// 			  error: function(err){
+// 			  }
+// 		});
+		groupUser = [{"userId":"10000019431705","name":"设计师1"},{"userId":"10000025190000","name":"设计师2"},{"userId":"10000025600000","name":"设计师3"}];
+		console.log("123==="+JSON.stringify(groupUser)); 
+		$(groupUser).each(function(i) {
+             $('#userList').append('<div style="width: 60px; height: 60px; float: left; margin-left: 10px;"><div class="uf">'+this.name.substring(0,1)+'</div><div style="text-align: center;">'+this.name+'</div><img class="du" src="/img/minus.png" onclick="aaaaa('+this.userId+')"></div>');
+//              $('#userList').append('<li class="btn btn-default dropdown-toggle" style="float:left;" value="'+this.userId+'">'+this.name+'</li>');
+         });
+	}
+
+</script>

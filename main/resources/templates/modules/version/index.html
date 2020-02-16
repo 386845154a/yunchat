@@ -1,0 +1,115 @@
+<script th:src="@{/js/echarts/echarts.min.js}"></script>
+<script th:src="@{/js/echarts/echarts.js}"></script>
+<div style="height: 48px; background-color: #1F68D4;">
+	<div style="float: left; color: white; font-size: 25px; font-weight: bold; 
+		margin: 6px 0 0 15px;" class="last-name">版本管理</div>
+</div>
+<div id="body-content">
+	<div id="main" style="min-width: 800px; min-height: 600px">
+	
+	</div>
+</div>
+<script type="text/javascript">
+	var charts_data = [];
+	var charts_links = [];
+	var level = 0;
+	var level_map = {};
+	
+	$(function (){
+		AjaxMethod.asyncAjax('nodeSnapshot/queryAllNode', {}, false).then(function (nodeMap){
+			var node_0 = nodeMap[0] ? nodeMap[0][0] : null;
+			if (!node_0){
+				alert("未查询到根节点");
+				return;
+			}
+			var root_node = {
+					level: level,
+					nodeId : node_0.nodeId,
+					name : node_0.versionName,
+					x : 0,
+					y : 0
+			};
+			charts_data.push(root_node);
+			getChildNode(root_node, nodeMap);
+			draw_echarts();
+			
+			console.log(charts_data);
+			console.log(level_map);
+		});
+	});
+	
+	//递归获得所有子节点
+	function getChildNode(p_node, nodeMap) {
+		if (!p_node || !p_node.nodeId){
+			return;
+		}
+			
+		var node_map = nodeMap[p_node.nodeId];
+		if (!node_map){
+			return;
+		}
+		
+		for (var i in node_map){
+			var node = node_map[i]
+			var p_level = p_node.level;
+			if (level_map[p_level + 1] == undefined){
+				level_map[p_level + 1] = 0;
+			}else {
+				level_map[p_level + 1] += 1;
+			}
+			var node_data = {
+					level : p_level + 1,
+					nodeId : node.nodeId,
+					name : node.versionName,
+					x : (p_level + 1) * 10,
+					y : level_map[p_level + 1] * 10
+			};
+			charts_data.push(node_data);
+			charts_links.push({ source: p_node.name, target: node.versionName});
+			
+			getChildNode(node_data, nodeMap);
+		}
+	}
+	//绘制图表
+	function draw_echarts() {
+		var myChart = echarts.init(document.getElementById('main'));
+		var option = {
+		    tooltip: {},
+		    animationDurationUpdate: 1500,
+		    animationEasingUpdate: 'quinticInOut',
+		    series : [
+		        {
+		        	type: 'graph',
+		            layout: 'none',
+		            symbolSize: 50,
+		            roam: true,
+		            label: {
+		                normal: {
+		                    show: true
+		                }
+		            },
+		            edgeSymbol: ['circle', 'arrow'],
+		            edgeSymbolSize: [4, 10],
+		            edgeLabel: {
+		                normal: {
+		                    textStyle: {
+		                        fontSize: 20
+		                    }
+		                }
+		            },
+		            data: charts_data,
+		            links: charts_links,
+		            lineStyle: {
+		                normal: {
+		                    opacity: 0.9,
+		                    width: 2,
+		                    curveness: 0
+		                }
+		            }
+		        }
+		    ]
+		};
+		myChart.setOption(option);	
+	}
+	
+</script>

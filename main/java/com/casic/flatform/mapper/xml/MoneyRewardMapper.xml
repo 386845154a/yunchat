@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.casic.flatform.mapper.MoneyRewardMapper">
+	<resultMap id="UserModel" type="com.casic.flatform.model.UserModel">
+		<id column="userId" property="userId" jdbcType="VARCHAR" />
+		<result column="fullname" property="fullname" jdbcType="VARCHAR" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+	<!--<result column="password" property="password" jdbcType="VARCHAR" /> -->
+		<result column="isExpired" property="isExpired" jdbcType="INTEGER" />
+		<result column="isLock" property="isLock" jdbcType="INTEGER" />
+		<result column="createtime" property="createtime" jdbcType="DATE" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="roomid" property="roomid" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="VARCHAR" />
+		<result column="picture" property="picture" jdbcType="INTEGER" />
+		<result column="FROMTYPE" property="fromType" jdbcType="INTEGER" />
+		<result column="orgId" property="orgId" jdbcType="VARCHAR" />
+		<result column="orgSn" property="orgSn" jdbcType="VARCHAR" />
+		<result column="orgName" property="orgName" jdbcType="VARCHAR" />
+		<result column="shortAccount" property="shortAccount" jdbcType="VARCHAR" />
+		<result column="levels" property="levels" jdbcType="VARCHAR" />
+		<result column="isonline" property="isonline" jdbcType="VARCHAR" />
+		<result column="head" property="head" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="MoneyRewardCModel" type="com.casic.flatform.model.MoneyRewardCModel">
+		<id column="cid" property="cid" jdbcType="VARCHAR" />
+		<result column="collectid" property="collectid" jdbcType="VARCHAR" />
+		<result column="collectname" property="collectname" jdbcType="VARCHAR" />
+		<result column="projectc" property="projectc" jdbcType="VARCHAR" />
+		<result column="linkid" property="linkid" jdbcType="VARCHAR" />
+		<result column="money" property="money" />
+		<result column="collecttime" property="collecttime" jdbcType="VARCHAR" />
+		<result column="isread" property="isread" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 根据用户姓名和部门名称 -->
+	<select id="getIdbyUOName" resultType="com.casic.flatform.model.UserModel">
+		select u.userid 
+		from SYS_USER u 
+		where u.orgsn = #{hrId}
+	</select>
+
+	<!-- 获取我的全部金额 -->
+	<select id="getMygold" resultMap="MoneyRewardCModel">
+		SELECT * FROM  
+		(  
+		SELECT A.*, ROWNUM RN  
+		FROM (SELECT * FROM pf_money_reward_link l WHERE l.cid is not null and l.collectid = #{userId} order by l.collecttime desc
+		) A  
+		WHERE ROWNUM <![CDATA[ <= ]]> #{row}  
+		)  
+		WHERE RN<![CDATA[ >= ]]> #{start}
+	</select>
+	
+	<!-- 获取我的全部金额条数 -->
+	<select id="getMygoldCount" resultType="int">
+		SELECT count(1)
+		FROM pf_money_reward_link l WHERE l.cid is not null and l.collectid = #{userId} order by l.collecttime desc
+	</select>
+	
+	<!-- 插入我的金额记录(主表) -->
+	<insert id="addMyGoldMainMsgs">
+		INSERT INTO pf_money_reward (gid,senderid,sendername,projectg,totalmoney,sendtime) 
+		VALUES (#{gid,jdbcType=VARCHAR},#{senderid,jdbcType=VARCHAR},#{sendername,jdbcType=VARCHAR},
+		#{projectg,jdbcType=VARCHAR},#{totalmoney,jdbcType=VARCHAR},sysdate)
+	</insert>
+	
+	<!-- 插入我的金额记录(关联表) -->
+	<insert id="addMyGoldMsgs">
+		INSERT INTO pf_money_reward_link (cid,collectid,collectname,projectc,linkid,money,collecttime,isread) 
+		VALUES (#{cid,jdbcType=VARCHAR},#{collectid,jdbcType=VARCHAR},#{collectname,jdbcType=VARCHAR},
+		#{projectc,jdbcType=VARCHAR},#{linkid,jdbcType=VARCHAR},#{money,jdbcType=VARCHAR},sysdate, 
+		#{isread,jdbcType=VARCHAR})
+	</insert>
+	
+	<!-- 删除我的金额记录 -->
+	<delete id="delMyGoldMsgs" parameterType="String">
+		DELETE FROM pf_money_reward_link l WHERE l.linkid = #{userId} and l.projectc = #{projectName}
+	</delete>
+	
+	<!-- 查询我的未读金额 -->
+	<select id="getMyNoRead" resultMap="MoneyRewardCModel">
+		SELECT * 
+		FROM pf_money_reward_link l 
+		WHERE l.collectid = #{userId} and l.isread = 0 order by l.collecttime desc
+	</select>
+	
+	<!-- 更改我的金额是否读取状态 -->
+	<update id="updateMyRead">
+		UPDATE pf_money_reward_link l SET l.isread = 1 where l.collectid = #{userId}
+	</update>
+	
+</mapper>
+
+
+

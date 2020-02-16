@@ -1,0 +1,148 @@
+	<script th:src="@{/js/points.js}"></script>
+
+	<style type="text/css">
+		table thead, table tr {
+			border-top-width: 1px;
+			border-top-style: solid;
+			table-layout:fixed;
+			/*border-top-color: rgb(230, 189, 189);*/
+		}
+		table tbody {
+			overflow-y:scroll;
+
+		}
+		table {
+			table-layout: fixed;
+			overflow-x: auto;
+			border-bottom-width: 1px;
+			border-bottom-style: solid;
+			border-bottom-color: rgb(230, 189, 189);
+			/*display: table-cell;*/
+			vertical-align: middle;
+			width: 100%;
+			height: 100%;
+		}
+
+		/* Padding and font style */
+		table td, table th {
+			padding: 5px 2px;
+			/*text-overflow: ellipsis;*/
+			white-space:nowrap;
+			overflow:hidden;
+			text-overflow: ellipsis;
+			font-size: 13px;
+			text-align: center;
+			font-family: Verdana;
+			color: rgb(177, 106, 104);
+			width: 43px;
+		}
+
+		.rk1{
+			background-image: url("/images/2018/1.png") ;
+			background-repeat: no-repeat;
+			background-position:center center;
+			background-size: 35px 35px;
+		}
+		.rk2{
+			background-image: url("/images/2018/2.png");
+			background-repeat: no-repeat;
+			background-size: 35px 35px;
+			background-position:center center;
+		}
+		.rk3{
+			background-image: url("/images/2018/3.png") ;
+			background-repeat: no-repeat;
+			background-position:center center;
+			background-size: 35px 35px;
+
+		}
+		.tableStyel{
+			overflow: hidden;
+			float: left;
+			height: calc(100vh - 130px - 80px)
+		}
+		.tableStyel:hover{
+			overflow-y: auto;
+		}
+</style>
+		<div class="main-content no-border-right" style="width:100%">
+			<div style="float: left;width:25%;height: 100%"  >
+				<div style="text-align:center">
+					<img src="/images/2018/quanju.png" height="120px" width="120px"/>
+					<p id="pGlobal" style="text-align:center;background-color: #dabc1a;color:#333333;font-size: 16px"></p>
+				</div>
+				<div class="tableStyel" style="border-right:1px solid #92adca">
+					<table id="Global" >
+						<thead>
+						<tr>
+							<th type="number">排名</th>
+							<th type="string">姓名</th>
+							<th type="number">研究室</th>
+							<th type="string">积分</th>
+						</tr>
+						</thead>
+						<tbody  >
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div style="float: left;width: 25%;height: 100%"  >
+				<div style="text-align:center">
+					<img src="/images/2018/fengxian.png" height="120px" width="120px"/>
+					<p id="pDevotion" style="text-align: center;background-color: #66ba3c;color:#333333;font-size: 16px"></p></div>
+				<div class="tableStyel" style="border-right:1px solid #92adca" >
+					<table id="Devotion">
+						<thead>
+						<tr>
+							<th type="number">排名</th>
+							<th type="string">姓名</th>
+							<th type="number">研究室</th>
+							<th type="string">积分</th>
+						</tr>
+						</thead>
+						<tbody>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div style="float: left;width: 25%;height: 100%"  >
+				<div style="text-align:center">
+					<img src="/images/2018/qiushi.png" height="120px" width="120px"/>
+					<p id="pBereal" style="text-align: center;background-color: #318be4;color:#333333;font-size: 16px"></p></div>
+				<div class="tableStyel" style="border-right:1px solid #92adca" >
+					<table id="Bereal">
+						<thead>
+						<tr>
+							<th type="number">排名</th>
+							<th type="string">姓名</th>
+							<th type="number">研究室</th>
+							<th type="string">积分</th>
+						</tr>
+						</thead>
+						<tbody>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div style="float: left;width: 25%;height: 100%" >
+				<div style="text-align:center" >
+					<img src="/images/2018/chuangxin.png" height="120px" width="120px"/>
+					<p id="pInnovate" style="text-align: center;background-color: #f0c562;color:#333333;font-size: 16px"></p></div>
+				<div  class="tableStyel"  >
+					<table id="Innovate">
+						<thead>
+						<tr>
+							<th type="number">排名</th>
+							<th type="string">姓名</th>
+							<th type="number">研究室</th>
+							<th type="string">积分</th>
+						</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>

@@ -1,0 +1,57 @@
+<style>
+     baby {
+      background-color: #ffff00;
+    }
+     .modal-body {
+         padding: 0px;
+     }
+    .report-loading {
+        display: flex;
+        position: absolute;
+        overflow: hidden;
+        left: 28%;
+    }
+    .report-loading-tip {
+        margin-left: 5px;
+        height: 30px;
+        line-height: 30px;
+        color: #fff;
+    }
+    .report-loading-tip-message {
+        font-size: 24px;
+        font-weight: 600;
+        font-family: cursive;
+    }
+    .report-loading-image {
+        -webkit-animation: rotateImg 1.5s linear infinite;
+        width: 30px;
+        height: 30px !important;
+    }
+    @keyframes rotateImg {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    @-webkit-keyframes rotateImg {
+        0% {
+            -webkit-transform: rotate(0deg);
+        }
+        100% {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+</style>
+<body>
+<div class="report-loading">
+    <img class="report-loading-image" src="/img/logox.png" />
+    <div class="report-loading-tip">
+        <span class="report-loading-tip-message">正在生成年报，请稍后</span>
+        <span class="report-loading-tip-emoji">(<span style="color: red">●</span>'◡'<span style="color: red">●</span>)</span>
+    </div>
+    <!-- <h3 class="report-loading-tip">年报正在生成中......</h3> -->
+</div>
+</body>

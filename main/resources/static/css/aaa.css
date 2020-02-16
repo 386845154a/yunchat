@@ -1,0 +1,240 @@
+body {
+	overflow: hidden;
+}
+.body_context {
+	height: 99.8%;
+	overflow: hidden;
+}
+.left_context {
+	height: 99.8%;
+	width: 36vh;
+	float: left; 
+	margin-left: 0.3%; 
+}
+.middle_context {
+	border-left: 1px solid rgb(204, 204, 204);
+	border-right: 1px solid rgb(204, 204, 204);
+	height: 99.8%;
+	width: 120vh;
+	float: left;
+}
+.right_context {
+	height: 99.8%;
+	width: 22vh;
+	float: left;
+}
+.search_User_group {
+	width: 60%;
+	height: 28px;
+    position: relative;
+    left: 15%;
+    top: 5px;
+	display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.428571429;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: #333333;
+    background-color: #ffffff;
+    border-color: #cccccc;
+    background-image: url(/images/2018/search-o.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+.nav_style {
+    list-style: none;
+    height: 52px;
+    line-height: 52px;
+    border-bottom: 1px solid #fff;
+    cursor: pointer;
+    padding-left: 15px;
+    font-size: 16px;
+    margin-bottom: 0px;
+    background-size: 10% 25%;
+    background-color: #CEF1FF;
+    font-weight: bold;
+}
+.msg-left-css {
+    overflow-x: hidden;
+    position: absolute;
+    left: 5.5%;
+    top: 40%;
+    width: calc(100% - 73%);
+    height: 50px;
+    word-break: break-word;
+    text-align: left;
+    line-height: 17px;
+}
+.msg-right-css {
+	overflow-x: hidden;
+    position: absolute;
+    left: 2%;
+    top: 8%;
+    width: 100%;
+    height: 150px;
+    word-wrap:break-word;
+    text-align: left;
+    line-height: 17px;
+}
+.bg-left-css {
+    float: left;
+    max-width: 50%;
+    min-width: 30%;
+    min-height: 60px;
+    /*background-image: url(/img/bg_left.png);*/
+    background-repeat: no-repeat;
+    background-size: 100% 60px;
+    background-attachment: inherit;
+    background-position: right;
+}
+.bg-right-css {
+    float: right;
+    max-width: 50%;
+    min-width: 30%;
+    min-height: 60px;
+    /*background-image: url(/img/bg_right.png);*/
+    background-repeat: no-repeat;
+    background-size: 100% 60px;
+    background-attachment: inherit;
+    background-position: right;
+    position: absolute;
+    right: 40px;
+}
+.img-msg-div {
+    width: 265px;
+    height: 265px;
+}
+.img-msg-div img {
+	float: right;
+    position: relative;
+    right: 20px;
+    width: 265px;
+    height: 265px;
+}
+.my_office_css {
+    width: 265px;
+    height: 60px;
+    float: right;
+    background-color: #E3E3E3;
+    border-radius: 5px;
+    position: relative;
+    right: 5px;
+}
+.other_office_css {
+    width: 265px;
+    height: 60px;
+    float: left;
+    background-color: #E3E3E3;
+    border-radius: 5px;
+    position: relative;
+    left: 10px;
+}
+.my_officeImg_css {
+    width: 53px;
+    height: 55px;
+    float: left;
+    margin-top: 3px;
+    margin-left: 3px;
+}
+.my_officeChild_css {
+	height: 58px;
+    width: 200px;
+    float: right;
+    text-align: left;
+    word-break: break-word;
+    cursor: pointer;
+}
+.user_info_div {
+    height: 99.8%;
+    z-index: 1;
+    display: none;
+}
+.group_info_div {
+    height: 99.8%;
+    overflow-x: hidden;
+    position: absolute;
+    width: 100%;
+    display: block;
+    border: 1px solid rgba(247, 244, 244, 0.02);
+}
+.label_ {
+    display: inline;
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    font-weight: bold;
+    line-height: 1;
+    color: black;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+    width: 110px;
+}
+.uinfoOne {
+    color: #b3b7cb;
+    font-size: 14px;
+    float: left;
+    position: relative;
+    bottom: 3px;
+    left: 15px;
+    font-weight: bold;
+}
+.uinfoTwo {
+    color: black;
+    position: relative;
+    left: 20px;
+    bottom: 3px;
+    width: 110px;
+}
+#isTabShow li {
+	float: left;
+	margin-left: 5px;
+}
+.group_user_div {
+    height: 99.8%;
+    overflow-x: hidden;
+    display: block;
+}
+.group_file_div {
+   	height: 99.8%;
+    overflow-x: hidden;
+}
+.important_info_div {
+    height: 99.8%;
+    overflow-x: hidden;
+}
+.out_group {
+    height: 33px;
+    border-radius: 5px;
+    background-color: #B3B7CB;
+}
+.modal-body_ {
+    background-color: white;
+    height: 200px;
+    width: 500px;
+    position: absolute;
+    left: 33%;
+    top: 15%;
+    border-radius: 5px;
+}
+.user-left_ {
+	width: 40%; 
+	float: left; 
+	height: 100%;
+}
+.user-right_ {
+	width: 59%; 
+	float: right; 
+	height: 100%;
+}
+.rows {
+    line-height: 30px;
+    margin-left: 10px;
+}

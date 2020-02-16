@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta charset="UTF-8" />
+<title>标记信息详情</title>
+<style type="text/css">
+li {
+	list-style: none;
+	min-height: 30px;
+}
+
+/*左对齐*/
+.left {
+	float: left;
+}
+
+/*右对齐*/
+.right {
+	float: right;
+}
+
+/*offic图标*/
+.fileImg {
+	width: 20px;
+	height: 20px;
+}
+/*标题*/
+.title {
+	text-align: center;
+	font-weight: bold;
+}
+/*附件标识*/
+.affiche_img {
+	width: 25px;
+	height: 20px;
+}
+/*附件下载*/
+.down {
+  cursor: pointer;
+}
+#show img{
+	max-width: 500px;
+}
+.modal-dialog{
+	width: 80%;
+}
+</style>
+<script type="text/javascript" th:inline="javascript">
+	var affiche_title = [[${info.title}]];
+	var affiche_context = [[${info.context}]];
+	var affiche_name = [[${info.fileName}]];
+	var affiche_path = [[${info.path}]];
+	var page_info = '';
+	page_info +=  '<div class="title" style="text-align: center;font-weight: bold;">'+ affiche_title +'</div>';
+	page_info +=  '<div><p style="text-indent:2em;word-wrap: break-word; word-break: normal;">'+ affiche_context +'</p></div>';
+	if (affiche_path != "null") {
+		page_info +=  '<div style="margin-left: 30px;"><img src="/img/FJ.png" class="affiche_img"/>'
+				  +   '<a class="down" onclick="down_affiche(\'' + affiche_name + '\',\'' + affiche_path + '\')">'+affiche_name +'</a></div>';
+	}
+	document.getElementById('show').innerHTML = page_info;
+
+	function down_affiche(name, path) {
+		$.downloadForOpen(path, name);	//附件打开
+// 		$.toolsDownByPath(path, name);	//附件下载
+	}
+</script>
+<script th:src="@{/js/jquery-2.0.3.min.js}"></script>
+<script th:src="@{/js/download.js}"></script>
+</head>
+<body>
+	<div id="show" style="margin: auto;"></div>
+</body>
+</html>
+

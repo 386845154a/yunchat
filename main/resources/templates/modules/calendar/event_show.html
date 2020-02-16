@@ -1,0 +1,34 @@
+<style>
+	lable {
+		font-weight: bold;
+	}
+	
+	.lable_float {
+	    float: left;
+	}
+</style>
+<lable class="lable_float">议题：</lable>
+<div id="eventName" class="lable_float"></div><br/>
+<lable class="lable_float">地点：</lable>
+<div id="eventAddress" class="lable_float"></div>
+<lable class="lable_float" style="margin-left: 40%;">时间：</lable>
+<div id="eventTime" class="lable_float"></div><br/>
+<lable>内容：</lable>
+<div id="eventDescribe" style="min-height: 20px; max-height: 100px; overflow-x: hidden;"></div>
+<lable>议程：</lable>
+<div id="eventAgenda" style="min-height: 20px; max-height: 100px; overflow-x: hidden;"></div>
+<label>人员：</label>
+<div style="min-height: 20px; max-height: 170px; overflow-x: hidden;">
+	<table id="dynamic-table" class="table table-striped table-bordered table-hover" style="width: 100%;">
+		<thead>
+			<tr>
+				<th class="center bg">名称</th>
+				<th class="center bg">部门</th>
+				<th class="center bg">备注</th>
+				<th class="center bg">签到</th>
+			</tr>
+		</thead>
+		<tbody class="infor-tbody" id="eventUser" >
+		</tbody>
+	</table>
+</div>

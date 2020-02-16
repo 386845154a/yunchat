@@ -1,0 +1,191 @@
+<link href='groupEdit.css' rel='stylesheet'>
+<style>
+	li {
+		list-style: none;
+	}
+	#change-user-list .item-user {
+	    width: 70%;
+    	margin-left: 13%;
+	}
+</style>
+<div class="group_info">
+    <div class="group_left_div">
+        <div class="create-group-info">
+            <div class="row-info">
+                <span>讨论组名称：</span>
+                <input type="text" id="gname-input" style="width: 200px;" class="name-input form-control"  maxlength="12">
+            </div>
+            <div class="row-info">
+                <span>讨论组描述：</span>
+                <textarea id="gdecribe-textarea" style="resize: none;width: 200px;" class="decribe-textarea form-control"></textarea>
+            </div>
+            <div class="row-info">
+    		  <input type="button" style="width: 200px; margin-top: 5px; visibility: hidden" id="proBtn" value="其他" class="btn btn-default dropdown-toggle"/>
+            </div>
+            <div class="levels">
+                <select id="levels" style="height: 35px ;width: 224px;margin-left: 21px;border-radius: 4px; margin-top: 10px;"></select>
+            </div>
+        </div>
+    </div>
+<!--    <div style="float: right">-->
+<!--        <div class="layui-input-block" style="margin: 0px;width: 50px">-->
+<!--            <input type="text" placeholder="请输入关键字进行搜索" autocomplete="off" class="layui-input eleTree-search"  id="searchUser"/>-->
+<!--        </div>-->
+<!--        <div id="orgTree" class="org-tree"></div>-->
+<!--    </div>-->
+    <div class="group_right_div">
+        <div class="input-group">
+<!--            <input type="text" class="form-control" id="gro-list-input" style="height:24px;" onchange="query_gro_user()"/>-->
+<!--            <span class="input-group-btn" onclick="query_gro_user()">-->
+<!--            	<button  class="btn btn-default" style="height:24px;line-height:12px;font-size:12px;padding: 2px 10px;margin-left: 33px">搜索</button >-->
+<!--            </span>-->
+            <div class="layui-input-block" style="margin: 0px;width: 200px">
+                <input type="text" placeholder="请输入关键字进行搜索" autocomplete="off" class="layui-input eleTree-search"  id="groupSearchUser"/>
+            </div>
+            <div id="orgTree" class="org-tree" lay-filter="treeData"></div>
+        </div>
+        <div class="user-list " id="change-user-list">
+
+        </div>
+    </div>
+    <div class="user" id="checked-user" style="height: 600px">
+
+    </div>
+</div>
+<script src='../../../../js/jquery-2.0.3.min.js'></script>
+<script src="../../../../js/ajax.js"></script>
+<link href="../../../../js/layui/css/layui.css"  rel="stylesheet"/>
+<link href="../../../../js/layui/css/eleTree.css"  rel="stylesheet"/>
+<script src="../../../../js/layui/layui.js"></script>
+<script src="groupEdit.js"></script>
+<script type="text/javascript">
+    layui.config({
+        base: '../../../../js/layui/lay/mymodules/'}
+    );
+
+    var orgdata = "";
+    $.ajax({
+        type : 'post',
+        url : '/homeController/getOrgDataByPid',
+        data: {'noLogUser' : "true"},
+        async:false,
+        cache: false,
+        success:function (res) {
+            orgdata = res;
+        }
+    });
+
+    layui.use(['eleTree'], function() {
+        var tree = layui.eleTree;
+
+        $(".eleTree-search").on("change",function() {
+            // el6.search($(this).val());
+            if ($(this).val()){
+                $.ajax({
+                    type : 'post',
+                    url : '/homeController/getOrgDataByUserName',
+                    data: {'noLogUser' : "true",
+                        'userName':$(this).val()},
+                    async:false,
+                    cache: false,
+                    success:function (res) {
+                        var eles=tree.render({
+                            elem: '#orgTree',
+                            // data: data,
+                            // showCheckbox: true,
+                            defaultExpandAll: true,
+                            defaultCheckedKeys: [23,24],
+                            accordion: false
+                        });
+                        console.log(res);
+                        eles.reload({data:res});
+                    }
+                });
+            }else {
+                showTree();
+            }
+
+        });
+
+        showTree();
+
+        function showTree() {
+            var el6=tree.render({
+                elem: '#orgTree',
+                data: orgdata,
+                // showCheckbox: true,
+                defaultExpandAll: true,
+                // defaultCheckedKeys: [23,24],
+                // accordion: false,
+                highlightCurrent:true,
+                showLine:true,
+                async:false,
+                lazy: true,
+                load: function(data,callback){
+                    console.log('jiazai')
+                    console.log(data);
+                    console.log(data.children.length);
+                    var newData;
+                    if (data.leaf == 0)
+                    {
+                        $.ajax({
+                            type : 'post',
+                            url : '/homeController/getOrgDataByPid',
+                            data: {'pid' : data.id},
+                            async:false,
+                            cache: false,
+                            success:function (res) {
+                                // console.log(res)
+                                newData =res
+                            }
+                        })
+                        // setTimeout(function() {
+
+                        // },500);
+                    }
+                    else {
+                        $.ajax({
+                            type : 'post',
+                            url : '/homeController/getUserDataByPid',
+                            data: {'pid' : data.id},
+                            async:false,
+                            cache: false,
+                            success:function (res) {
+                                // console.log(res)
+                                newData =res
+                            }
+                        })
+                    }
+
+                    callback(newData);
+                },
+                searchNodeMethod: function(value,data) {
+                    if (!value) return true;
+                    return data.label.indexOf(value) !== -1;
+                }
+            });
+        }
+
+        // 节点点击事件
+        tree.on("nodeClick(treeData)",function(d) {
+            console.log(d.data);    // 点击节点对应的数据
+            if (d.data.currentData.isLeaf){
+                change_user[d.data.currentData.id] = d.data.currentData.label;
+                update_checked_user();
+            }else {
+                console.log("23123")
+            }
+
+
+        })
+        tree.on("nodeChecked(treeData)",function(d) {
+            console.group("节点选中nodeChecked:")
+            // console.log(d.data);    // 点击节点对于的数据
+            // console.log(d.isChecked);   // input是否被选中
+            // console.log(d.node);    // 点击的dom节点
+            // console.log(this);      // input对于的dom
+            // console.groupEnd();
+            console.log(ele.getChecked(true,false));
+        })
+    });
+</script>

@@ -1,0 +1,196 @@
+<meta http-equiv="Content-Type" charset="utf-8"/>
+<div class="main-content contacts-h b-t-2 no-padding-right no-border-right" style="background-color: #fff;">
+	<div class="content-info" style="height: 100%">
+		<div class="contacts f_left b-r-2">
+			<div class="contacts_search">
+				<input type="text" id="contacts_kw_" name="contacts_kw_" placeholder="搜&nbsp;索"/>
+			</div>
+			<div class="content">
+				<ul>
+					<li id="nav_01" onclick="changeContactsNav(this)">
+						<span class="mycontacts"><a>联系人</a></span>
+					</li>
+					<ul id="ul_pid_nav_01" class="org-dt-ul active">
+
+					</ul>
+					<li id="nav_02" class="mychat" onclick="changeContactsNav(this)">
+						<span class="mychat"><a>最近</a></span>
+					</li>
+					<ul id="ul_pid_nav_02" class="dt-ul">
+						<dt class="active">
+							<img class="f_left" src="/images/2018/userphoto.png" height="37px" width="37px"/>
+							<span class="f_left"><a>张三</a></span>
+						</dt>
+					</ul>
+					<li id="nav_03" onclick="changeContactsNav(this)">
+						<span class="mygroup"><a>群组</a></span>
+					</li>
+					<ul id="ul_pid_nav_03" class="dt-ul">
+						<dt class="active">
+							<img class="f_left" src="/images/2018/c04.png" height="37px" width="37px"/>
+							<span class="f_left"><a>群组001</a></span>
+						</dt>
+					</ul>
+				</ul>
+			</div>
+		</div>
+		<div class="chat f_left b-r-1">
+			<div class="chat-top">
+				<img class="img_chat_user f_left" src="/images/2018/c04.png" height="37px" width="37px"/>
+				<span class="f_left"><a>王二麻子</a></span>
+				<div class="img_chat_top f_right">
+					<img src="/images/2018/chat-top-01.png" width="27px" height="25px"/>
+					<img src="/images/2018/chat-top-02.png" width="27px" height="23px"/>
+					<img src="/images/2018/chat-top-03.png" width="25px" height="22px"/>
+					<img src="/images/2018/chat-top-04.png" width="23px" height="27px"/>
+					<img src="/images/2018/chat-top-05.png" width="27px" height="27px"/>
+					<img src="/images/2018/chat-top-06.png" width="22px" height="27px"/>
+					<img src="/images/2018/chat-top-07.png" width="27px" height="23px"/>
+					<img src="/images/2018/chat-top-08.png" width="27px" height="23px"/>
+				</div>
+			</div>
+			<div class="content no-border-top">
+				<ul>
+					<li>
+						<span class="chat_left f_left">
+							<img class="f_left" src="/images/2018/c04.png" height="47px" width="47px" />
+						</span>
+						<span class="subject f_left p-l-3 p-r-3">新入职员工</span>
+						<span class="time">2018-08-27</span>
+					</li>
+					<li>
+			    			    <span class="chat_left f_left">
+			    			    	<img class="f_left" src="/images/2018/c04.png" height="47px" width="47px" />
+			    			    </span>
+						<span class="subject f_left p-l-3 p-r-3">赵启伦</span>
+						<span class="time">2018-08-27</span>
+					</li>
+					<li>
+			    			    <span class="chat_right f_right">
+			    			    	<img class="f_right" src="/images/2018/userphoto.png" height="47px" width="47px" />
+			    			    </span>
+						<span class="subject subject_r f_right p-l-3 p-r-3">新入职员工赵启伦计算机申请入网，请领导给予批准并提供门户服务器访问</span>
+						<span class="time">2018-08-27</span>
+					</li>
+				</ul>
+			</div>
+			<div class="msg-content">
+				<textarea id="msg-content" name="msg-content" placeholder="请输入消息"></textarea>
+				<button class="send-msg">发送</button>
+			</div>
+		</div>
+		<div class="comments f_left">
+			<!-- 个人信息，默认隐藏 -->
+			<div id="userinfo" class="content no-border-top" style="display:none;">
+			    <div class="t-bar">
+			    	<h2 class="title">个人信息</h2>
+			    </div>
+			    <div id="talkUserHead" style="margin-top: 30px;"></div>
+				<ul>
+	    			<li>
+	    				<span class="subject">
+	    					姓名：<font id="userName"></font>
+	    				</span>
+	    			</li>
+	    			<li>
+	    				<span class="subject">
+	    					科室：<font id="classRoom"></font>
+	    				</span>
+	    			</li>
+					<li>
+	    				<span class="subject">
+	    					办公地点：<font id="address"></font>
+	    				</span>
+	    			</li>
+	    		</ul>
+	    	</div>
+    		<!-- 群组信息，默认隐藏 -->
+	    	<div id="groupinfo" class="content no-border-top" style="display:none;">
+			    <div class="t-bar">
+			    	<h2 class="title">群组信息</h2>
+			    </div>
+	    		<ul>
+	    			<li>
+	    				<span class="subject">
+	    					主题：<font id="group_name"></font>
+	    				</span>
+	    			</li>
+					<li>
+	    				<span class="subject">
+	    					描述：<font id="group_describe"></font>
+	    				</span>
+	    			</li>
+					<li>
+	    				<span class="subject">
+	    					发起时间：<font id="group_create_time"></font>
+	    				</span>
+	    			</li>
+					<li>
+	    				<span class="subject">
+	    					发起人：<font id="group_creator"></font>
+	    				</span>
+	    			</li>
+					<li>
+	    				<span class="subject">
+	    					参与范围：<font id="scop"></font>
+	    				</span>
+	    			</li>
+					<li>
+	    				<span class="subject">
+	    					投票：<font></font>
+	    				</span>
+	    			</li>
+	    		</ul>
+			</div>
+	    	<!-- 群组成员信息，默认隐藏 -->
+			<div id="groupUserInfo" class="content no-border-top" style="display:none;">
+				<div class="t-bar">
+			    	<h2 class="title">群组成员信息</h2>
+			    </div>
+			    <div id="groupUserInfoList">
+			    
+			    </div>
+			</div>
+    		<!-- 群组文件信息，默认隐藏 -->
+			<div id="groupFileInfo" class="content no-border-top" style="display:none;">
+				<div class="t-bar">
+			    	<h2 class="title">群组文件信息</h2>
+			    </div>
+			    <ul id="groupFileInfoList">
+			    
+			    </ul>
+			</div>
+    		<!-- 重点信息，默认隐藏 -->
+			<div id="importInfo" class="content no-border-top" style="display:none;">
+				<div class="t-bar">
+			    	<h2 class="title">重点信息</h2>
+			    </div>
+			    <ul id="importInfoList">
+			    
+			    </ul>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- basic scripts -->
+<script type="text/javascript" th:src="@{/js/2018/jquery-1.11.3.min.js}"></script>
+<link rel="stylesheet" th:src="@{/js/2018/kindeditor/themes/default/default.css}" />
+<link rel="stylesheet" th:src="@{/js/2018/kindeditor/plugins/code/prettify.css}" />
+<script type="text/javascript" th:src="@{/js/2018/kindeditor/kindeditor.js}"></script>
+<script type="text/javascript" th:src="@{/js/2018/kindeditor/kindeditor-min.js}"></script>
+<script type="text/javascript" th:src="@{/js/2018/kindeditor/lang/zh_CN.js}"></script>
+<script type="text/javascript" th:src="@{/js/2018/kindeditor/plugins/code/prettify.js}"></script>
+<script type="text/javascript" th:src="@{/js/2018/kindeditor/setkindeditor.js}"></script>
+<script th:src="@{/js/newjs/contacts/index.js}"></script>
+<script th:src="@{/js/newjs/chat/chat.js}"></script>
+<script>
+    var kindEditor = null;
+    var uploadUrl = "upload/commonuploadfile";
+    // 设置编辑器
+    setKindEditor($('textarea[name="msg-content"]'));
+    if ($('textarea[name="msg-content"]').val()) {
+        if (!kindEditor.html()) {
+            kindEditor.html($('textarea[name="msg-content"]').val());
+        }
+    }
+</script>

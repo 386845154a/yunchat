@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta charset="UTF-8" />
+<script th:src="@{/js/jquery-2.0.3.min.js}"></script>
+<script th:src="@{/js/ajax.js}"></script>
+<script th:src="@{/js/talkingPage.js}"></script>
+<script th:src="@{/js/chat1.js}"></script>
+<script th:src="@{/js/socket.io.js}"></script>
+<script type="text/javascript" th:src="@{/at/js/jquery.caret.js}"></script>
+<script type="text/javascript" th:src="@{/at/js/jquery.atwho.js}"></script>
+<script type="text/javascript" th:src="@{/ckeditor/ckeditor.js}"></script>
+<link th:href="@{/at/css/jquery.atwho.css}" rel="stylesheet" />
+<script th:src="@{/css/bootstrap-3.0.2/js/bootstrapmenu.min.js}"></script>
+<script th:src="@{/css/bootstrap-3.0.2/js/bootstrap.min.js}"></script>
+<link th:href="@{/css/bootstrap-3.0.2/css/bootstrap.css}" rel="stylesheet" />
+<link th:href="@{/css/bootstrap-3.0.2/css/bootstrap-switch.min.css}" rel="stylesheet"/>
+<link th:href="@{/css/font-awesome-4.7.0/css/font-awesome.min.css}" rel="stylesheet" />
+<link th:href="@{/js/dialog/jquery.gritter.css}" rel="stylesheet" />
+<script th:src="@{/js/dialog/jquery.gritter.js}"></script>
+<script th:src="@{/js/dialog/bootbox.js}"></script>
+<script th:src="@{/js/dialog/dialog.js}"></script>
+<script th:src="@{/js/download.js}"></script>
+<script th:src="@{/js/groupEdit/groupEdit.js}"></script>
+<script th:src="@{/js/count.js}"></script>
+<script th:src="@{/js/log.js}"></script>
+<style type="text/css">
+  	.textsize {
+		font-size: 12px;
+		color: #A26CF5;
+    	cursor: pointer;
+  	}
+	.img-msg-div img {
+		width: 90px;
+		height: 85px;
+	    margin-left: 5px;
+	}
+	.msg-office-div {
+		border-radius: 3px;
+		background-color: #BECEEB;
+	    width: 290px;
+	    height: 80px;
+    	margin-right: -23%;
+   	    word-wrap: break-word;
+   	    float: right;
+	}
+/* 	.msg-office-div div { */
+/* 		padding-bottom: 14px; */
+/* 	} */
+	.msg-office-div .name-span {
+/* 	    position: relative; */
+/* 	    left: 30%; */
+        position: absolute;
+	    left: 55%;
+	    width: 160px;
+	}
+	.filestitle {
+	    position: relative;
+	    top: 5px;
+	    right: 220px;
+	    border-radius: 10px;
+	    width: 70px;
+	    height: 70px;
+	    float: right;
+        z-index: 1;
+	}
+	.leftMsg {
+		border-right: 1px solid #CCCCCC; 
+		border-bottom: 1px solid #CCCCCC; 
+		overflow-x: hidden; 
+		width: 65%; 
+		height: 63%; 
+		float: left; 
+		position: absolute; 
+		top: 0px;
+	}
+	.rightMsg {
+		width: 33%; 
+		max-height: 92%; 
+		float: right; 
+		position: absolute; 
+		top: 0px; 
+		right: 0.5%; 
+		overflow-x: hidden;
+	}
+	.bottomMsg {
+		float: left; 
+		width: 65%; 
+		position: absolute; 
+		bottom: 14%; 
+		height: 21%;
+	}
+	.label {
+		color: black;
+		font-size: 90%;
+	}
+	.row {
+		margin-top: 15px;
+	}
+	.functionButton{
+		margin-bottom: 20px;
+		padding-top: 5px;
+		background-color: #D8DFE7;
+		height: 25px;
+	}
+	.functionButton ul{
+		position: relative;
+		right: 40px;
+	}
+	.functionButton ul li {
+		list-style: none;
+		float: left;
+		margin-left: 10px;
+	    cursor: pointer;
+	}
+</style>
+<script type="text/javascript">
+	var type = "", id = "", titleName = "", user_html = "", nextPage = 0, totalPage = 0;
+	var str = location.href; //取得整个地址栏
+	var tmp1 = str.split("?")[1];
+	var tmp2 = tmp1.split(",");
+	for ( var i in tmp2) {
+		if (tmp2[i].split("=")[0] == "type") {
+			type = tmp2[i].split("=")[1];
+		} else if (tmp2[i].split("=")[0] == "id") {
+			id = tmp2[i].split("=")[1];
+		} else if (tmp2[i].split("=")[0] == "name") {
+			titleName = decodeURIComponent(tmp2[i].split("=")[1]);
+		}
+	}
+	
+	//加载富文本编辑器
+	editM(id);
+	//信息加载
+	loadHisMsg(id, type);
+	//发送信息密级初始化
+	bottom_level(id, type);
+	
+	window.onload = function() {
+		if (type == "group") {
+			$("#user_info_div").hide();
+			$("#group_info_div").show();
+			show_group_info();
+		} else {
+			$("#user_info_div").show();
+			$("#group_info_div").hide();
+			show_user_info();
+		}
+		document.title = titleName;
+		document.getElementById('moreMsgs').innerHTML = '<span style="position: relative; left: 40%; cursor: pointer;" onclick="loadMove()"><i class="fa fa-list" style="margin-right:5px;"></i>加载更多消息</span>';
+		document.getElementById('loadDiv').innerHTML = user_html;
+	}
+	
+</script>
+
+<title></title>
+</head>
+<body style="overflow: hidden;">
+	<input type="hidden" id="chat-type" /> 
+	<input type="hidden" id="chat-user-id" />
+	<input type="hidden" id="send_type" />
+	<input type="hidden" id="at_user" />
+	<div class="leftMsg">
+		<div id="moreMsgs"></div>
+		<div id="functionButton" class="functionButton" style="display: none;">
+			<ul>
+				<li onclick="show_group_info()" id="ginfo" data-toggle="tooltip" title="组信息">
+					<span class="glyphicon glyphicon-comment"></span> 
+				</li>
+				<li onclick="show_group_user()" id="guser" data-toggle="tooltip" title="成员">
+					<span class="glyphicon glyphicon-user"></span> 
+				</li>
+				<li onclick="show_group_file()" id="gfile" data-toggle="tooltip" title="组文件">
+					<span class="glyphicon glyphicon-folder-open"></span> 
+				</li>
+				<li onclick="show_importantInfo_user()" id="import" data-toggle="tooltip" title="重要信息">
+					<span class="glyphicon glyphicon-asterisk"></span>
+				</li>
+				<li onclick="out_files()" id="fileout" data-toggle="tooltip" title="导出">
+					<span class="glyphicon glyphicon-save"></span>
+				</li>
+				<li onclick="edit_group_btn()" id="fileout" data-toggle="tooltip" title="讨论组编辑">
+					<span class="glyphicon glyphicon-pencil"></span>
+				</li>
+				<li onclick="closed_group()" id="closeGroup" data-toggle="tooltip" title="讨论组关闭">
+					<span class="glyphicon glyphicon-remove"></span>
+				</li>
+			</ul>
+		</div>
+		<div id="loadDiv"></div>
+	</div>
+	<div class="right-main-div" id="hi_msg_div" style="display: none;">
+				<div class="close_groupinfo_div" onclick="show_chat()">
+					<i class="fa fa-close"></i>
+				</div>
+				<div id="hi-msg-content">
+					<div style="margin: 20%; font-size: 18px; color: #999;">
+						<span>没有历史消息</span>
+					</div>
+				</div>
+				<div class="page">
+					<ul class="pagination" id="msg-page"></ul>
+				</div>
+			</div>
+	<div class="bottomMsg">
+		<textarea id="msgcontent" name="msgcontent"></textarea>
+		<div class="btn-div text-right" style="margin-right:10px;">
+			<button id="sendMsgBtn" onclick="send_Msg()" style="float: right; margin-top: 2px;"
+					class="btn btn-success">发送</button>
+			<div id="bottom_level" style="position: relative; right: 15px; top: 5px; float: right;"></div>
+		</div>
+	</div>
+	<div class="rightMsg" >
+		<!-- 个人信息start -->
+		<div id="user_info_div">
+			<div class="row">
+				<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+					<div id="talkUserHead" style="margin-top: 30px;"></div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+					<i class="fa fa-info-circle" style="color:#B3B7CB; float: left;"></i>
+					<div class="uinfoOne">姓名:</div>
+					<div class="uinfoTwo" id="userName"></div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+					<i class="fa fa-align-justify" style="color:#B3B7CB; float: left;"></i>
+					<div class="uinfoOne">科室:</div>
+					<div class="uinfoTwo" id="classRoom"></div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+					<i class="fa fa-calendar" style="color:#B3B7CB; float: left;"></i>
+					<div class="uinfoOne">办公地点:</div>
+					<div class="uinfoTwo" id="address"></div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+					<i class="fa fa-calendar" style="color:#B3B7CB; float: left;"></i>
+					<div class="uinfoOne">人员密级:</div>
+					<div class="uinfoTwo" id="levelsinfo"></div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+					<i class="fa fa-calendar" style="color:#B3B7CB; float: left;"></i>
+					<div class="uinfoOne">联系电话:</div>
+					<div class="uinfoTwo" id="call_phone_"></div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+					<i class="fa fa-calendar" style="color:#B3B7CB; float: left;"></i>
+					<div class="uinfoOne">是否在线:</div>
+					<div class="uinfoTwo" id="is_online_"></div>
+				</div>
+			</div>
+		</div>
+		<!-- 讨论组信息 start -->
+		<div id="group_info_div">
+			<div id="group_info_div" style="width: 100%; height: 104%;">
+				<!-- ajax填充讨论组信息 -->
+				<div class="row" style="margin-top: 15px;">
+					<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+						<i class="fa fa-info-circle" style="color:#B3B7CB;"></i>
+						<div class="label">主题:</div>
+						<div class="group_info" id="group_name" style="margin-left: 16px;"></div>
+					</div>
+				</div>
+				<div class="row" style="margin-top: 15px;">
+					<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+						<i class="fa fa-info-circle" style="color:#B3B7CB;"></i>
+						<div class="label">密级:</div>
+						<div class="group_info" id="group_le" style="margin-left: 16px;"></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+						<i class="fa fa-align-justify" style="color:#B3B7CB;"></i>
+						<div class="label">描述:</div>
+						<div class="group_info" id="group_describe" style="margin-left: 16px;"></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+						<i class="fa fa-calendar" style="color:#B3B7CB;"></i>
+						<div class="label">发起时间:</div>
+						<div class="group_info" id="group_create_time" style="margin-left: 16px;"></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+						<i class="fa fa-user" style="color:#B3B7CB;"></i>
+						<div class="label">发起人:</div>
+						<div class="group_info" id="group_creator" style="margin-left: 16px;"></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+						<i class="fa fa-user" style="color:#B3B7CB;"></i>
+						<div class="label">参与范围:</div>
+						<div class="group_info" id="group_scope" style="margin-left: 16px;"></div>
+					</div>
+				</div>
+<!-- 				<div class="row"> -->
+<!-- 					<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;"> -->
+<!-- 						<i class="fa fa-user" style="color:#B3B7CB;"></i> -->
+<!-- 						<div class="label">是否投票:</div> -->
+<!-- 						<div class="group_info" id="group_vote" style="margin-left: 16px;"></div> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+				<div class="row">
+					<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+						<input id="gId" type="hidden" />
+						<div class="label" style="display: none">退出群组:</div>
+						<div style="position: relative; bottom: 23px; left: 80px;">
+							<input type="button" class="out_group" value="退出" onclick="out_group()" />
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+		<!-- 讨论组成员 start -->
+		<div class="right-main-div" id="group_user_div" style="display: none; ">
+			<div id="group_user_list" style="width: 100%; height: 105%;">
+				<!-- ajax填充讨论组成员 -->
+			</div>
+		</div>
+		<!-- 讨论组成员 end -->
+		<!-- 重要信息 start -->
+		<div class="right-main-div" id="important_info_div" style="display: none;">
+			<div id="important_info_list">
+				<!-- ajax填充重要信息 -->
+			</div>
+		</div>
+		<!-- 重要信息 end -->
+		<!-- 讨论组文件 start -->
+		<div class="right-main-div" id="group_file_div" style="display: none;">
+			<div style="margin-top: 15px;">
+				<div class="input-group">
+					<input type="text" class="form-control" style="height: 26px; width: 75%;" id="group_file_input" /> 
+					<span class="input-group-btn" onclick="show_group_file(1)">
+						<button class="btn btn-default" style="height: 26px; padding: 2px 9px; position: relative; right: 45px;">搜索</button>
+					</span>
+				</div>
+			</div>
+			<div id="group_user_file" style="">
+				<!-- ajax填充讨论组文件 -->
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th style="min-width: 40px;">名称</th>
+<!-- 									<th>大小</th> -->
+<!-- 									<th class="center" style="min-width: 90px;">时间</th> -->
+							<th class="center" style="min-width: 40px;">用户</th>
+							<th style="min-width: 40px;" class="del_gro_fil center">操作</th>
+						</tr>
+					</thead>
+					<tbody id="file-table">
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!-- 项目进展状态 18-03-22  -->
+		<div class="right-main-div" id="group_matter_div"
+			style="display: none;">
+			<div style="float: left;">
+				<div class="update-div"
+					style="float: left; margin-left: 10px; padding: 2px;">
+					<div id="update_btn" onclick="$(this).find('input')[0].click()">
+						项目启动 <input type="file" style="display: none;"
+							onchange="upload_group_file(this)" multiple="multiple" />
+					</div>
+				</div>
+				<div class="update-div"
+					style="float: left; margin-left: 80px; padding: 2px;">
+					<div id="update_btn">
+						项目进行中 <input type="file" style="display: none;"
+							onchange="upload_group_file(this)" multiple="multiple" />
+					</div>
+				</div>
+				<div class="update-div"
+					style="float: left; margin-left: 80px; padding: 2px;">
+					<div id="update_btn">
+						项目关闭 <input type="file" style="display: none;"
+							onchange="upload_group_file(this)" multiple="multiple" />
+					</div>
+				</div>
+				<div class="update-div"
+					style="float: left; margin-left: 80px; padding: 2px;">
+					<div id="update_btn" onclick="$(this).find('input')[0].click()">
+						项目导出 <input type="file" style="display: none;"
+							onchange="upload_group_file(this)" multiple="multiple" />
+					</div>
+				</div>
+			</div>
+			<div id="group_user_file">
+				<!-- ajax填充讨论组文件 -->
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<!-- <th>文件名称</th><th>文件大小</th><th class="center" style="min-width:90px;">上传时间</th>
+	        				<th class="center" style="min-width:80px;">上传用户</th> -->
+							<th class="del_gro_fil"></th>
+						</tr>
+					</thead>
+					<tbody id="file-table" class="del_gro_fil">
+					</tbody>
+				</table>
+				<div class="page">
+					<ul class="pagination" id="file-page"></ul>
+				</div>
+			</div>
+		</div>
+		<!-- 讨论组文件 end -->
+	</div>
+	<script>
+		// 激活文字提示
+		$("[data-toggle='tooltip']").tooltip();
+	</script>
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="my_Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">文件上传</h4>
+				</div>
+				<div class="modal-body" style="margin-left:65px;">
+				  
+				  保密级别：<select id="level_Id" style="height: 35px;" onchange="isClick('true')"></select>
+				
+				</div>
+				<div class="modal-footer">
+					<div class="btn btn-default" id="update_btn" onclick="$(this).find('input')[0].click()" style="margin: 10px;">
+						上传文件 <input type="file" style="display: none;" id="one" disabled="true"
+							onchange="upload_chat_file(this)" multiple="multiple" />
+					</div>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal -->
+	</div>
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">文件上传</h4>
+				</div>
+				<div class="modal-body" style="margin-left:65px;">
+				  
+				  保密级别：<select id="levelId" style="height: 35px;" onchange="isClick('false')"></select>
+				
+				</div>
+				<div class="modal-footer">
+					<div class="btn btn-default" id="update_btn" onclick="$(this).find('input')[0].click()">
+						上传文件 <input type="file" style="display: none;" id="two" disabled="true"
+							onchange="upload_group_file(this)" multiple="multiple" />
+					</div>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal -->
+	</div>
+</body>
+</html>
+

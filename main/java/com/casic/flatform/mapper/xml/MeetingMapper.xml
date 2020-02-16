@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.casic.flatform.mapper.MeetingMapper">
+	<!-- 查询日程信息 -->
+	<resultMap id="CalendarModel" type="com.casic.flatform.model.CalendarModel">
+		<id column="event_id" property="eventId" jdbcType="VARCHAR" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="event_name" property="eventName" jdbcType="VARCHAR" />
+		<result column="event_describe" property="eventDescribe" jdbcType="VARCHAR" />
+		<result column="start_time" property="startTime" />
+		<result column="create_time" property="createTime" />
+		<result column="end_time" property="endTime" />
+		<result column="state" property="state" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="agenda" property="agenda" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 查询会议信息 -->
+	<resultMap id="MeetingModel" type="com.casic.flatform.model.MeetingModel">
+		<id column="meetid" property="meetid" jdbcType="VARCHAR" />
+		<result column="meetname" property="meetname" jdbcType="VARCHAR" />
+		<result column="meettype" property="meettype" jdbcType="VARCHAR" />
+		<result column="stime" property="stime" />
+		<result column="meettime" property="meettime" jdbcType="VARCHAR" />
+		<result column="meetaddress" property="meetaddress" jdbcType="VARCHAR" />
+		<result column="meetu" property="meetu" jdbcType="VARCHAR" />
+		<result column="meetclub" property="meetclub" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="VARCHAR" />
+		<result column="creater" property="creater" jdbcType="VARCHAR" />
+		<result column="suser" property="suser" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 查询日程、会议信息结果集 -->
+	<resultMap id="EventMeetModel" type="com.casic.flatform.model.EventMeetModel">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="userid" property="userId" jdbcType="VARCHAR" />
+		<result column="eventid" property="eventid" jdbcType="VARCHAR" />
+		<result column="meetid" property="meetid" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="savetime" property="savetime" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="UserModel" type="com.casic.flatform.model.UserModel">
+		<id column="userId" property="userId" jdbcType="VARCHAR" />
+		<result column="fullname" property="fullname" jdbcType="VARCHAR" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+	<!--<result column="password" property="password" jdbcType="VARCHAR" /> -->
+		<result column="isExpired" property="isExpired" jdbcType="INTEGER" />
+		<result column="isLock" property="isLock" jdbcType="INTEGER" />
+		<result column="createtime" property="createtime" jdbcType="DATE" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="roomid" property="roomid" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="VARCHAR" />
+		<result column="picture" property="picture" jdbcType="INTEGER" />
+		<result column="FROMTYPE" property="fromType" jdbcType="INTEGER" />
+		<result column="orgId" property="orgId" jdbcType="VARCHAR" />
+		<result column="orgSn" property="orgSn" jdbcType="VARCHAR" />
+		<result column="orgName" property="orgName" jdbcType="VARCHAR" />
+		<result column="shortAccount" property="shortAccount" jdbcType="VARCHAR" />
+		<result column="levels" property="levels" jdbcType="VARCHAR" />
+		<result column="isonline" property="isonline" jdbcType="VARCHAR" />
+		<result column="head" property="head" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 保存会议信息 -->
+	<insert id="addMeeting">
+		INSERT INTO pf_meeting (meetid, meetname, meettype, stime, meettime, meetaddress, meetu, meetclub, state, creater, suser) 
+		VALUES (#{meetid,jdbcType=VARCHAR}, #{meetname,jdbcType=VARCHAR}, #{meettype,jdbcType=INTEGER}, #{stime}, 
+		#{meettime,jdbcType=VARCHAR}, #{meetaddress,jdbcType=VARCHAR}, #{meetu,jdbcType=VARCHAR},
+		#{meetclub,jdbcType=VARCHAR},#{state,jdbcType=VARCHAR},#{creater,jdbcType=VARCHAR},#{suser,jdbcType=VARCHAR})
+	</insert>
+	
+	<!-- 保存关联信息 -->
+	<insert id="addGL">
+		INSERT INTO pf_event_meeting_user (id, userid, eventid, meetid, type, savetime, name) 
+		VALUES (#{id,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{eventid,jdbcType=INTEGER}, 
+		#{meetid,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{savetime}, #{name,jdbcType=VARCHAR})
+	</insert>
+	
+	<!-- 查询日程、会议信息 -->
+	<select id="listInfo" resultMap="EventMeetModel">
+		SELECT * FROM  
+		(  
+		SELECT A.*, ROWNUM RN  
+		FROM (
+			select emu.* 
+			from PF_EVENT_MEETING_USER emu 
+			where emu.userid = #{userId,jdbcType=VARCHAR} and emu.savetime like to_date(#{startTime,jdbcType=VARCHAR},'yyyy-MM-dd')
+		) A  
+		WHERE ROWNUM <![CDATA[ <= ]]> #{row}  
+		)  
+		WHERE RN<![CDATA[ >= ]]> #{start} order by savetime desc
+	</select>
+	
+	<!-- 查询日程、会议信息总数 -->
+	<select id="listInfoCount" resultType="int" parameterType="String">
+		select count(1) from (
+			select emu.* 
+			from PF_EVENT_MEETING_USER emu 
+			where emu.userid = #{userId,jdbcType=VARCHAR} and emu.savetime like to_date(#{startTime,jdbcType=VARCHAR},'yyyy-MM-dd')
+		) order by savetime desc
+	</select>
+	
+	<!-- 根据会议ID获取会议信息-->
+	<select id="getMeetingById"  resultMap="MeetingModel">
+		select * from pf_meeting t where t.meetid = #{id}
+	</select>
+	
+	<!-- 删除会议信息 -->
+	<delete id="delMeeting" parameterType="String">
+		DELETE FROM pf_meeting t WHERE t.meetid = #{meetId}
+	</delete>
+	
+	<!-- 删除会议信息成员 -->
+	<delete id="delMeetingUser" parameterType="String">
+		DELETE FROM pf_event_meeting_user WHERE meetid = #{meetId}
+	</delete>
+	
+	<!-- 获取会议成员 -->
+	<select id="getMeetingUser" resultMap="UserModel">
+		select u.* 
+		from pf_event_meeting_user emu left join sys_user u on emu.userid = u.userid
+		where emu.meetid = #{userId,jdbcType=VARCHAR} and u.endFlag != '1' order by savetime desc
+	</select>
+	
+	<!-- 会议创建人 -->
+	<select id="getCreater" resultType="string">
+		select m.creater from pf_meeting m where m.meetid = #{meetId}
+	</select>	
+	
+	<!-- 会议修改 -->
+	<update id="updateMeeting">
+		UPDATE pf_meeting m
+		SET m.stime = #{stime}, m.state = #{state,jdbcType=VARCHAR} 
+		where m.meetid = #{meetId,jdbcType=VARCHAR}
+	</update>
+</mapper>

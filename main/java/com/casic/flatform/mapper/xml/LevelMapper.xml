@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.casic.flatform.mapper.LevelMapper">
+	<resultMap id="LevelModel" type="com.casic.flatform.model.LevelModel">
+		<id column="level_id" property="levelId" jdbcType="BIGINT" />
+		<result column="level_name" property="levelName" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 获取保密等级 -->
+	<select id="queryLevel" resultMap="LevelModel">
+		SELECT * FROM pf_level
+	</select>
+	
+	<!-- 通过ID获取等级信息 -->
+	<select id="getLevelInfoById" resultType="String">
+		SELECT level_name FROM pf_level where level_id = #{levelId}
+	</select>
+	
+	<!-- 通过ID获取等级信息 -->
+	<select id="getLevelInfoByName" resultType="String">
+		SELECT level_id FROM pf_level where level_name = #{levelName}
+	</select>
+</mapper>
+
+
+

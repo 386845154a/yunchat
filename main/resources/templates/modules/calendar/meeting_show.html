@@ -1,0 +1,66 @@
+<style>
+	lable {
+		font-weight: bold;
+	}
+	
+	.div_float {
+		width: 50%;
+	    float: left;
+	    margin-top: 10px;
+	}
+</style>
+<div class="row">
+	<div class="div_float">
+		<lable>会议名称：</lable>
+		<span id="meetname"></span>
+	</div>
+	<div class="div_float">
+		<lable>会议类型：</lable>
+		<span id="meettype"></span>
+	</div>
+	<div class="div_float">
+		<lable>开始时间：</lable>
+		<span id="stime"></span>
+	</div>
+	<div class="div_float">
+		<lable>会议时长：</lable>
+		<span id="meettime"></span>
+	</div>
+	<div class="div_float">
+		<lable>会议地点：</lable>
+		<span id="meetaddress"></span>
+	</div>
+	<div class="div_float">
+		<lable>主持&nbsp;人：</lable>
+		<span id="meetu"></span>
+	</div>
+	<div class="div_float">
+		<lable>会&nbsp;&nbsp;务：</lable>
+		<span id="meetclub"></span>
+	</div>
+	<div class="div_float">
+		<lable>状&nbsp;&nbsp;态：</lable>
+		<span id="state"></span>
+	</div>
+	<div class="div_float">
+		<lable>发起&nbsp;人：</lable>
+		<span id="creater"></span>
+	</div>
+	<div class="div_float" style="width: 100%;">
+		<label>会议成员：</label>
+		<div style="min-height: 20px; max-height: 170px; overflow-x: hidden;">
+			<table id="dynamic-table" class="table table-striped table-bordered table-hover" style="width: 100%;">
+				<thead>
+					<tr>
+						<th class="center bg">名称</th>
+						<th class="center bg">部门</th>
+						<th class="center bg">备注</th>
+						<th class="center bg">签到</th>
+					</tr>
+				</thead>
+				<tbody class="infor-tbody" id="eventUser" >
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,331 @@
+<div style="border: 2px solid red; width: 33%; float: right;" >
+			<div id="right-info" class="chat-body" style="left:330px;">
+				<!-- 个人信息start -->
+				<div id="user_info_div" class="user_info_div">
+					<div class="row" style="margin-top: 15px;">
+						<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+							<div id="talkUserHead" style="margin-top: 30px;"></div>
+						</div>
+					</div>
+					<div class="row" style="margin-top: 15px;">
+						<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+							<i class="fa fa-info-circle" style="color:#B3B7CB; float: left;"></i>
+							<div class="uinfoOne">姓名:</div>
+							<div class="uinfoTwo" id="userName"></div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+							<i class="fa fa-align-justify" style="color:#B3B7CB; float: left;"></i>
+							<div class="uinfoOne">科室:</div>
+							<div class="uinfoTwo" id="classRoom"></div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+							<i class="fa fa-calendar" style="color:#B3B7CB; float: left;"></i>
+							<div class="uinfoOne">办公地点:</div>
+							<div class="uinfoTwo" id="address"></div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+							<i class="fa fa-calendar" style="color:#B3B7CB; float: left;"></i>
+							<div class="uinfoOne">人员密级:</div>
+							<div class="uinfoTwo" id="levelsinfo"></div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+							<i class="fa fa-calendar" style="color:#B3B7CB; float: left;"></i>
+							<div class="uinfoOne">联系电话:</div>
+							<div class="uinfoTwo" id="call_phone_"></div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+							<i class="fa fa-calendar" style="color:#B3B7CB; float: left;"></i>
+							<div class="uinfoOne">是否在线:</div>
+							<div class="uinfoTwo" id="is_online_"></div>
+						</div>
+					</div>
+				</div>
+				<!-- 个人信息end -->
+				<div id="head-div" style="height:0px;width:0px;border-bottom:1px solid #ccc;background-color: #F5F7FA;">
+					<div id="isTabShow" class="group-info-div" style="display: none; top:0px; height: 45px; width:100%; /* padding-top: 10px; */ background-color: #D8DFE7;">
+						<ul class="nav navbar-nav" style="margin-top: 8px; margin-left: 1px;">
+							<li onclick="show_group_info()" id="ginfo" data-toggle="tooltip" title="组信息"><span
+								class="glyphicon glyphicon-comment"></span> </li>
+							<li onclick="show_group_user()" id="guser" data-toggle="tooltip" title="成员"><span
+								class="glyphicon glyphicon-user"></span> </li>
+							<li onclick="show_group_file()" id="gfile" data-toggle="tooltip" title="组文件"><span
+								class="glyphicon glyphicon-folder-open"></span> </li>
+							<li onclick="show_importantInfo_user($('#chat-user-id').val())" id="import" data-toggle="tooltip" title="重要信息">
+								<span class="glyphicon glyphicon-asterisk"></span>
+							</li>
+							<li onclick="out_files()" id="fileout" data-toggle="tooltip" title="导出">
+								<span class="glyphicon glyphicon-save"></span>
+							</li>
+							<li onclick="del_group($('#chat-user-id').val(), this)" code="modules/discussion/discussion" id="del" data-toggle="tooltip" title="删除">
+								<span class="glyphicon glyphicon-trash"></span>
+							</li>
+							<li onclick="edit_group($('#chat-user-id').val())" id="fileout" data-toggle="tooltip" title="讨论组编辑">
+								<span class="glyphicon glyphicon-pencil"></span>
+							</li>
+							<li onclick="closed_group($('#chat-user-id').val(), this)" code="modules/discussion/discussion" id="closeGroup" data-toggle="tooltip" title="讨论组关闭">
+								<span class="glyphicon glyphicon-remove"></span>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div id="right-body-div" style="overflow:hidden; top:48px;">
+					<!-- 系统通知 start -->
+					<div class="right-main-div" id="system_noti_div">
+						<div id="notification_div">
+							<div class="list-group" id="system_noti_list" style="overflow-x: hidden;"></div>
+						</div>
+						<div id="noti_page_div" style="display:none;">
+							<div onclick="$('#noti_page_div').hide();$('#notification_div').show();" style="margin-top:-20px;">
+								<span style="cursor:pointer;font-size:16px;"><i class="fa fa-mail-reply "></i>返回</span>
+							</div>
+							<iframe src="" name="noti_iframe" class="iframe_full">
+							</iframe>
+						</div>
+					</div>
+					<!-- 系统通知 end -->
+					<!-- 讨论组信息 start -->
+					<div class="right-main-div" id="group_info_div" style="display: none;  height:95%; overflow-x:hidden; 
+						position:absolute; left: 70%; width: 30%; border-left: 1px solid #cccccc;">
+						<div id="group_info_div" style="width: 100%; height: 104%;">
+							<!-- ajax填充讨论组信息 -->
+							<div class="row" style="margin-top: 15px;">
+								<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+									<i class="fa fa-info-circle" style="color:#B3B7CB;"></i>
+									<div class="label">主题:</div>
+									<div class="group_info" id="group_name" style="margin-left: 16px;"></div>
+								</div>
+							</div>
+							<div class="row" style="margin-top: 15px;">
+								<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+									<i class="fa fa-info-circle" style="color:#B3B7CB;"></i>
+									<div class="label">密级:</div>
+									<div class="group_info" id="group_le" style="margin-left: 16px;"></div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+									<i class="fa fa-align-justify" style="color:#B3B7CB;"></i>
+									<div class="label">描述:</div>
+									<div class="group_info" id="group_describe" style="margin-left: 16px;"></div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+									<i class="fa fa-calendar" style="color:#B3B7CB;"></i>
+									<div class="label">发起时间:</div>
+									<div class="group_info" id="group_create_time" style="margin-left: 16px;"></div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+									<i class="fa fa-user" style="color:#B3B7CB;"></i>
+									<div class="label">发起人:</div>
+									<div class="group_info" id="group_creator" style="margin-left: 16px;"></div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+									<i class="fa fa-user" style="color:#B3B7CB;"></i>
+									<div class="label">参与范围:</div>
+									<div class="group_info" id="group_creator" style="margin-left: 16px;"></div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+									<i class="fa fa-user" style="color:#B3B7CB;"></i>
+									<div class="label">是否投票:</div>
+									<div class="group_info" id="group_creator" style="margin-left: 16px;"></div>
+								</div>
+							</div>
+		<!-- 					<div class="row" id="gstate"> -->
+		<!-- 						<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;"> -->
+		<!-- 							<i class="fa fa-user" style="color:#B3B7CB;"></i> -->
+		<!-- 							<div class="label">是否禁言:</div> -->
+		<!-- 							<div class="switch" style="margin-left: 16px;">  -->
+		<!-- 								<div class="btn_fath clearfix off" onclick="toogle(this)">  -->
+		<!-- 									<div class="move" data-state="on"></div>  -->
+		<!-- 									<div class="btnSwitch btn1">ON</div>  -->
+		<!-- 									<div class="btnSwitch btn2 ">OFF</div>  -->
+		<!-- 								</div>  -->
+		<!-- 							</div> -->
+		<!-- 						</div> -->
+		<!-- 					</div> -->
+							<div class="row">
+								<div class="col-xs-8 col-sm-8 col-md-8" style="margin-left: 16px;">
+									<input id="gId" type="hidden" />
+		   							<div><input type="button" class="out_group" value="退出群组" onclick="out_group($('#chat-user-id').val())" /></div>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+					<!-- 讨论组信息 end -->
+					<!-- 讨论组成员 start -->
+					<div class="right-main-div" id="group_user_div" style="display: none; height:95%; overflow-x:hidden;
+						position:absolute; left: 70%; width: 30%; border-left: 1px solid #cccccc;">
+						<div id="group_user_list" style="width: 100%; height: 105%;">
+							<!-- ajax填充讨论组成员 -->
+						</div>
+					</div>
+					<!-- 讨论组成员 end -->
+					<!-- 重要信息 start -->
+					<div class="right-main-div" id="important_info_div" style="display: none; height:95%; overflow-x:hidden; 
+						position:absolute; left: 70%; width: 30%; border-left: 1px solid #cccccc;">
+						<div id="important_info_list" style="width: 100%; height: 105%; margin-top:0px; border: 1px solid #cccccc;">
+							<!-- ajax填充重要信息 -->
+						</div>
+					</div>
+					<!-- 重要信息 end -->
+					<!-- 讨论组文件 start -->
+					<div class="right-main-div" id="group_file_div" style="display: none; height:95%; overflow:auto;
+						position:absolute; left: 70%; width: 30%; border-left: 1px solid #cccccc;">
+						<div style="float: left; width: 100%; height: 10%;">
+							<div class="input-group"
+								style="max-width: 200px; height: 26px; margin-top: 10px; margin-left: 10px;">
+								<input type="text" class="form-control" style="height: 26px; width: 75%;"
+									id="group_file_input" /> <span class="input-group-btn"
+									onclick="fc_group_file(1)">
+									<button class="btn btn-default"
+										style="height: 26px; padding: 2px 9px;">搜索</button>
+								</span>
+							</div>
+						</div>
+						<div id="group_user_file" style="width: 100%; height: 105%; margin-top: 87px;">
+							<!-- ajax填充讨论组文件 -->
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th style="min-width: 40px;">名称</th>
+										<th class="center" style="min-width: 40px;">用户</th>
+										<th style="min-width: 40px;" class="del_gro_fil center">操作</th>
+									</tr>
+								</thead>
+								<tbody id="file-table">
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<!-- 项目进展状态 18-03-22  -->
+					<div class="right-main-div" id="group_matter_div"
+						style="display: none;">
+						<div style="float: left;">
+							<div class="update-div"
+								style="float: left; margin-left: 10px; padding: 2px;">
+								<div id="update_btn" onclick="$(this).find('input')[0].click()">
+									项目启动 <input type="file" style="display: none;"
+										onchange="upload_group_file(this)" multiple="multiple" />
+								</div>
+							</div>
+							<div class="update-div"
+								style="float: left; margin-left: 80px; padding: 2px;">
+								<div id="update_btn">
+									项目进行中 <input type="file" style="display: none;"
+										onchange="upload_group_file(this)" multiple="multiple" />
+								</div>
+							</div>
+							<div class="update-div"
+								style="float: left; margin-left: 80px; padding: 2px;">
+								<div id="update_btn">
+									项目关闭 <input type="file" style="display: none;"
+										onchange="upload_group_file(this)" multiple="multiple" />
+								</div>
+							</div>
+							<div class="update-div"
+								style="float: left; margin-left: 80px; padding: 2px;">
+								<div id="update_btn" onclick="$(this).find('input')[0].click()">
+									项目导出 <input type="file" style="display: none;"
+										onchange="upload_group_file(this)" multiple="multiple" />
+								</div>
+							</div>
+						</div>
+						<div id="group_user_file">
+							<!-- ajax填充讨论组文件 -->
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<!-- <th>文件名称</th><th>文件大小</th><th class="center" style="min-width:90px;">上传时间</th>
+				        				<th class="center" style="min-width:80px;">上传用户</th> -->
+										<th class="del_gro_fil"></th>
+									</tr>
+								</thead>
+								<tbody id="file-table" class="del_gro_fil">
+								</tbody>
+							</table>
+							<div class="page">
+								<ul class="pagination" id="file-page"></ul>
+							</div>
+						</div>
+					</div>
+					<!-- 讨论组文件 end -->
+					<!-- 历史消息记录 start -->
+					<div class="right-main-div" id="hi_msg_div" style="display: none;">
+						<div class="close_groupinfo_div" onclick="show_chat()">
+							<i class="fa fa-close"></i>
+						</div>
+						<div id="hi-msg-content">
+							<div style="margin: 20%; font-size: 18px; color: #999;">
+								<span>没有历史消息</span>
+							</div>
+						</div>
+						<div class="page">
+							<ul class="pagination" id="msg-page"></ul>
+						</div>
+					</div>
+					<!-- 历史消息记录 end -->
+					<div class="right-main-div" id="main-div" style="display: none;">
+		<!-- 					<div id="chat-content-div"> -->
+							<div id="container-div" style="width: 100%;height: calc(100vh - 300px);">
+								<div id="load-div" onclick="loadMove()">
+									<span class="load-span" onclick="show_himsg(1)"><i
+										class="fa fa-list"></i>历史消息</span>
+								</div>
+								<div id="chat-content" style="margin-top: 20px;"></div>
+							</div>
+		
+							<div id="container_div" class="send-div" style="width: 100%;height: 200px">
+								<div>
+									<div style="height: 15%" class="img-div" >
+										<!--<ul class="img-ul">-->
+											<!--<li onclick="showEmoji()" class="emoji-li"></li>-->
+											<!--<li  id="file-li" class="file-li" onclick="updateFiles()"></li>-->
+										<!--</ul>-->
+										<div
+											style="padding: 4px 20px 0px 0px; float: right; color: #666; cursor: pointer; font-size: 12px;"
+											onclick="show_himsg(1)">
+										</div>
+									</div>
+									<!--<div style="height: 67%; padding: 0px 10px;" class="send-info">-->
+										<!--<textarea id="msg-content" name="msg-content"></textarea>-->
+										<textarea id="msgcontent" name="msgcontent"></textarea>
+										<!--<pre id="msgPre" contenteditable="true" style="border-top: 1px solid #cccccc;"></pre>-->
+									<!--</div>-->
+									<div class="btn-div text-right" style="margin-right:10px;">
+										<button id="sendMsgBtn" onclick="sendMsg()"
+												class="btn btn-success">发送</button>
+									</div>
+								</div>
+		
+		
+								<div id="emoji-panel-div" style="overflow-y: auto;">
+									<div id="emoji-list-div">
+										<img class="emoji-div"
+											th:each="item:${#numbers.sequence(701,755)}"
+											th:src="@{/img/emoji/} + ${item} + '.png'" />
+									</div>
+								</div>
+							</div>
+					</div>
+					<div id="chat-info"></div>
+				</div>
+			</div>
+		</div>

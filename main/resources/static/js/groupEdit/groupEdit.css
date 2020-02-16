@@ -1,0 +1,37 @@
+.org-tree{width: 400px;float: left}
+
+.group_info{overflow: auto;width:960px;}
+.group_info .group_left_div{width:240px;float:left;}
+.group_info .group_right_div{float: left;  width: 400px;  margin-left: 10px;padding: 4px 10px 4px 60px;}
+
+.create-group-info{border-bottom: 1px solid #ccc;padding-bottom: 10px;}
+.create-group-info .row-info{padding:4px 20px;}
+.create-group-info .row-info span{}
+.create-group-info .name-input{width:160px;}
+.create-group-info .decribe-textarea{width:200px;}
+
+#checked-user{overflow: auto;max-height: 600px;overflow-y: auto;}
+#checked-user .checked-user-info{width: 60px;height:60px;margin:4px;float:left;}
+#checked-user .user-img{width: 40px;  height: 40px;  border-radius: 20px;  line-height: 40px;  text-align: center;  font-size: 16px;  background-color: #9ac9f1;margin: auto;}
+#checked-user .user-name{text-align: center}
+
+#change-user-list{height: 400px;overflow-y: auto;}
+#change-user-list .user-org{background-color: #EEEEEE}
+#change-user-list .item-user{padding:0px 20px;overflow: hidden;}
+#change-user-list .item-user div{float:left;    margin-right: 10px;}
+#change-user-list .item-user .checked-div{width:20px;height:20px;margin:5px;border-radius: 10px;}
+#change-user-list .item-user .unchecked{background: url(/img/home.png) no-repeat;background-position:-468px -350px;  -webkit-background-size: 487px 462px;  background-size: 487px 462px;}
+#change-user-list .item-user .checked{background: url(/img/home.png) no-repeat;background-position:-468px -331px;  -webkit-background-size: 487px 462px;  background-size: 487px 462px;}
+#change-user-list .user-img{width: 30px;height: 30px;border-radius: 16px;line-height: 30px;text-align: center;font-size: 15px;background-color: #9ac9f1;}
+
+.delete_tools {
+    color: red;
+    float: left;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    top: -60px;
+    left: 50px;
+}

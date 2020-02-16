@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.casic.flatform.mapper.UserMapper">
+	<resultMap id="UserModel" type="com.casic.flatform.model.UserModel">
+		<id column="userId" property="userId" jdbcType="VARCHAR" />
+		<result column="fullname" property="fullname" jdbcType="VARCHAR" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+	<!--<result column="password" property="password" jdbcType="VARCHAR" /> -->
+		<result column="isExpired" property="isExpired" jdbcType="INTEGER" />
+		<result column="isLock" property="isLock" jdbcType="INTEGER" />
+		<result column="createtime" property="createtime" jdbcType="DATE" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="roomid" property="roomid" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="VARCHAR" />
+		<result column="picture" property="picture" jdbcType="INTEGER" />
+		<result column="FROMTYPE" property="fromType" jdbcType="INTEGER" />
+		<result column="orgId" property="orgId" jdbcType="VARCHAR" />
+		<result column="orgSn" property="orgSn" jdbcType="VARCHAR" />
+		<result column="orgName" property="orgName" jdbcType="VARCHAR" />
+		<result column="shortAccount" property="shortAccount" jdbcType="VARCHAR" />
+		<result column="levels" property="levels" jdbcType="VARCHAR" />
+		<result column="isonline" property="isonline" jdbcType="VARCHAR" />
+		<result column="head" property="head" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="SystemUserModel" type="com.casic.flatform.model.SystemUserModel">
+		<id column="system_id" property="id" jdbcType="INTEGER" />
+		<result column="login_name" property="loginName" jdbcType="VARCHAR" />
+		<result column="show_name" property="showName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 登录时验证密码 -->
+	<select id="checkNamePassword" resultMap="UserModel" parameterType="java.util.HashMap">
+		SELECT * FROM sys_user WHERE account = #{account} AND password = #{password}
+	</select>
+
+	<!-- 获得用户信息 -->
+	<select id="queryUserInfo" resultMap="UserModel">
+		SELECT su.*, so.orgName AS orgName
+		FROM sys_user su LEFT JOIN sys_org so ON su.orgId = so.orgId
+		WHERE su.userId = #{userId,jdbcType=VARCHAR} and su.endFlag != '1'
+	</select>
+
+	<!-- 通过登录名获得用户信息 -->
+	<select id="queryUserInfoByAccount" parameterType="String" resultMap="UserModel">
+		SELECT * FROM sys_user WHERE account = #{account} and endFlag != '1'
+	</select>
+	
+	<!-- 验证管理员用户  -->
+	<select id="checkAdminNamePassword" resultMap="SystemUserModel" parameterType="String">
+		select t.system_id, t.login_name, t.show_name, t.login_name 
+		from pf_system_user t where t.login_name = #{account} and t.user_password = #{password}
+	</select>
+	
+	<!-- 上传头像 -->
+	<update id="uploadHead" parameterType="String">
+		UPDATE sys_user SET head = #{readPath,jdbcType=VARCHAR} WHERE userId = #{use,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 获取头像 -->
+	<select id="queryHead" resultMap="UserModel" parameterType="String">
+		SELECT head FROM sys_user WHERE userId = #{use,jdbcType=VARCHAR} and endFlag != '1'
+	</select>
+	
+	<!-- 加载科员 -->
+	<select id="queryClassUser" parameterType="String"  resultMap="UserModel">
+		SELECT su.*
+		FROM sys_user su 
+		WHERE su.orgId = #{orgId,jdbcType=VARCHAR} and su.endFlag != '1' order by su.isonline desc, su.picture asc
+	</select>
+	
+	<!-- 查询联系人 -->
+	<select id="getUserByName" parameterType="String"  resultMap="UserModel">
+		SELECT su.*
+		FROM sys_user su 
+		WHERE su.endFlag != '1' and su.fullname LIKE '%' || #{name} || '%'
+	</select>
+	
+	<!-- 姓名转编码 -->
+	<select id="turnNameToId" parameterType="String"  resultMap="UserModel">
+		SELECT su.*
+		FROM sys_user su 
+		WHERE su.fullname = #{name}
+	</select>
+	
+	<!-- 删除最近联系人\讨论组 -->
+	<delete id="delLink" parameterType="String">
+		DELETE FROM pf_lately_linkman WHERE user_id = #{userId} and link_id = #{id} and type = #{type}
+	</delete>
+	
+	<!-- 修改用户信息 -->
+	<update id="updataUserInfo" parameterType="String">
+		UPDATE sys_user SET phone = #{phone} , roomid = #{roomid} where userId = #{userId,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 分页查询在线人员信息 -->
+	<select id="userList" resultMap="UserModel">
+		SELECT * FROM  
+		(  
+		SELECT A.*, ROWNUM RN  
+		FROM (SELECT * FROM sys_user su
+		WHERE su.isonline = 1 and su.endFlag != '1'
+		<if test="fileName != null and fileName != '' ">
+			AND su.userId = #{fileName}
+		</if>
+		 order by su.picture asc
+		) A  
+		WHERE ROWNUM <![CDATA[ <= ]]> #{row}  
+		)  
+		WHERE RN<![CDATA[ >= ]]> #{start}
+	</select>
+	
+	<!-- 查询在线人员总数 -->
+	<select id="userCount" resultType="int">
+		SELECT count(1)
+		FROM sys_user su
+		WHERE su.isonline = 1 and su.endFlag != '1'
+		<if test="fileName != null and fileName != '' ">
+			AND su.userId = #{fileName}
+		</if>	
+		 order by su.picture asc
+	</select>
+	
+	<!-- 一键下线 -->
+	<update id="allUnline" parameterType="String">
+		update SYS_USER t set t.isonline = 0
+	</update>
+	
+	<!-- 根据密级和部门获取用户 -->
+	<select id="getALLUserByOrg" parameterType="String"  resultMap="UserModel">
+		select *
+        from sys_org org join sys_user us on org.orgId = us.orgId
+        where us.userId != #{userId} and us.orgId = #{orgId} and us.levels &gt;= #{levels} and us.endFlag != '1' order by org.px asc
+	</select>
+	
+	<select id="GetMeUser" resultMap="UserModel">
+		select * from sys_user t where t.userId != '2' and t.userId != '3' and t.userId != '4' and t.endFlag != '1'
+		<if test="orgId != null and orgId != '' ">
+			AND t.orgId = #{orgId}
+		</if>
+	</select>
+	
+	<!-- 审批执行人 -->
+	<select id="selectDown" parameterType="String"  resultMap="UserModel">
+		SELECT su.*
+		FROM sys_user su 
+		WHERE su.orgId = #{orgId,jdbcType=VARCHAR} and su.picture != '9999999' and su.picture is not null and su.endFlag != '1' order by su.picture asc
+	</select>
+</mapper>

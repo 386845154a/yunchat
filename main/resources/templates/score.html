@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+
+<style>
+    .cenbox{
+        height: 330px;
+    }
+</style>
+
+<script th:src="@{/AdminLTE/components/chartjs/Chart.min.js}"></script>
+<script th:src="@{/AdminLTE/dist/js/pages/dashboard2.js}"></script>
+<script th:src="@{/AdminLTE/dist/js/demo.js}"></script>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div id="myCarousel" class="carousel slide">
+                <!-- 轮播（Carousel）指标 -->
+                <ol class="carousel-indicators">
+                    <li data-target="#myCarousel" data-slide-to="0"
+                        class="active"></li>
+                    <li data-target="#myCarousel" data-slide-to="1"></li>
+                    <li data-target="#myCarousel" data-slide-to="2"></li>
+                </ol>
+                <!-- 轮播（Carousel）项目 -->
+                <div class="carousel-inner">
+                    <div class="item active">
+                        <img src="/img/5.jpg" alt="First slide" style="width: 100%;height: 400px "/>
+                    </div>
+                    <div class="item">
+                        <img src="/img/6.jpg" alt="Third slide" style="width: 100%;height: 400px "/>
+                    </div>
+                    <div class="item">
+                        <img src="/img/7.jpg" alt="Third slide" style="width: 100%;height: 400px "/>
+                    </div>
+                    <div class="item">
+                        <img src="/img/9.jpg" alt="Third slide" style="width: 100%;height: 400px "/>
+                    </div>
+                </div>
+                <!-- 轮播（Carousel）导航 -->
+                <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">情    报</h3>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <ul class="products-list product-list-in-box">
+                        <li class="item">
+                            <div class="product-img">
+                                <img src="/AdminLTE/dist/img/default-50x50.gif" alt="Product Image"/>
+                            </div>
+                            <div class="product-info">
+                                <a href="javascript:void(0)" class="product-title">这是一个情报
+                                    <span class="label label-warning pull-right">重要</span></a>
+                                <span class="product-description">
+                          Samsung 32" 1080p 60Hz LED Smart HDTV.
+                        </span>
+                            </div>
+                        </li>
+                        <!-- /.item -->
+                        <li class="item">
+                            <div class="product-img">
+                                <img src="/AdminLTE/dist/img/default-50x50.gif" alt="Product Image"/>
+                            </div>
+                            <div class="product-info">
+                                <a href="javascript:void(0)" class="product-title">一般的情报
+                                    <span class="label label-info pull-right">一般</span></a>
+                                <span class="product-description">
+                          26" Mongoose Dolomite Men's 7-speed, Navy Blue.
+                        </span>
+                            </div>
+                        </li>
+                        <!-- /.item -->
+                        <li class="item">
+                            <div class="product-img">
+                                <img src="/AdminLTE/dist/img/default-50x50.gif" alt="Product Image"/>
+                            </div>
+                            <div class="product-info">
+                                <a href="javascript:void(0)" class="product-title">这是一个紧急的情报 <span class="label label-danger pull-right">紧急</span></a>
+                                <span class="product-description">
+                          Xbox One Console Bundle with Halo Master Chief Collection.
+                        </span>
+                            </div>
+                        </li>
+                        <!-- /.item -->
+                        <li class="item">
+                            <div class="product-img">
+                                <img src="/AdminLTE/dist/img/default-50x50.gif" alt="Product Image"/>
+                            </div>
+                            <div class="product-info">
+                                <a href="javascript:void(0)" class="product-title">十分特殊的情报
+                                    <span class="label label-success pull-right">特殊</span></a>
+                                <span class="product-description">
+                          PlayStation 4 500GB Console (PS4)
+                        </span>
+                            </div>
+                        </li>
+                        <!-- /.item -->
+                    </ul>
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer text-center">
+                    <a href="javascript:void(0)" class="uppercase">View All Products</a>
+                </div>
+                <!-- /.box-footer -->
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-aqua">
+                <div class="inner">
+                    <h3>6</h3>
+
+                    <p>新任务</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-bag"></i>
+                </div>
+                <a href="#" class="small-box-footer">详情 <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-green">
+                <div class="inner">
+                    <h3>5</h3>
+
+                    <p>待处理</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="#" class="small-box-footer">更多 <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-yellow">
+                <div class="inner">
+                    <h3>55</h3>
+
+                    <p>已完成</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-person-add"></i>
+                </div>
+                <a href="#" class="small-box-footer">更多 <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-red">
+                <div class="inner">
+                    <h3>3</h3>
+
+                    <p>逾期</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-pie-graph"></i>
+                </div>
+                <a href="#" class="small-box-footer">更多 <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <!-- ./col -->
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="box box-primary cenbox">
+                <div class="box-header ui-sortable-handle" style="cursor: move;">
+                    <i class="ion ion-clipboard"></i>
+
+                    <h3 class="box-title">待办事项列表</h3>
+
+                    <div class="box-tools pull-right">
+                        <ul class="pagination pagination-sm inline">
+                            <li><a href="#">«</a></li>
+                            <li><a href="#">1</a></li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li><a href="#">»</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <ul class="todo-list ui-sortable">
+                        <li>
+                            <!-- drag handle -->
+                            <span class="handle ui-sortable-handle">
+                            <i class="fa fa-ellipsis-v"></i>
+                            <i class="fa fa-ellipsis-v"></i>
+                          </span>
+                            <!-- checkbox -->
+                            <input type="checkbox" value=""/>
+                            <!-- todo text -->
+                            <span class="text">设计一个很好的主题</span>
+                            <!-- Emphasis label -->
+                            <small class="label label-danger"><i class="fa fa-clock-o"></i> 2 分钟</small>
+                            <!-- General tools such as edit or delete-->
+                            <div class="tools">
+                                <i class="fa fa-edit"></i>
+                                <i class="fa fa-trash-o"></i>
+                            </div>
+                        </li>
+                        <li>
+                          <span class="handle ui-sortable-handle">
+                            <i class="fa fa-ellipsis-v"></i>
+                            <i class="fa fa-ellipsis-v"></i>
+                          </span>
+                            <input type="checkbox" value=""/>
+                            <span class="text">使主题反应快速</span>
+                            <small class="label label-info"><i class="fa fa-clock-o"></i> 4 小时</small>
+                            <div class="tools">
+                                <i class="fa fa-edit"></i>
+                                <i class="fa fa-trash-o"></i>
+                            </div>
+                        </li>
+                        <li>
+                          <span class="handle ui-sortable-handle">
+                            <i class="fa fa-ellipsis-v"></i>
+                            <i class="fa fa-ellipsis-v"></i>
+                          </span>
+                            <input type="checkbox" value=""/>
+                            <span class="text">让主题闪耀如星星</span>
+                            <small class="label label-warning"><i class="fa fa-clock-o"></i> 1 天</small>
+                            <div class="tools">
+                                <i class="fa fa-edit"></i>
+                                <i class="fa fa-trash-o"></i>
+                            </div>
+                        </li>
+                        <li>
+                          <span class="handle ui-sortable-handle">
+                            <i class="fa fa-ellipsis-v"></i>
+                            <i class="fa fa-ellipsis-v"></i>
+                          </span>
+                            <input type="checkbox" value=""/>
+                            <span class="text">让主题闪耀如星星</span>
+                            <small class="label label-success"><i class="fa fa-clock-o"></i> 3 天</small>
+                            <div class="tools">
+                                <i class="fa fa-edit"></i>
+                                <i class="fa fa-trash-o"></i>
+                            </div>
+                        </li>
+                        <li>
+                          <span class="handle ui-sortable-handle">
+                            <i class="fa fa-ellipsis-v"></i>
+                            <i class="fa fa-ellipsis-v"></i>
+                          </span>
+                            <input type="checkbox" value=""/>
+                            <span class="text"> 检查您的邮件和通知</span>
+                            <small class="label label-primary"><i class="fa fa-clock-o"></i> 1 周</small>
+                            <div class="tools">
+                                <i class="fa fa-edit"></i>
+                                <i class="fa fa-trash-o"></i>
+                            </div>
+                        </li>
+                        <li>
+                          <span class="handle ui-sortable-handle">
+                            <i class="fa fa-ellipsis-v"></i>
+                            <i class="fa fa-ellipsis-v"></i>
+                          </span>
+                            <input type="checkbox" value=""/>
+                            <span class="text">让主题闪耀如星星</span>
+                            <small class="label label-default"><i class="fa fa-clock-o"></i> 1 月</small>
+                            <div class="tools">
+                                <i class="fa fa-edit"></i>
+                                <i class="fa fa-trash-o"></i>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="box box-success cenbox">
+                <div class="box-header ui-sortable-handle" style="cursor: move;">
+                    <i class="fa fa-comments-o"></i>
+
+                    <h3 class="box-title">消息中心</h3>
+
+                    <div class="box-tools pull-right" data-toggle="tooltip" title="Status">
+                        <div class="btn-group" data-toggle="btn-toggle">
+                            <button type="button" class="btn btn-default btn-sm active"><i class="fa fa-square text-green"></i>
+                            </button>
+                            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-square text-red"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 250px;"><div class="box-body chat" id="chat-box" style="overflow: hidden; width: auto; height: 250px;">
+                    <!-- chat item -->
+                    <div class="item">
+                        <img src="/AdminLTE/dist/img/user4-128x128.jpg" alt="user image" class="online"/>
+
+                        <p class="message">
+                            <a href="#" class="name">
+                                <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> 2:15</small>
+                                Mike Doe
+                            </a>
+                            我想见你来讨论一下最新消息新主题的到来。 他们说这将是一个市场上最好的主题
+                        </p>
+                        <!-- /.attachment -->
+                    </div>
+                    <!-- /.item -->
+                    <!-- chat item -->
+                    <div class="item">
+                        <img src="/AdminLTE/dist/img/user3-128x128.jpg" alt="user image" class="offline"/>
+
+                        <p class="message">
+                            <a href="#" class="name">
+                                <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> 5:15</small>
+                                Alexander Pierce
+                            </a>
+                            我想见你来讨论一下最新消息新主题的到来。 他们说这将是一个市场上最好的主题
+                        </p>
+                    </div>
+                    <!-- /.item -->
+                    <!-- chat item -->
+                    <div class="item">
+                        <img src="/AdminLTE/dist/img/user2-160x160.jpg" alt="user image" class="offline"/>
+
+                        <p class="message">
+                            <a href="#" class="name">
+                                <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> 5:30</small>
+                                Susan Doe
+                            </a>
+                            我想见你来讨论一下最新消息新主题的到来。 他们说这将是一个市场上最好的主题
+                        </p>
+                    </div>
+                    <!-- /.item -->
+                </div><div class="slimScrollBar" style="background: rgb(0, 0, 0); width: 7px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 224.82px;"></div><div class="slimScrollRail" style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <!-- AREA CHART -->
+            <div class="box box-danger cenbox">
+                <div class="box-header with-border">
+                    <h3 class="box-title">数据中心-PDM</h3>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table class="table table-bordered">
+                                <tbody><tr>
+                                    <th style="width: 10px">#</th>
+                                    <th>Task</th>
+                                    <th>Progress</th>
+                                    <th style="width: 40px">Label</th>
+                                </tr>
+                                <tr>
+                                    <td>1.</td>
+                                    <td>Update software</td>
+                                    <td>
+                                        <div class="progress progress-xs">
+                                            <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-red">55%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>2.</td>
+                                    <td>Clean database</td>
+                                    <td>
+                                        <div class="progress progress-xs">
+                                            <div class="progress-bar progress-bar-yellow" style="width: 70%"></div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-yellow">70%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>3.</td>
+                                    <td>Cron job running</td>
+                                    <td>
+                                        <div class="progress progress-xs progress-striped active">
+                                            <div class="progress-bar progress-bar-primary" style="width: 30%"></div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-light-blue">30%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>4.</td>
+                                    <td>Fix and squish bugs</td>
+                                    <td>
+                                        <div class="progress progress-xs progress-striped active">
+                                            <div class="progress-bar progress-bar-success" style="width: 90%"></div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-green">90%</span></td>
+                                </tr>
+                                </tbody></table>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer clearfix">
+                            <ul class="pagination pagination-sm no-margin pull-right">
+                                <li><a href="#">«</a></li>
+                                <li><a href="#">1</a></li>
+                                <li><a href="#">2</a></li>
+                                <li><a href="#">3</a></li>
+                                <li><a href="#">»</a></li>
+                            </ul>
+                        </div>
+
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <!--<canvas id="pieChart" style="height: 294px; width: 588px;" height="367" width="735"></canvas>-->
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+
+        </div>
+        <!-- /.col (LEFT) -->
+        <div class="col-md-6">
+            <!-- LINE CHART -->
+            <div class="box box-info cenbox">
+                <div class="box-header with-border">
+                    <h3 class="box-title">知识中心</h3>
+                    <img src="/img/77.png" alt="Third slide" style="width: 100%;height: 275px "/>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="chart">
+                        <canvas id="lineChart" style="height: 249px; width: 587px;" height="311" width="733"></canvas>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col (RIGHT) -->
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">工具仓</h3>
+
+                    <div class="box-tools pull-right">
+                        <!--<span class="label label-danger">8 New Members</span>-->
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body no-padding">
+                    <ul class="users-list clearfix">
+                        <li>
+                            <img src="/img/k11.png" alt="User Image"/>
+                            <a class="users-list-name" href="#">Alexander Pierce</a>
+                            <span class="users-list-date">Today</span>
+                        </li>
+                        <li>
+                            <img src="/img/k1.png" alt="User Image"/>
+                            <a class="users-list-name" href="#">Norman</a>
+                            <span class="users-list-date">Yesterday</span>
+                        </li>
+                        <li>
+                            <img src="/img/k2.png" alt="User Image"/>
+                            <a class="users-list-name" href="#">Jane</a>
+                            <span class="users-list-date">12 Jan</span>
+                        </li>
+                        <li>
+                            <img src="/img/k3.png" alt="User Image"/>
+                            <a class="users-list-name" href="#">John</a>
+                            <span class="users-list-date">12 Jan</span>
+                        </li>
+                        <li>
+                            <img src="/img/k4.png" alt="User Image"/>
+                            <a class="users-list-name" href="#">Alexander</a>
+                            <span class="users-list-date">13 Jan</span>
+                        </li>
+                        <li>
+                            <img src="/img/k5.png" alt="User Image"/>
+                            <a class="users-list-name" href="#">Sarah</a>
+                            <span class="users-list-date">14 Jan</span>
+                        </li>
+                        <li>
+                            <img src="/img/k6.png" alt="User Image"/>
+                            <a class="users-list-name" href="#">Nora</a>
+                            <span class="users-list-date">15 Jan</span>
+                        </li>
+                        <li>
+                            <img src="/img/k8.png" alt="User Image"/>
+                            <a class="users-list-name" href="#">Nadia</a>
+                            <span class="users-list-date">15 Jan</span>
+                        </li>
+                    </ul>
+                    <!-- /.users-list -->
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer text-center">
+                    <a href="" class="uppercase">更多</a>
+                </div>
+                <!-- /.box-footer -->
+            </div>
+        </div>
+        <!-- /.col -->
+        <div class="col-md-6">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">模型</h3>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="chart-responsive">
+                                <img src="/img/fff.jpg" alt="User Image" style="width: 100%;height: 275px "/>
+                            </div>
+                            <!-- ./chart-responsive -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-md-4">
+                            <ul class="chart-legend clearfix">
+                                <li><i class="fa fa-circle-o text-red"></i> Chrome</li>
+                                <li><i class="fa fa-circle-o text-green"></i> IE</li>
+                                <li><i class="fa fa-circle-o text-yellow"></i> FireFox</li>
+                                <li><i class="fa fa-circle-o text-aqua"></i> Safari</li>
+                                <li><i class="fa fa-circle-o text-light-blue"></i> Opera</li>
+                                <li><i class="fa fa-circle-o text-gray"></i> Navigator</li>
+                            </ul>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer no-padding">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li><a href="#">United States of America
+                            <span class="pull-right text-red"><i class="fa fa-angle-down"></i> 12%</span></a></li>
+                        <li><a href="#">India <span class="pull-right text-green"><i class="fa fa-angle-up"></i> 4%</span></a>
+                        </li>
+                        <li><a href="#">China
+                            <span class="pull-right text-yellow"><i class="fa fa-angle-left"></i> 0%</span></a></li>
+                    </ul>
+                </div>
+                <!-- /.footer -->
+            </div>
+        </div>
+        <!-- /.col -->
+    </div>
+
+</div>
+
+</body>
+</html>

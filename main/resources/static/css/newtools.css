@@ -1,0 +1,57 @@
+/* 工具列表滚动条 */
+.tool_list {
+	overflow-x: hidden; 
+}
+
+/* 工具添加按钮 */
+.toolAdd {
+	float: right;
+    position: relative;
+    top: 6px;
+    right: 10px;
+}
+
+/* 工具头像背景 */
+.tHeadImg {
+	background-color: #C3C3C3;
+}
+
+/* 非本地工具 */
+.unLocalTool {
+    height: 35px;
+    margin-top: 10px;
+    width: 176px;
+    resize: none;
+}
+
+/* 详情标题 */
+.xq {
+    position: relative;
+    left: 100px;
+    bottom: 60px;
+    font-size: 20px;
+    color: #1996CC;
+}
+
+/* 下载次数 */
+.downc {
+    background-color: #FE9870;
+    width: 100px;
+    height: 25px;
+    line-height: 25px;
+    text-align: center;
+    border-radius: 5px;
+    float: left;
+    position: relative;
+    bottom: 85px;
+}
+
+/* 发布者浮动 */
+.send_float {
+	font-weight: bold;
+}
+
+/* 去除星星logo */
+.glyphicon-minus-sign{
+	display: none !important; 
+}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.casic.flatform.mapper.FlagMapper">
+	<resultMap id="FlagModel" type="com.casic.flatform.model.FlagModel">
+		<id column="reportid" property="id" jdbcType="VARCHAR" />
+		<result column="userid" property="userId" jdbcType="VARCHAR" />
+		<result column="report" property="report" jdbcType="VARCHAR" />
+		<result column="welcome" property="welcome" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 根据报表ID获取报表数据 -->
+	<select id="getFlagByUserId" resultMap="FlagModel">
+		SELECT * FROM pf_flag f where f.userid = #{userId}
+	</select>
+
+	<!-- 根据报表ID修改报表数据 -->
+	<update id="updateFlagByUserId" parameterType="String">
+		UPDATE pf_flag f SET f.report = #{report,jdbcType=VARCHAR} where f.userid = #{userId,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 根据报表ID修改欢迎页面 -->
+	<update id="updateWelcomeByUserId" parameterType="String">
+		UPDATE pf_flag f SET f.welcome = #{welcome,jdbcType=VARCHAR} where f.userid = #{userId,jdbcType=VARCHAR}
+	</update>
+
+
+</mapper>
+
+
+

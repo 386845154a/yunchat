@@ -1,0 +1,30 @@
+<div id="eventTip" style="display: none;">
+        今日您有日程 <input type="button" onclick="eventToday()" id="scheduleDay" class="btn btn-purple btn-sm" value="查看"/>
+</div>
+<div id="notification_div">
+	<div id="add" style="margin-right:4%; float:right;padding-top: 5px;padding-bottom: 5px;" >
+		<button type="button" id="but_add" class="btn" onclick="add_meeting()">
+       		添加会议
+		</button>
+		<button type="button" id="but_add" class="btn" onclick="open_window()">
+       		添加日程
+		</button>
+	</div>
+	<input type="hidden" id="start" value=""/>
+	<table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>事件标题</th>
+                <th>事件内容</th>
+                <th class='center'>时间</th>
+                <th class='center'>操作</th>
+              </tr>
+            </thead>
+            <tbody id="schedule_List">
+            </tbody>
+    </table>
+    <div id="pageInfo" class="pager cf"></div>
+</div>
+<script th:src="@{/js/calendar/schedule.js}"></script>
+<script th:src="@{/js/calendar/meeting.js}"></script>
+

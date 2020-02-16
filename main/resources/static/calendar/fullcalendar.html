@@ -1,0 +1,186 @@
+<link href='/css/fullcalendar.css' rel='stylesheet' />
+<link href='/css/fullcalendar.print.css' rel='stylesheet' media='print' />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<script src='/js/jquery-ui.custom.min.js'></script>
+<script src='/js/calendar/fullcalendar.js'></script>
+<script th:src="@{/js/ajax.js}"></script>
+<script>
+	//比较日程事件
+	function _event(){
+		var dayArr = ',';
+		$.ajax({
+	        type: "post",
+	        url: '/calendarController/queryDayEvent',
+	        data: {},
+	        dataType: 'JSON',
+	        cache: false, 
+	        async: false,
+	        success: function(result) {
+	        	var list = result.objectList;
+				for(var i in list){
+					dayArr += changeDate(list[i].startTime).split(" ") + ',';
+				}
+	    	}
+	    });
+		return dayArr;
+	}
+	var eventDays = _event();
+	
+	function addEvent(this_, href,start) {
+		$('#nav_ul').find('.active').removeClass('active');
+		$(this_).addClass('active');
+		$('.content-body').show();
+		$.ajax({
+	        type: "GET",
+	        url: 'loadPath',
+	        data: {'href':href,'start':start},
+	        dataType: 'html',
+	        cache: false, 
+	        async: false,
+	        success: function(result) {
+	        	$('#content-body').html("").html(result);
+	        	$("#start").val(start);
+	    	}
+	    });
+	};
+	
+	//时间格式转换
+	function changeDate (date_str){
+	    var date = new Date(date_str);
+	    var month  = date.getMonth() + 1;
+	    var day   = date.getDate();
+	    var hour  = date.getHours();
+	    var minute = date.getMinutes();
+	    return month + '-' + day + '  ' + hour + ':' + minute;
+	}
+	$(document).ready(function() {
+	    var date = new Date();
+		var d = date.getDate();
+		var m = date.getMonth();
+		var y = date.getFullYear();
+		$('#external-events div.external-event').each(function() {
+			var eventObject = {
+				title: $.trim($(this).text())
+			};
+			$(this).data('eventObject', eventObject);
+			$(this).draggable({
+				zIndex: 999,
+				revert: true,
+				revertDuration: 0
+			});
+			
+		});
+		var calendar =  $('#calendar').fullCalendar({
+			header: {
+				left: 'title',
+				center: 'agendaDay,agendaWeek,month',
+				right: 'prev,next today'
+			},
+			editable: true,
+			firstDay: 1,
+			selectable: true,
+			defaultView: 'month',
+			axisFormat: 'h:mm',
+			columnFormat: {
+                month: 'ddd',    // Mon
+                week: 'ddd d', // Mon 7
+                day: 'dddd M/d',  // Monday 9/7
+                agendaDay: 'dddd d'
+            },
+            titleFormat: {
+                month: 'MMMM yyyy', // September 2009
+                week: "MMMM yyyy", // September 2009
+                day: 'MMMM yyyy'                  // Tuesday, Sep 8, 2009
+            },
+			allDaySlot: false,
+			selectHelper: true,
+			select: function(start, end, allDay) {
+// 				var title = prompt('事件标题');
+// 				if (title) {
+// 					calendar.fullCalendar('renderEvent',
+// 						{
+// 							title: title,
+// 							start: start,
+// 							end: end,
+// 							allDay: allDay
+// 						},
+// 						true // make the event "stick"
+// 					);
+// 				}
+				//calendar.fullCalendar('unselect');
+				//addEvent('schedule', 'modules/calendar/schedule',start);
+			},
+			droppable: true,
+			drop: function(date, allDay) {
+				var originalEventObject = $(this).data('eventObject');
+				var copiedEventObject = $.extend({}, originalEventObject);
+				copiedEventObject.start = date;
+				copiedEventObject.allDay = allDay;
+				$('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+				if ($('#drop-remove').is(':checked')) {
+					$(this).remove();
+				}
+			},
+			events: [
+			],			
+		});
+	});
+</script>
+<style>
+	body {
+		margin-top: 0px;
+		text-align: center;
+		font-size: 14px;
+		font-family: "Helvetica Nueue",Arial,Verdana,sans-serif;
+		background-color: #DDDDDD;
+	}
+	#wrap {
+		width: 145%;
+    }
+	#external-events {
+		float: left;
+		width: 150px;
+		padding: 0 10px;
+		text-align: left;
+    }
+	#external-events h4 {
+		font-size: 16px;
+		margin-top: 0;
+		padding-top: 1em;
+    }
+	.external-event {
+		margin: 10px 0;
+		padding: 2px 4px;
+		background: #3366CC;
+		color: #fff;
+		font-size: .85em;
+		cursor: pointer;
+    }
+	#external-events p {
+		margin: 1.5em 0;
+		font-size: 11px;
+		color: #666;
+    }
+	#external-events p input {
+		margin: 0;
+		vertical-align: middle;
+	 }
+	#calendar {
+		width: 69%;
+		background-color: #FFFFFF;
+		border-radius: 6px;
+        box-shadow: 0 1px 2px #C3C3C3;
+	 }
+	h2, .h2 {
+    padding-top: 6px;
+    font-size: 18px;
+    font-weight: bold;
+	}
+
+</style>
+</head>
+<div id='wrap'>
+<div id='calendar'></div>
+
+<div style='clear:both'></div>
+</div>

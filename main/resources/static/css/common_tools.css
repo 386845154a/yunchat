@@ -1,0 +1,16 @@
+.links {
+	min-height: 100px;
+	max-height: 150px;
+	overflow-x: hidden; 
+}
+
+.links li {
+	width: 60px;
+	list-style: none;
+	float: left;
+	margin-left: 5px;
+}
+
+.links li span {
+	margin-left: 13px;
+}
