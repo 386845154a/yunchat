@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.casic.flatform.model.*;
+import com.casic.flatform.vo.message.ToMsgInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
@@ -505,6 +506,19 @@ public interface MessageMapper {
 
 	ChatFileModel qPrivateFileInfo(String fileId);
 
+	/**
+	 * 获取私聊聊天记录
+	 * @param current_user 当前人id
+	 * @param chat_user 聊天人id
+	 * @return
+	 */
+	List<ToMsgInfo> getPrivateMsgHistory(@Param("current_user") String current_user,@Param("chat_user") String chat_user);
+	/**
+	 * 获取群聊聊天记录
+	 * @param chat_user 群id
+	 * @return
+	 */
+	List<ToMsgInfo> getGroupMsgHistory(@Param("chat_user") String chat_user);
 }
 
 

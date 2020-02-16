@@ -1,19 +1,12 @@
 package com.casic.flatform.service;
 
+import com.casic.flatform.model.*;
+import com.casic.flatform.pageModel.PageObject;
+import com.casic.flatform.vo.message.ToMsgInfo;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import com.casic.flatform.model.ATModel;
-import com.casic.flatform.model.ChatFileModel;
-import com.casic.flatform.model.GroupFileModel;
-import com.casic.flatform.model.GroupMsgModel;
-import com.casic.flatform.model.PrivateMsgModel;
-import com.casic.flatform.model.ReModel;
-import com.casic.flatform.model.ToolsModel;
-import com.casic.flatform.model.TreeModel;
-import com.casic.flatform.model.UserModel;
-import com.casic.flatform.pageModel.PageObject;
 
 public interface MessageService {
 
@@ -343,5 +336,6 @@ public interface MessageService {
 
 	ChatFileModel qPrivateFileInfo(String fileId);
 
-	
+	List<ToMsgInfo> getPrivateMsgHistory(String curren_user,String chat_user);
+	List<ToMsgInfo> getGroupMsgHistory(String chat_user);
 }

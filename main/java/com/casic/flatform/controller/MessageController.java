@@ -1,21 +1,21 @@
 package com.casic.flatform.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import com.casic.flatform.model.ChatFileModel;
+import com.casic.flatform.model.GroupFileModel;
+import com.casic.flatform.model.UserModel;
+import com.casic.flatform.service.MessageService;
+import com.casic.flatform.vo.message.ToMsgInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.casic.flatform.model.ChatFileModel;
-import com.casic.flatform.model.GroupFileModel;
-import com.casic.flatform.model.UserModel;
-import com.casic.flatform.service.MessageService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/messageController")
@@ -94,4 +94,36 @@ public class MessageController {
 		}
         return map;
     }
+
+	/**
+	 * 获取聊天记录 type 0 私聊 1群聊
+	 * curren_user 当期人id
+	 * chat_user 和谁聊天的id 或者 哪个群id
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/getMsgHistory")
+	public Object getMsgHistory(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+		Map<String, Object> map = new HashMap<>();
+
+		UserModel user = (UserModel) session.getAttribute("userSessionItems");
+		String current_user = user.getUserId();
+		//String current_user =  "10000019431705";
+		String chat_user = request.getParameter("chat_user");
+		//chat_user="7";
+		String type = request.getParameter("type");
+		if(type == null || "".equals(type)){
+			type = "0";
+		}
+		List<ToMsgInfo> msgList = null;
+		if(type.equals("1")){//群聊
+			msgList = this.messageService.getGroupMsgHistory(chat_user);
+		}else if(type.equals("0")){//私聊
+			msgList = this.messageService.getPrivateMsgHistory(current_user,chat_user);
+		}
+		map.put("msgList", msgList);
+		return map;
+	}
 }
