@@ -618,7 +618,7 @@ public class GroupController {
 
 	//编辑群获取组织机构信息
 	@RequestMapping("/getGroupEditOrgInf")
-	public List<GroupEidtOrgModel> getGroupEditOrgInf(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+	public List<GroupEidtOrgVo> getGroupEditOrgInf(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		String groupId = request.getParameter("groupId");
 		if(groupId==null){
 			groupId = "";

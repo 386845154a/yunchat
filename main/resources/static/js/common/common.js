@@ -156,7 +156,7 @@ $(function(){
                     async:false,
                     cache: false,
                     success:function (res) {
-                        let eles=eleTree.render({
+                        var eles=eleTree.render({
                             elem: '#layui-contacts',
                             // data: data,
                             // showCheckbox: true,
@@ -202,7 +202,7 @@ $(function(){
         });
 
         function showTree() {
-            let el6=eleTree.render({
+            var el6=eleTree.render({
                 elem: '#layui-contacts',
                 data: orgdata,
                 // showCheckbox: true,
@@ -217,7 +217,7 @@ $(function(){
                     console.log('jiazai')
                     console.log(data);
                     console.log(data.children.length);
-                    let newData;
+                    var newData;
                     if (data.leaf == 0)
                     {
                         $.ajax({

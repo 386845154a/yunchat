@@ -3,8 +3,8 @@ package com.casic.flatform.model;
 public class GroupEidtOrgModel {
     private String name;
     private String id;
-    private String pid;
-    private Boolean checked;
+    private String Pid;
+    private String checked;
 
     public String getName() {
         return name;
@@ -23,18 +23,19 @@ public class GroupEidtOrgModel {
     }
 
     public String getPid() {
-        return pid;
+        return Pid;
     }
 
-    public void setPid(String pid) {
-        this.pid = pid;
+    public void setPid(String Pid) {
+        this.Pid = Pid;
+        this.Pid = Pid;
     }
 
-    public Boolean getChecked() {
+    public String getChecked() {
         return checked;
     }
 
-    public void setChecked(Boolean checked) {
+    public void setChecked(String checked) {
         this.checked = checked;
     }
 
@@ -43,7 +44,7 @@ public class GroupEidtOrgModel {
         return "{" +
                 "name:\"" + name + '\"' +
                 ", id:\"" + id + '\"' +
-                ", pId:\"" + pid + '\"' +
+                ", pId:\"" + Pid + '\"' +
                 ", checked:" + checked +
                 '}';
     }

@@ -147,7 +147,6 @@ layui.define(['layer', 'laytpl', 'upload'], function(exports){
       ,'<li class="layim-null">'+ (nodata[options.type] || "暂无数据") +'</li>'
     ,'{{# } }}'].join('');
   };
-
   var elemTpl = ['<div class="layui-layim-main">'
     ,'<div class="layui-layim-info">'
       ,'<div class="layui-layim-user">{{ d.mine.username }}</div>'
@@ -250,14 +249,14 @@ layui.define(['layer', 'laytpl', 'upload'], function(exports){
   ,'{{# }); }}'
   ,'<li layim-event="setSkin"><cite>简约</cite></li>'
   ,'</ul>'].join('');
-  
   //聊天主模板
   var elemChatTpl = ['<div class="layim-chat layim-chat-{{d.data.type}}{{d.first ? " layui-show" : ""}}">'
     ,'<div class="layui-unselect layim-chat-title">'
       ,'<div class="layim-chat-other">'
         ,'<img class="layim-{{ d.data.type }}{{ d.data.id }}" src="{{ d.data.avatar }}">' +
       '<span class="layim-chat-username" layim-event="{{ d.data.type==="group" ? \"groupMembers\" : \"\" }}">{{ d.data.name||"佚名" }}{{d.data.temporary ? "<cite>临时会话</cite>" : ""}} {{# if(d.data.type==="group"){ }} <em class="layim-chat-members"></em><i class="layui-icon">&#xe61a;</i> {{# } }}</span>'
-        ,'<p class="layim-chat-status"></p>'
+    ,'<p id="sbxiaotian" style="display: none">{{ d.data.id }}</p>'
+    ,'<p class="layim-chat-status"></p>'
         ,'{{# if(d.data.type==="group"){ }} <div><span class="layui-icon layim-tool-face" title="选择表情" onclick="createGroupIm(1,{{ d.data.id }})">群组编辑</span></div> {{# } }}'
       ,'</div>'
     ,'</div>'

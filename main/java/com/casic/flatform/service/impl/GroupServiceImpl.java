@@ -1,9 +1,6 @@
 package com.casic.flatform.service.impl;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.casic.flatform.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,7 +144,7 @@ public class GroupServiceImpl implements GroupService {
 	 */
 	@Override
 	public String createGroup(String groupName, String groupDescribe, String[] userIdArray, String userId, String choose_name, String scop, String ispublic,String levels) {
-		String groupId = String.valueOf((int) (Math.random() * 10000)) + String.valueOf(new Date().getTime());
+		String groupId = String.valueOf(UUID.randomUUID());
 		GroupInfoModel groupInfo = new GroupInfoModel();
 		groupInfo.setGroupId(groupId);
 		groupInfo.setGroupName(groupName);
@@ -479,8 +476,18 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	@Override
-	public List<GroupEidtOrgModel> getGroupEditOrgInf(String groupId){
-		return groupMapper.getGroupEditOrgInf(groupId);
+	public List<GroupEidtOrgVo> getGroupEditOrgInf(String groupId){
+		List<GroupEidtOrgVo> groupEidtOrgVoList = new ArrayList<>();
+		for (GroupEidtOrgModel groupEidtOrg: groupMapper.getGroupEditOrgInf(groupId)
+			 ) {
+			GroupEidtOrgVo groupEidtOrgVo = new GroupEidtOrgVo();
+			groupEidtOrgVo.setId(groupEidtOrg.getId());
+			groupEidtOrgVo.setpId(groupEidtOrg.getPid());
+			groupEidtOrgVo.setName(groupEidtOrg.getName());
+			groupEidtOrgVo.setChecked(Boolean.parseBoolean(groupEidtOrg.getChecked()) );
+			groupEidtOrgVoList.add(groupEidtOrgVo);
+		}
+		return groupEidtOrgVoList;
 	}
 }
 
