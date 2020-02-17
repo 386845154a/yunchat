@@ -3,6 +3,9 @@ package com.casic.flatform.service.impl;
 import java.util.*;
 
 import com.casic.flatform.model.*;
+import com.casic.flatform.vo.message.CommonVo;
+import com.casic.flatform.vo.message.GroupUserDataVo;
+import com.casic.flatform.vo.message.GroupUserListVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -488,6 +491,28 @@ public class GroupServiceImpl implements GroupService {
 			groupEidtOrgVoList.add(groupEidtOrgVo);
 		}
 		return groupEidtOrgVoList;
+	}
+
+	/**
+	 * 获取群成员列表
+	 * @param groupId
+	 * @return
+	 */
+	@Override
+	public CommonVo getGroupUserList(String groupId){
+		CommonVo data = new CommonVo();
+
+		try {
+			GroupUserListVo list = new GroupUserListVo();
+			List<GroupUserDataVo> users = this.groupMapper.getGroupUserList(groupId);
+			list.setList(users);
+			data.setData(list);
+		} catch (Exception e) {
+			data.setCode("1");
+			data.setMsg("失败，服务器出错");
+			e.printStackTrace();
+		}
+		return data;
 	}
 }
 
