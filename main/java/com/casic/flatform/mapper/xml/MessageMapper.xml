@@ -827,5 +827,33 @@
 		   and m.msg_receiver = #{chat_user}
 		 order by send_time asc
 	</select>
-	
+	<!-- 群聊天记录-->
+	<select id="addGroupMsg">
+		insert into PF_HI_GROUP_MSG
+		 (
+		 MSG_ID,
+		 MSG_SENDER,
+		 MSG_RECEIVER,
+		 SEND_TIME,
+		 MSG,
+		 MSG_TYPE,
+		 MSG_PATH,
+		 IS_DELETE,
+		 IS_IMPORTANT,
+		 LEVELS
+		 )
+		 values
+		 (
+          #{params.msgId},
+          #{params.msgSender},
+          #{params.msgReceiver},
+          #{params.sendTime},
+          #{params.msg},
+          #{params.msgType},
+          #{params.msgPath},
+          #{params.isDelete},
+          #{params.isImportant},
+          #{params.levels}
+		 )
+	</select>
 </mapper>

@@ -709,4 +709,23 @@ public class MessageServiceImpl implements MessageService {
 	public List<ToMsgInfo> getGroupMsgHistory(String chat_user){
 		return  this.messageMapper.getGroupMsgHistory(chat_user);
 	}
+
+	/**
+	 * 新增群消息
+	 * @param params
+	 * @return
+	 */
+	public  boolean addGroupMsg(GroupMsgModel params){
+       if(params.getIsDelete()==null || "".equals(params.getIsDelete())){
+          params.setIsDelete("0");
+	   }
+		if(params.getMsgId()==null || "".equals(params.getMsgId())){
+			params.setIsDelete("0");
+		}
+		if(params.getSendTime()==null){
+			params.setSendTime(new Date());
+		}
+	   this.messageMapper.addGroupMsg(params);
+	   return  true;
+	}
 }

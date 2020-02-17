@@ -519,6 +519,13 @@ public interface MessageMapper {
 	 * @return
 	 */
 	List<ToMsgInfo> getGroupMsgHistory(@Param("chat_user") String chat_user);
+
+	/**
+	 * 群消息新增
+	 * @param params
+	 * @return
+	 */
+	void addGroupMsg(@Param("params") GroupMsgModel params);
 }
 
 

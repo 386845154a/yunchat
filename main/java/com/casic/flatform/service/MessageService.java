@@ -338,4 +338,5 @@ public interface MessageService {
 
 	List<ToMsgInfo> getPrivateMsgHistory(String curren_user,String chat_user);
 	List<ToMsgInfo> getGroupMsgHistory(String chat_user);
+	boolean addGroupMsg(GroupMsgModel params);
 }
