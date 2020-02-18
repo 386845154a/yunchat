@@ -1,11 +1,12 @@
 package com.casic.flatform.service;
 
+import com.casic.flatform.model.*;
+import com.casic.flatform.pageModel.PageObject;
+import com.casic.flatform.vo.message.CommonVo;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import com.casic.flatform.model.*;
-import com.casic.flatform.pageModel.PageObject;
 
 public interface GroupService {
 	/**
@@ -283,4 +284,6 @@ public interface GroupService {
      */
 	public List<?> del_more_file(Date inputTime, String type);
 	List<GroupEidtOrgVo> getGroupEditOrgInf(String groupId ,String userName);
+	//查询群用户列表
+	CommonVo getGroupUserList(String groupId);
 }

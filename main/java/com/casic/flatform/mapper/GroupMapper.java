@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.casic.flatform.model.*;
+import com.casic.flatform.vo.message.GroupUserDataVo;
 import org.apache.ibatis.annotations.Param;
 
 public interface GroupMapper {
@@ -270,6 +271,8 @@ public interface GroupMapper {
 
 
 	List<GroupEidtOrgModel> getGroupEditOrgInf(@Param("groupId") String groupId,@Param("userName") String userName);
+	//查询群用户列表
+	List<GroupUserDataVo> getGroupUserList(@Param("groupId") String groupId);
 
 }
 
