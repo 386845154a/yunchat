@@ -2,7 +2,12 @@ package com.casic.flatform.service.impl;
 
 import java.util.*;
 
+import com.alibaba.fastjson.JSON;
 import com.casic.flatform.model.*;
+import com.casic.flatform.server.IworkServerConfig;
+import com.casic.flatform.server.IworkWebsocketStarter;
+import com.casic.flatform.util.MyUUID;
+import com.casic.flatform.vo.message.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +19,8 @@ import com.casic.flatform.mapper.MessageMapper;
 import com.casic.flatform.pageModel.PageObject;
 import com.casic.flatform.service.GroupService;
 import com.casic.flatform.util.FileUtil;
+import org.tio.core.Tio;
+import org.tio.websocket.common.WsResponse;
 
 /**
  * 讨论组内功能服务类
@@ -144,7 +151,7 @@ public class GroupServiceImpl implements GroupService {
 	 */
 	@Override
 	public String createGroup(String groupName, String groupDescribe, String[] userIdArray, String userId, String choose_name, String scop, String ispublic,String levels) {
-		String groupId = String.valueOf(UUID.randomUUID());
+		String groupId = String.valueOf(MyUUID.getUUID());
 		GroupInfoModel groupInfo = new GroupInfoModel();
 		groupInfo.setGroupId(groupId);
 		groupInfo.setGroupName(groupName);
@@ -158,11 +165,30 @@ public class GroupServiceImpl implements GroupService {
 		groupInfo.setLevels(levels);
 		groupMapper.saveGroupInfo(groupInfo);
 
+//		MsgInfoModel msgInfoModel = new MsgInfoModel();
+//		msgInfoModel.setType("system");
+//		msgInfoModel.setData();
+
+		MsgInfoModel msgInfoModel = new MsgInfoModel();
+		msgInfoModel.setType("system");
+		Data data = new Data();
+		Mine mine = new Mine();
+		To to = new To();
+
 		for (int i = 0; i < userIdArray.length; i++) {
 			GroupUserRefModel groupUserRef = new GroupUserRefModel();
 			groupUserRef.setGroupId(groupId);
 			groupUserRef.setUserId(userIdArray[i]);
 			groupMapper.saveGroupUser(groupUserRef);
+//			toMsgInfo.setId(userIdArray[i]);
+			mine.setContent(userIdArray[i]);
+			mine.setUsername(groupName);
+			mine.setId(groupId);
+			data.setMine(mine);
+			data.setTo(to);
+			msgInfoModel.setData(data);
+			WsResponse wsResponse = WsResponse.fromText(JSON.toJSONString(msgInfoModel), IworkServerConfig.CHARSET);
+			Tio.sendToUser(IworkWebsocketStarter.getServerTioConfig(),userIdArray[i],wsResponse);
 		}
 
 		return groupId;

@@ -55,7 +55,16 @@ $(function(){
                     layim.getMessage(res); //res.data即你发送消息传递的数据（阅读：监听发送的消息）
                 }
                 if(res.type === 'system'){
-                    ws.send(res.data);
+                    debugger
+                    console.log("system")
+                    console.log(JSON.stringify(res))
+                    ws.send(JSON.stringify(res));
+                    layim.addList({
+                        type: 'group' //列表类型，只支持friend和group两种
+                        ,avatar: "a.jpg" //群组头像
+                        ,groupname: 'Angular开发' //群组名称
+                        ,id: "12333333" //群组id
+                    });
                 }
             };
 
@@ -266,10 +275,10 @@ $(function(){
         layim.on('sendMessage', function (res) {
             var mine = res.mine; //包含我发送的消息及我的信息
             var to = res.to; //对方的信息
-
+            console.log(res.to.type);
             //监听到上述消息后，就可以轻松地发送socket了，如：
             tiows.send(JSON.stringify({
-                type: 'friend' //随便定义，用于在服务端区分消息类型
+                type: res.to.type //随便定义，用于在服务端区分消息类型
                 , data: res
             }));
         });
