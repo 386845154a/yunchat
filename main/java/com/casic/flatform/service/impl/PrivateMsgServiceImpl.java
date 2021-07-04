@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.casic.flatform.model.PrivateMsgInfoModel;
+import com.casic.flatform.util.MyUUID;
 import com.casic.flatform.vo.message.MsgInfoModel;
 import com.casic.flatform.vo.message.ToMsgInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,7 +100,7 @@ public class PrivateMsgServiceImpl implements PrivateMsgService {
 	@Override
 	public ToMsgInfo savePrivateMsg(MsgInfoModel msgInfoModel) {
 		PrivateMsgInfoModel privateMsgModel = new PrivateMsgInfoModel();
-		privateMsgModel.setMsgId(String.valueOf(UUID.randomUUID()));
+		privateMsgModel.setMsgId(String.valueOf(MyUUID.getUUID()));
 		privateMsgModel.setMsg(msgInfoModel.getData().getMine().getContent());
 		privateMsgModel.setIsDelete(String.valueOf(0));
 		privateMsgModel.setIsRead(String.valueOf(0));

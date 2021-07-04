@@ -1,11 +1,16 @@
 package com.casic.flatform.service.impl;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.alibaba.fastjson.JSON;
 import com.casic.flatform.model.*;
+import com.casic.flatform.server.IworkServerConfig;
+import com.casic.flatform.server.IworkWebsocketStarter;
+import com.casic.flatform.util.MyUUID;
+import com.casic.flatform.vo.message.*;
+import com.casic.flatform.vo.message.CommonVo;
+import com.casic.flatform.vo.message.GroupUserDataVo;
+import com.casic.flatform.vo.message.GroupUserListVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +22,8 @@ import com.casic.flatform.mapper.MessageMapper;
 import com.casic.flatform.pageModel.PageObject;
 import com.casic.flatform.service.GroupService;
 import com.casic.flatform.util.FileUtil;
+import org.tio.core.Tio;
+import org.tio.websocket.common.WsResponse;
 
 /**
  * 讨论组内功能服务类
@@ -147,7 +154,7 @@ public class GroupServiceImpl implements GroupService {
 	 */
 	@Override
 	public String createGroup(String groupName, String groupDescribe, String[] userIdArray, String userId, String choose_name, String scop, String ispublic,String levels) {
-		String groupId = String.valueOf((int) (Math.random() * 10000)) + String.valueOf(new Date().getTime());
+		String groupId = String.valueOf(MyUUID.getUUID());
 		GroupInfoModel groupInfo = new GroupInfoModel();
 		groupInfo.setGroupId(groupId);
 		groupInfo.setGroupName(groupName);
@@ -161,11 +168,30 @@ public class GroupServiceImpl implements GroupService {
 		groupInfo.setLevels(levels);
 		groupMapper.saveGroupInfo(groupInfo);
 
+//		MsgInfoModel msgInfoModel = new MsgInfoModel();
+//		msgInfoModel.setType("system");
+//		msgInfoModel.setData();
+
+		MsgInfoModel msgInfoModel = new MsgInfoModel();
+		msgInfoModel.setType("system");
+		Data data = new Data();
+		Mine mine = new Mine();
+		To to = new To();
+
 		for (int i = 0; i < userIdArray.length; i++) {
 			GroupUserRefModel groupUserRef = new GroupUserRefModel();
 			groupUserRef.setGroupId(groupId);
 			groupUserRef.setUserId(userIdArray[i]);
 			groupMapper.saveGroupUser(groupUserRef);
+//			toMsgInfo.setId(userIdArray[i]);
+			mine.setContent(userIdArray[i]);
+			mine.setUsername(groupName);
+			mine.setId(groupId);
+			data.setMine(mine);
+			data.setTo(to);
+			msgInfoModel.setData(data);
+			WsResponse wsResponse = WsResponse.fromText(JSON.toJSONString(msgInfoModel), IworkServerConfig.CHARSET);
+			Tio.sendToUser(IworkWebsocketStarter.getServerTioConfig(),userIdArray[i],wsResponse);
 		}
 
 		return groupId;
@@ -479,8 +505,40 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	@Override
-	public List<GroupEidtOrgModel> getGroupEditOrgInf(String groupId){
-		return groupMapper.getGroupEditOrgInf(groupId);
+	public List<GroupEidtOrgVo> getGroupEditOrgInf(String groupId, String userName){
+		List<GroupEidtOrgVo> groupEidtOrgVoList = new ArrayList<>();
+		for (GroupEidtOrgModel groupEidtOrg: groupMapper.getGroupEditOrgInf(groupId,userName)
+			 ) {
+			GroupEidtOrgVo groupEidtOrgVo = new GroupEidtOrgVo();
+			groupEidtOrgVo.setId(groupEidtOrg.getId());
+			groupEidtOrgVo.setpId(groupEidtOrg.getPid());
+			groupEidtOrgVo.setName(groupEidtOrg.getName());
+			groupEidtOrgVo.setChecked(Boolean.parseBoolean(groupEidtOrg.getChecked()) );
+			groupEidtOrgVoList.add(groupEidtOrgVo);
+		}
+		return groupEidtOrgVoList;
+	}
+
+	/**
+	 * 获取群成员列表
+	 * @param groupId
+	 * @return
+	 */
+	@Override
+	public CommonVo getGroupUserList(String groupId){
+		CommonVo data = new CommonVo();
+
+		try {
+			GroupUserListVo list = new GroupUserListVo();
+			List<GroupUserDataVo> users = this.groupMapper.getGroupUserList(groupId);
+			list.setList(users);
+			data.setData(list);
+		} catch (Exception e) {
+			data.setCode("1");
+			data.setMsg("失败，服务器出错");
+			e.printStackTrace();
+		}
+		return data;
 	}
 }
 

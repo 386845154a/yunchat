@@ -59,8 +59,8 @@ if (window.jQuery || window.Zepto) {
 				//将点击事件与复选框事件关联
 				var zTree = $.fn.zTree.getZTreeObj("treeDemo");
 				zTree.checkNode(treeNode, !treeNode.checked, true);
-				checkChangeFn(event, treeId, treeNode);
-				var curSelect = $ztree.find(".curSelectedNode"); //控制选中项背景样式
+				this.checkFn(event, treeId, treeNode);
+				var curSelect = ztree.find(".curSelectedNode"); //控制选中项背景样式
 				treeNode.checked == true ? (curSelect.hasClass("unactive") ? curSelect.removeClass("unactive") : '') : curSelect.addClass("unactive");
 			},
 			/*主要功能：将点击事件与checked事件关联，判断是否最后一个元素，如果是，将最后一个元素放入渲染数组，再将数组渲染到右侧
@@ -175,8 +175,19 @@ if (window.jQuery || window.Zepto) {
 					if (filter != "" && filterArr.length == 0) { $(".no-data").css("display", "block"); } else { $(".no-data").css("display", "none"); }
 					updateNodes(true, filterArr);
 				}
+				/*输入框添回车监听*/
+				function listendown(event){
+					// if(!event)event = window.event;
+					if(event.keyCode ==13){
+						// alert(555);
+					}
+				}
 				/*输入框添加输入监听*/
 				$("#filter-text").on("propertychange", searchNode).on("input", searchNode);
+
+				$("#filter-text").on("keydown",function (event) {
+					listendown(event);
+				});;
 			}
 		}
 		$.fn.TransferTree = function (params) {

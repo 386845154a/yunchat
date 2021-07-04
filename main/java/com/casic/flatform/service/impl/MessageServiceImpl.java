@@ -1,12 +1,14 @@
 package com.casic.flatform.service.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import com.casic.flatform.mapper.MessageMapper;
+import com.casic.flatform.mapper.UserMapper;
+import com.casic.flatform.model.*;
+import com.casic.flatform.pageModel.PageObject;
+import com.casic.flatform.service.MessageService;
+import com.casic.flatform.util.ConfigParameterUtil;
+import com.casic.flatform.util.HttpUtil;
+import com.casic.flatform.util.MyUUID;
+import com.casic.flatform.vo.message.ToMsgInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,22 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import com.casic.flatform.mapper.MessageMapper;
-import com.casic.flatform.mapper.UserMapper;
-import com.casic.flatform.model.ATModel;
-import com.casic.flatform.model.ChatFileModel;
-import com.casic.flatform.model.GroupFileModel;
-import com.casic.flatform.model.GroupMsgModel;
-import com.casic.flatform.model.PrivateMsgModel;
-import com.casic.flatform.model.ReModel;
-import com.casic.flatform.model.ToolsModel;
-import com.casic.flatform.model.TreeModel;
-import com.casic.flatform.model.UserModel;
-import com.casic.flatform.pageModel.PageObject;
-import com.casic.flatform.service.MessageService;
-import com.casic.flatform.util.ConfigParameterUtil;
-import com.casic.flatform.util.HttpUtil;
-import com.casic.flatform.util.MyUUID;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * 消息处理service
@@ -704,6 +692,40 @@ public class MessageServiceImpl implements MessageService {
 		return messageMapper.qPrivateFileInfo(fileId);
 	}
 
-	
+	/**
+	 * 查询私人聊天记录
+	 * @param curren_user 当前人id
+	 * @param chat_user 跟谁聊天id
+	 * @return
+	 */
+	public List<ToMsgInfo> getPrivateMsgHistory(String curren_user, String chat_user){
+		return  this.messageMapper.getPrivateMsgHistory(curren_user,chat_user);
+	}
+	/**
+	 * 查询群聊天记录
+	 * @param chat_user 跟谁聊天id
+	 * @return
+	 */
+	public List<ToMsgInfo> getGroupMsgHistory(String chat_user){
+		return  this.messageMapper.getGroupMsgHistory(chat_user);
+	}
 
+	/**
+	 * 新增群消息
+	 * @param params
+	 * @return
+	 */
+	public  boolean addGroupMsg(GroupMsgModel params){
+       if(params.getIsDelete()==null || "".equals(params.getIsDelete())){
+          params.setIsDelete("0");
+	   }
+		if(params.getMsgId()==null || "".equals(params.getMsgId())){
+			params.setIsDelete("0");
+		}
+		if(params.getSendTime()==null){
+			params.setSendTime(new Date());
+		}
+	   this.messageMapper.addGroupMsg(params);
+	   return  true;
+	}
 }

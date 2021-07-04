@@ -2,7 +2,9 @@ package com.casic.flatform.server;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.casic.flatform.model.GroupInfo;
+import com.casic.flatform.service.GroupService;
+import com.casic.flatform.service.HomeService;
 import com.casic.flatform.service.PrivateMsgService;
 import com.casic.flatform.vo.message.MsgInfoModel;
 import com.casic.flatform.vo.message.ToMsgInfo;
@@ -20,6 +22,7 @@ import org.tio.websocket.common.WsSessionContext;
 import org.tio.websocket.server.handler.IWsMsgHandler;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.Objects;
 
 @Component
@@ -28,6 +31,10 @@ public class IworkWsMsgHandler implements IWsMsgHandler {
 
     @Autowired
     protected PrivateMsgService privateMsgService;
+    @Autowired
+    protected GroupService groupService;
+    @Autowired
+    protected HomeService homeService;
 
     private static IworkWsMsgHandler  serverHandler ;
 
@@ -35,6 +42,8 @@ public class IworkWsMsgHandler implements IWsMsgHandler {
     public void init() {
         serverHandler = this;
         serverHandler.privateMsgService = this.privateMsgService;
+        serverHandler.groupService = this.groupService;
+        serverHandler.homeService = this.homeService;
         // 初使化时将已静态化的Service实例化
     }
 
@@ -66,6 +75,7 @@ public class IworkWsMsgHandler implements IWsMsgHandler {
 //      获取用户在线信息，如在线，踢掉他
 //      checkUserOnline(channelContext,userid);
         //todo 改成从userInf获取orgCode
+        // TODO: 2020/2/16 获取用户群组信息，绑定他
         String orgCode=request.getParam("orgCode");
 //      加入组织
         Tio.bindGroup(channelContext,orgCode);
@@ -76,24 +86,22 @@ public class IworkWsMsgHandler implements IWsMsgHandler {
         Tio.bindGroup(channelContext, Const.GROUP_SYS);
 //        IworkSocketChannel.setUserChannelContext(userid,channelContext);
 //       根据握手信息，将用户绑定到群组
-        //todo 从userInf里获取用户绑定的群组、会议 信息,这里暂时使用mq通信
         if(userid!=null && !"".equals(userid)){
 
         }
-
-        /*//List<String> grouplist =  serverHandler.userGroupService.getGroupByUserId(userid);
-        List<String> grouplist =  new ArrayList<>();
-        grouplist.stream().forEach((String i) ->{
-            Tio.bindGroup(channelContext,i);
+       List<GroupInfo> groupInfos =  serverHandler.homeService.groupByUserIdNew(userid);
+        //List<String> grouplist =  serverHandler.userGroupService.getGroupByUserId(userid);
+        groupInfos.stream().forEach((GroupInfo i) ->{
+            Tio.bindGroup(channelContext,i.getId());
         });
 //        加入会议
-        //List<String> meetlist =  serverHandler.meetingUserService.getMeetingByUserId(userid);
-        List<String> meetlist = new ArrayList<>();
-        meetlist.stream().forEach((String i) ->{
-            Tio.bindGroup(channelContext,i);
-        });*/
+//        //List<String> meetlist =  serverHandler.meetingUserService.getMeetingByUserId(userid);
+//        List<String> meetlist = new ArrayList<>();
+//        meetlist.stream().forEach((String i) ->{
+//            Tio.bindGroup(channelContext,i);
+//        });*/
 //        ProcessLogin.setOnLineSatus(channelContext.getBsId(), MessageType.ONLINE);
-        log.info("收到来自{}的ws握手包\r\n{}", clientip, request.toString());
+//        log.info("收到来自{}的ws握手包\r\n{}", clientip, request.toString());
         return httpResponse;
     }
 
@@ -154,6 +162,9 @@ public class IworkWsMsgHandler implements IWsMsgHandler {
 
         /**消息收到确认应答end*/
 
+        // TODO: 2020/2/16 处理system消息 群组变更信息
+
+
         /**消息解析begin*/
         MsgInfoModel msgInfoModel = (MsgInfoModel) JSON.parseObject(text,MsgInfoModel.class);
         switch (msgInfoModel.getType()){
@@ -163,9 +174,12 @@ public class IworkWsMsgHandler implements IWsMsgHandler {
                 Tio.sendToUser(channelContext.getTioConfig(),msgInfoModel.getData().getTo().getId(),wsResponse);
                 break;
             case "group":
-//                ToMsgInfo toMsgInfo = serverHandler.privateMsgService.savePrivateMsg(msgInfoModel);
+//                ToMsgInfo toMsgInfo = serverHandler.groupService.(msgInfoModel);
 //                WsResponse wsResponse = WsResponse.fromText(JSON.toJSONString(toMsgInfo), IworkServerConfig.CHARSET);
 //                Tio.sendToUser(channelContext.getTioConfig(),msgInfoModel.getData().getTo().getId(),wsResponse);
+                break;
+            case "system":
+                Tio.bindGroup(channelContext,msgInfoModel.getData().getMine().getContent());
                 break;
 //            case MessageType.MEET_MSG:
 //                serverHandler.sendMessageService.sendTeamMsg(socketMsgVo);

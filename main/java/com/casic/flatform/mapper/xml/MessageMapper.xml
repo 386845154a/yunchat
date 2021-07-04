@@ -119,6 +119,13 @@
 		<result column="groupid" property="groupid" jdbcType="VARCHAR" />
 		<result column="receiverid" property="receiverid" jdbcType="VARCHAR" />
 	</resultMap>
+	<resultMap id="messageVo" type="com.casic.flatform.vo.message.ToMsgInfo">
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="timestamp" property="timestamp" jdbcType="BIGINT" />
+		<result column="avatar" property="avatar" jdbcType="VARCHAR" />
+	</resultMap>
 	
 	<sql id="Base_Column_List">
 		msg_id, msg_sender, msg_receiver, send_time, receiver_time, is_read, msg, msg_type, is_delete
@@ -793,6 +800,60 @@
 	<select id="qPrivateFileInfo" resultMap="UserFileListModel">
 		SELECT * FROM pf_chat_file where file_id = #{fileId}
 	</select>
-	
-	
+	<!-- 私人聊天记录-->
+	<select id="getPrivateMsgHistory" resultMap="messageVo">
+		select us.fullname as username,
+			   (send_time-to_date('1970-01-01 08:00:00','yyyy-mm-dd hh24:mi:ss'))* 24*60*60*1000 as timestamp,
+			   msg_id      id,
+			   us.head     as avatar,
+			   m.msg       as content
+		  from PF_HI_PRIVATE_MSG m, sys_user us, sys_user ur
+		 where m.is_delete = '0'
+		   and m.msg_sender = us.userid
+		   and m.msg_receiver = ur.userid
+		   and ((us.userid = #{current_user} and ur.userid= #{chat_user}) or (us.userid = #{chat_user} and ur.userid= #{current_user}) )
+		 order by send_time desc
+	</select>
+	<!-- 群聊天记录-->
+	<select id="getGroupMsgHistory" resultMap="messageVo">
+		select u.fullname as username,
+			   (send_time-to_date('1970-01-01 08:00:00','yyyy-mm-dd hh24:mi:ss'))* 24*60*60*1000 as timestamp,
+			   msg_id      id,
+			   u.head     as avatar,
+			   m.msg       as content
+		  from PF_HI_GROUP_MSG m, sys_user u
+		 where m.is_delete = '0'
+		   and m.msg_sender = u.userid
+		   and m.msg_receiver = #{chat_user}
+		 order by send_time asc
+	</select>
+	<!-- 群聊天记录-->
+	<select id="addGroupMsg">
+		insert into PF_HI_GROUP_MSG
+		 (
+		 MSG_ID,
+		 MSG_SENDER,
+		 MSG_RECEIVER,
+		 SEND_TIME,
+		 MSG,
+		 MSG_TYPE,
+		 MSG_PATH,
+		 IS_DELETE,
+		 IS_IMPORTANT,
+		 LEVELS
+		 )
+		 values
+		 (
+          #{params.msgId},
+          #{params.msgSender},
+          #{params.msgReceiver},
+          #{params.sendTime},
+          #{params.msg},
+          #{params.msgType},
+          #{params.msgPath},
+          #{params.isDelete},
+          #{params.isImportant},
+          #{params.levels}
+		 )
+	</select>
 </mapper>

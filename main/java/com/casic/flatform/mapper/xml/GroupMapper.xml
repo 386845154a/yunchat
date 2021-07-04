@@ -99,7 +99,12 @@
 		<result column="checked" property="checked" jdbcType="VARCHAR" />
 		<result column="pid" property="pid" jdbcType="VARCHAR" />
 	</resultMap>
-	
+	<resultMap id="groupUserDataVo" type="com.casic.flatform.vo.message.GroupUserDataVo">
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="avatar" property="avatar" jdbcType="VARCHAR" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="sign" property="sign" jdbcType="VARCHAR" />
+	</resultMap>
 	<!-- 获得讨论组成员 -->
 	<select id="queryGroupUser" resultMap="UserModel">
 		SELECT su.*, so.orgName as orgName FROM sys_user su JOIN pf_user_group_ref ugr ON su.userId = ugr.user_id
@@ -407,6 +412,9 @@
 		'0' as tree_node
 		from sys_user u
 		where 1 = 1
+		<if test="userName !=null and userName !=''">
+			and u.fullname = #{userName}
+		</if>
 		and u.islock = '0'
 		and u.isexpired = '0'
 		and u.status = '1') a
@@ -415,4 +423,16 @@
 		ORDER SIBLINGS BY a.px
 
 	</select>
+
+	<!-- 查询群成员列表 -->
+	<select id="getGroupUserList" resultMap="groupUserDataVo">
+		select u.userid as id, u.fullname username, u.head avatar, u.roomid as sign
+		  from PF_USER_GROUP_REF gu, SYS_USER u
+		 where gu.user_id = u.userid
+		   and u.islock = '0'
+		   and u.isexpired = '0'
+		   and u.status = '1'
+		   and gu.group_id = #{groupId}
+	</select>
+
 </mapper>

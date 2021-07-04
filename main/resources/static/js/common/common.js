@@ -54,6 +54,18 @@ $(function(){
                 if(res.type === 'friend'){
                     layim.getMessage(res); //res.data即你发送消息传递的数据（阅读：监听发送的消息）
                 }
+                if(res.type === 'system'){
+                    debugger
+                    console.log("system")
+                    console.log(JSON.stringify(res))
+                    ws.send(JSON.stringify(res));
+                    layim.addList({
+                        type: 'group' //列表类型，只支持friend和group两种
+                        ,avatar: "a.jpg" //群组头像
+                        ,groupname: 'Angular开发' //群组名称
+                        ,id: "12333333" //群组id
+                    });
+                }
             };
 
             this.onclose = function (e, ws) {
@@ -112,13 +124,14 @@ $(function(){
             , brief: false //是否简约模式（如果true则不显示主面板）
             //上传图片接口（返回的数据格式见下文），若不开启图片上传，剔除该项即可
             , uploadImage: {
-                url: '' //接口地址
+                url: 'http://127.0.0.1:8081/file/upload' //接口地址
                 , type: 'post' //默认post
             }
+            //TO DO 这里要改地址
 
             //上传文件接口（返回的数据格式见下文），若不开启文件上传，剔除该项即可
             , uploadFile: {
-                url: '' //接口地址
+                url: 'http://127.0.0.1:8081/file/upload' //接口地址
                 , type: 'post' //默认post
             }
             //扩展工具栏，下文会做进一步介绍（如果无需扩展，剔除该项即可）
@@ -156,7 +169,7 @@ $(function(){
                     async:false,
                     cache: false,
                     success:function (res) {
-                        let eles=eleTree.render({
+                        var eles=eleTree.render({
                             elem: '#layui-contacts',
                             // data: data,
                             // showCheckbox: true,
@@ -202,7 +215,7 @@ $(function(){
         });
 
         function showTree() {
-            let el6=eleTree.render({
+            var el6=eleTree.render({
                 elem: '#layui-contacts',
                 data: orgdata,
                 // showCheckbox: true,
@@ -217,7 +230,7 @@ $(function(){
                     console.log('jiazai')
                     console.log(data);
                     console.log(data.children.length);
-                    let newData;
+                    var newData;
                     if (data.leaf == 0)
                     {
                         $.ajax({
@@ -262,10 +275,10 @@ $(function(){
         layim.on('sendMessage', function (res) {
             var mine = res.mine; //包含我发送的消息及我的信息
             var to = res.to; //对方的信息
-
+            console.log(res.to.type);
             //监听到上述消息后，就可以轻松地发送socket了，如：
             tiows.send(JSON.stringify({
-                type: 'friend' //随便定义，用于在服务端区分消息类型
+                type: res.to.type //随便定义，用于在服务端区分消息类型
                 , data: res
             }));
         });
@@ -276,7 +289,7 @@ $(function(){
             layim.chat({
                 name: name //名称
                 , type: 'friend' //聊天类型
-                , avatar: 'http://tp1.sinaimg.cn/5619439268/180/40030060651/1' //头像
+                , avatar: 'http://127.0.0.1:8081/file/headimg/head.gif' //头像
                 , id: id //好友id
             })
         }
